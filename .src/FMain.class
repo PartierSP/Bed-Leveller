@@ -1,0 +1,228 @@
+' Gambas class file
+
+Public db1 As New Connection
+Public bedsizeX As Integer
+Public bedsizeY As Integer
+Public posmargin As Integer
+Public home As String
+Public rapidmove As String
+Public rapidplane As Integer
+Public setbedtemp As String
+Public bedtempprefix As String
+Public bedtemp As Single
+Public shim As Single
+Public port As String
+
+
+Public Sub SerialPort3D_Read()
+
+  Dim strReceived As String
+   
+  Try Read #SerialPort3D, strReceived, Lof(SerialPort3D)
+  If Error Then
+    strReceived = ""
+  Else
+    TextArea1.Text = TextArea1.Text & strReceived
+  Endif
+
+  Catch
+    Me.Text = Error.Text
+
+End
+
+Public Sub SendSerialData(strMessage As String, blnLF As Boolean)
+
+  If blnLF Then
+    strMessage &= gb.Lf
+  Endif
+  SerialPort3D.Begin()
+  Write #SerialPort3D, strMessage
+  SerialPort3D.Send()
+
+  Catch
+    Me.Text = Error.Text
+End
+
+Public Sub Form_Open()
+Dim tbl As Table
+Dim sql As String
+Dim rs As Result
+
+  'Check if ~/.config/leveler/config.sqlite exists
+  If Exist(User.Home & "/.config/leveler/config.sqlite") == False Then
+    'Config is missing check if ~/.config/leveler directory exists
+    If Exist(User.Home & "/.config/leveler") == False Then
+      'Config directory missing, create it
+      Mkdir User.Home & "/.config/leveler"
+    Endif
+    'Create config file and populate it standard values
+    With db1
+      .Type = "sqlite"
+      .Host = User.Home & "/.config/leveler"
+      .name = ""
+      .Open
+      .Databases.Add("config.sqlite")
+      .Close
+      .Name = "config.sqlite"
+      .Open
+        tbl = .Tables.Add("settings")
+        tbl.Fields.Add("name", db.String, 10)
+        tbl.Fields.Add("value", db.String, 10)
+        tbl.PrimaryKey = ["name"]
+        tbl.Update
+      .Exec("INSERT INTO settings (name, value) VALUES(\"bedsizeX\",\"235\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"bedsizeY\",\"240\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"margin\",\"30\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"home\",\"G28\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"rapidmove\",\"G0\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"rapidplane\",\"10\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"setbedtemp\",\"M140\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"bedtempprefix\",\"S\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"bedtemp\",\"60\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"shim\",\"0.2\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"port\",\"/dev/ttyUSB0\")")
+      .Close
+    End With
+
+  Endif
+  
+  'Open configuration database
+  With db1
+    .Type = "sqlite"
+    .Host = User.Home & "/.config/leveler"
+    .Name = "config.sqlite"
+    .Open
+  End With
+  
+  'Read settings
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"bedsizeX\"")
+  rs.MoveFirst
+  bedsizeX = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"bedsizeY\"")
+  rs.MoveFirst
+  bedsizeY = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"margin\"")
+  rs.MoveFirst
+  posmargin = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"home\"")
+  rs.MoveFirst
+  home = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"rapidmove\"")
+  rs.MoveFirst
+  rapidmove = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"rapidplane\"")
+  rs.MoveFirst
+  rapidplane = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"setbedtemp\"")
+  rs.MoveFirst
+  setbedtemp = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"bedtempprefix\"")
+  rs.MoveFirst
+  bedtempprefix = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"bedtemp\"")
+  rs.MoveFirst
+  bedtemp = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"shim\"")
+  rs.MoveFirst
+  shim = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"port\"")
+  rs.MoveFirst
+  port = rs!value
+  db1.Close
+  
+  SerialPort3D.PortName = port
+  SerialPort3D.Open()
+ 
+End
+
+Public Sub Form_Close()
+ 
+  'Turn off heated bed prior to exiting program
+  SendSerialData(setbedtemp & bedtempprefix & "0.0", True)
+  SerialPort3D.Close()
+ 
+End
+
+Public Sub Button6_Click()
+
+  'Home Printer
+  SendSerialData(home, True)
+  Button1.Enabled = True
+  Button2.Enabled = True
+  Button3.Enabled = True
+  Button4.Enabled = True
+  ToggleButton1.Enabled = True
+
+End
+
+Public Sub Button1_Click()
+
+  'Move to -X,+Y position
+  SendSerialData(rapidmove & "Z" & rapidplane, True)
+  SendSerialData(rapidmove & "X" & posmargin & "Y" & (bedsizeY - posmargin), True)
+  SendSerialData(rapidmove & "Z" & shim, True)
+
+End
+
+Public Sub Button2_Click()
+
+  'Move to +X,+Y position
+  SendSerialData(rapidmove & "Z" & rapidplane, True)
+  SendSerialData(rapidmove & "X" & (bedsizeX - posmargin) & "Y" & (bedsizeY - posmargin), True)
+  SendSerialData(rapidmove & "Z" & shim, True)
+
+End
+
+Public Sub Button3_Click()
+
+  'Move to -X,-Y position
+  SendSerialData(rapidmove & "Z" & rapidplane, True)
+  SendSerialData(rapidmove & "X" & posmargin & "Y" & posmargin, True)
+  SendSerialData(rapidmove & "Z" & shim, True)
+
+End
+
+Public Sub Button4_Click()
+
+  'Move to +X,-Y position
+  SendSerialData(rapidmove & "Z" & rapidplane, True)
+  SendSerialData(rapidmove & "X" & (bedsizeX - posmargin) & "Y" & posmargin, True)
+  SendSerialData(rapidmove & "Z" & shim, True)
+
+End
+
+Public Sub Button5_Click()
+
+  'Turn on heated bed
+  SendSerialData(setbedtemp & bedtempprefix & bedtemp, True)
+
+End
+
+Public Sub Button7_Click()
+
+  'Move to centre of the bed
+  SendSerialData(rapidmove & "Z" & rapidplane, True)
+  SendSerialData(rapidmove & "X" & (bedsizeX / 2) & "Y" & (bedsizeY / 2), True)
+  SendSerialData(rapidmove & "Z" & shim, True)
+
+End
+
+Public Sub TextArea1_Change()
+
+  TextArea1.Pos = Len(TextArea1.Text)
+
+End
+
+Public Sub ToggleButton1_Click()
+
+  If ToggleButton1.Value == True Then
+    'Turn on heated bed
+    SendSerialData(setbedtemp & bedtempprefix & bedtemp, True)
+    ToggleButton1.Text = "Bed On"
+  Else
+    'Turn off heated bed
+    SendSerialData(setbedtemp & bedtempprefix & "0.0", True)
+    ToggleButton1.Text = "Bed Off"
+  Endif
+
+End
