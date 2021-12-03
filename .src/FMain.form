@@ -48,6 +48,7 @@
   }
   { Button7 Button
     MoveScaled(18,9,9,8)
+    Enabled = False
     Text = ("Centre")
   }
 }
