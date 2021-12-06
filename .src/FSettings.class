@@ -1,0 +1,117 @@
+' Gambas class file
+
+Private db1 As New Connection
+
+Public Sub Run() As Boolean
+
+  Return Not Me.ShowModal()
+
+End
+
+Public Sub btOK_Click()
+
+  Dim rs As Result
+
+  'Set settings
+  With FMain
+    .iBedSizeX = sbBedWidth.Value 
+    .iBedSizeY = sbBedDepth.Value
+    .iMargin = sbMargin.Value
+    .iRapidPlane = sbRapidPlane.Value
+    .sgShim = sbShim.Value
+    .sgBedTemp = sbBedTemperature.Value
+    .sPort = tbPort.Text
+    .iBaud = Val(cbBaud.Text)
+    .iDataBits = Val(cbDataBits.Text)
+    .iStopBits = Val(cbStopBits.Text)
+    .sParity = cbParity.Text
+    .sFlowControl = cbFlowControl.Text
+    .sInitialization = tbInitialization.Text
+    .sHome = tbHome.Text
+    .sRapidMove = tbRapid.Text
+    .sSetBedTemp = tbSetBedTemp.Text
+    .sBedTempPrefix = tbBedTempPrefix.Text
+
+    'TODO: save settings
+    db1.Type = "sqlite"
+    db1.Host = User.Home & "/.config/leveler"
+    db1.Name = "config.sqlite"
+    db1.Open
+    rs = db1.Exec("UPDATE settings SET value=\"" & .iBedSizeX & "\" WHERE name=\"BedSizeX\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .iBedSizeY & "\" WHERE name=\"BedSizeY\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .iMargin & "\" WHERE name=\"Margin\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sHome & "\" WHERE name=\"Home\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sInitialization & "\" WHERE name=\"Init\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sRapidMove & "\" WHERE name=\"RapidMove\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sRapidMove & "\" WHERE name=\"RapidMove\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .iRapidPlane & "\" WHERE name=\"RapidPlane\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sSetBedTemp & "\" WHERE name=\"SetBedTemp\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sBedTempPrefix & "\" WHERE name=\"BedTempPrefix\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sgBedTemp & "\" WHERE name=\"BedTemp\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sgShim & "\" WHERE name=\"Shim\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sPort & "\" WHERE name=\"Port\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .iBaud & "\" WHERE name=\"Baud\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .iDataBits & "\" WHERE name=\"DataBits\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .iStopBits & "\" WHERE name=\"StopBits\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sParity & "\" WHERE name=\"Parity\"")
+    rs = db1.Exec("UPDATE settings SET value=\"" & .sFlowControl & "\" WHERE name=\"FlowControl\"")
+    db1.Close
+  End With
+
+  Me.Close
+
+End
+
+Public Sub btCancel_Click()
+
+  Me.Close
+
+End
+
+Public Sub Form_Open()
+
+  Dim sBaudRates As New String[7]
+  Dim sDataBits As New String[2]
+  Dim sStopBits As New String[3]
+  Dim sParity As New String[3]
+  Dim sFlowControls As New String[4]
+
+  'Fill in Combo Boxes
+  sBaudRates = ["1200", "2400", "4800", "9600", "28800", "57600", "115200"]
+  cbBaud.List = sBaudRates
+
+  sDataBits = ["7", "8"]
+  cbDataBits.List = sDataBits
+  
+  sStopBits = ["1", "2", "3"]
+  cbStopBits.List = sStopBits
+  
+  sParity = ["None", "Even", "Odd"]
+  cbParity.List = sParity
+
+  sFlowControls = ["None", "Hardware", "Software", "Both"]
+  cbFlowControl.List = sFlowControls
+
+
+  'Set the forms control values.
+  With FMain
+    sbBedWidth.Value = .iBedSizeX
+    sbBedDepth.Value = .iBedSizeY
+    sbMargin.Value = .iMargin
+    sbRapidPlane.Value = .iRapidPlane
+    sbShim.Value = .sgShim
+    sbBedTemperature.Value = .sgBedTemp
+    tbPort.Text = .sPort
+    cbBaud.Text = .iBaud
+    cbDataBits.Text = .iDataBits
+    cbStopBits.Text = .iStopBits
+    cbParity.Text = .sParity
+    cbFlowControl.Text = .sFlowControl
+    tbInitialization.Text = FMain.sInitialization
+    tbHome.Text = FMain.sHome
+    tbRapid.Text = FMain.sRapidMove
+    tbSetBedTemp.Text = FMain.sSetBedTemp
+    tbBedTempPrefix.Text = FMain.sBedTempPrefix
+  End With
+
+End

@@ -1,18 +1,23 @@
 ' Gambas class file
 
-Public db1 As New Connection
-Public bedsizeX As Integer
-Public bedsizeY As Integer
-Public posmargin As Integer
-Public home As String
-Public rapidmove As String
-Public rapidplane As Integer
-Public setbedtemp As String
-Public bedtempprefix As String
-Public bedtemp As Single
-Public shim As Single
-Public port As String
-
+Private db1 As New Connection
+Public iBedSizeX As Integer 
+Public iBedSizeY As Integer 
+Public iMargin As Integer 
+Public sInitialization As String
+Public sHome As String 
+Public sRapidMove As String 
+Public iRapidPlane As Integer 
+Public sSetBedTemp As String 
+Public sBedTempPrefix As String 
+Public sgBedTemp As Single 
+Public sgShim As Single 
+Public sPort As String 
+Public iBaud As Integer
+Public iDataBits As Integer
+Public iStopBits As Integer
+Public sParity As String
+Public sFlowControl As String
 
 Public Sub SerialPort3D_Read()
 
@@ -70,17 +75,23 @@ Dim rs As Result
         tbl.Fields.Add("value", db.String, 10)
         tbl.PrimaryKey = ["name"]
         tbl.Update
-      .Exec("INSERT INTO settings (name, value) VALUES(\"bedsizeX\",\"235\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"bedsizeY\",\"240\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"margin\",\"30\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"home\",\"G28\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"rapidmove\",\"G0\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"rapidplane\",\"10\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"setbedtemp\",\"M140\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"bedtempprefix\",\"S\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"bedtemp\",\"60\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"shim\",\"0.2\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"port\",\"/dev/ttyUSB0\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"BedSizeX\",\"235\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"BedSizeY\",\"240\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"Margin\",\"30\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"Home\",\"G28\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"Init\",\"G21 G90 T0\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"RapidMove\",\"G0\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"RapidPlane\",\"10\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"SetBedTemp\",\"M140\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"BedTempPrefix\",\"S\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"BedTemp\",\"60\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"Shim\",\"0.2\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"Port\",\"/dev/ttyUSB0\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"Baud\",\"115200\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"DataBits\",\"8\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"StopBits\",\"1\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"Parity\",\"None\")")
+      .Exec("INSERT INTO settings (name, value) VALUES(\"FlowControl\",\"None\")")
       .Close
     End With
 
@@ -95,115 +106,166 @@ Dim rs As Result
   End With
   
   'Read settings
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"bedsizeX\"")
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedSizeX\"")
   rs.MoveFirst
-  bedsizeX = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"bedsizeY\"")
+  iBedSizeX = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedSizeY\"")
   rs.MoveFirst
-  bedsizeY = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"margin\"")
+  iBedSizeY = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Margin\"")
   rs.MoveFirst
-  posmargin = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"home\"")
+  iMargin = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Home\"")
   rs.MoveFirst
-  home = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"rapidmove\"")
+  sHome = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Init\"")
   rs.MoveFirst
-  rapidmove = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"rapidplane\"")
+  sInitialization = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"RapidMove\"")
   rs.MoveFirst
-  rapidplane = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"setbedtemp\"")
+  sRapidMove = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"RapidPlane\"")
   rs.MoveFirst
-  setbedtemp = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"bedtempprefix\"")
+  iRapidPlane = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"SetBedTemp\"")
   rs.MoveFirst
-  bedtempprefix = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"bedtemp\"")
+  sSetBedTemp = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedTempPrefix\"")
   rs.MoveFirst
-  bedtemp = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"shim\"")
+  sBedTempPrefix = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedTemp\"")
   rs.MoveFirst
-  shim = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"port\"")
+  sgBedTemp = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Shim\"")
   rs.MoveFirst
-  port = rs!value
+  sgShim = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Port\"")
+  rs.MoveFirst
+  sPort = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Baud\"")
+  rs.MoveFirst
+  iBaud = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"DataBits\"")
+  rs.MoveFirst
+  iDataBits = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"StopBits\"")
+  rs.MoveFirst
+  iStopBits = Val(rs!value)
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Parity\"")
+  rs.MoveFirst
+  sParity = rs!value
+  rs = db1.Exec("SELECT * FROM settings WHERE name=\"FlowControl\"")
+  rs.MoveFirst
+  sFlowControl = rs!value
   db1.Close
   
-  SerialPort3D.PortName = port
-  SerialPort3D.Open()
+  With SerialPort3D
+    .PortName = sPort
+    .Speed = iBaud
+    .DataBits = iDataBits
+    .StopBits = iStopBits
+    Select sParity
+      Case "None"
+        .Parity = SerialPort.None
+      Case "Odd"
+        .Parity = SerialPort.Odd
+      Case "Event"
+        .Parity = SerialPort.Even
+    End Select
+    Select sFlowControl
+      Case "None"
+        .FlowControl = SerialPort.None
+      Case "Hardware"
+        .FlowControl = SerialPort.Hardware
+      Case "Software"
+        .FlowControl = SerialPort.Software
+      Case "Both"
+        .FlowControl = SerialPort.Both
+    End Select
+  End With
+  
+  Try serialPort3D.Open()
+  If Error Then
+    Message.Warning("Printer not found.  Check settings/connection and try again.")
+    FSettings.Show
+   Else
+    btnHome.Enabled = True
+  Endif
  
 End
 
 Public Sub Form_Close()
  
   'Turn off heated bed prior to exiting program
-  SendSerialData(setbedtemp & bedtempprefix & "0.0", True)
+  SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
   SerialPort3D.Close()
  
 End
 
-Public Sub Button6_Click()
+Public Sub btnHome_Click()
 
-  'Home Printer
-  SendSerialData(home, True)
-  Button1.Enabled = True
-  Button2.Enabled = True
-  Button3.Enabled = True
-  Button4.Enabled = True
-  ToggleButton1.Enabled = True
+  'sHome Printer
+  SendSerialData(Chr$(13), True)    'First communication sometimes results in error.  Sending a blank line lets this fault occure on this non-critial line.
+  SendSerialData(sInitialization, True)
+  SendSerialData(sHome, True)
+  btLoc1.Enabled = True
+  btnLoc2.Enabled = True
+  btnLoc3.Enabled = True
+  btnLoc4.Enabled = True
+  btnLoc5.Enabled = True
+  tgbBed.Enabled = True
 
 End
 
-Public Sub Button1_Click()
+Public Sub btLoc1_Click()
 
   'Move to -X,+Y position
-  SendSerialData(rapidmove & "Z" & rapidplane, True)
-  SendSerialData(rapidmove & "X" & posmargin & "Y" & (bedsizeY - posmargin), True)
-  SendSerialData(rapidmove & "Z" & shim, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "X" & iMargin & "Y" & (iBedSizeY - iMargin), True)
+  SendSerialData(sRapidMove & "Z" & sgShim, True)
 
 End
 
-Public Sub Button2_Click()
+Public Sub btnLoc2_Click()
 
   'Move to +X,+Y position
-  SendSerialData(rapidmove & "Z" & rapidplane, True)
-  SendSerialData(rapidmove & "X" & (bedsizeX - posmargin) & "Y" & (bedsizeY - posmargin), True)
-  SendSerialData(rapidmove & "Z" & shim, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & (iBedSizeY - iMargin), True)
+  SendSerialData(sRapidMove & "Z" & sgShim, True)
 
 End
 
-Public Sub Button3_Click()
+Public Sub btnLoc3_Click()
 
   'Move to -X,-Y position
-  SendSerialData(rapidmove & "Z" & rapidplane, True)
-  SendSerialData(rapidmove & "X" & posmargin & "Y" & posmargin, True)
-  SendSerialData(rapidmove & "Z" & shim, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
+  SendSerialData(sRapidMove & "Z" & sgShim, True)
 
 End
 
-Public Sub Button4_Click()
+Public Sub btnLoc4_Click()
 
   'Move to +X,-Y position
-  SendSerialData(rapidmove & "Z" & rapidplane, True)
-  SendSerialData(rapidmove & "X" & (bedsizeX - posmargin) & "Y" & posmargin, True)
-  SendSerialData(rapidmove & "Z" & shim, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
+  SendSerialData(sRapidMove & "Z" & sgShim, True)
 
 End
 
-Public Sub Button5_Click()
+Public Sub btnSetting_Click()
 
-  'Turn on heated bed
-  SendSerialData(setbedtemp & bedtempprefix & bedtemp, True)
+  'Open Settings form
+  FSettings.Show
 
 End
 
-Public Sub Button7_Click()
+Public Sub btnLoc5_Click()
 
   'Move to centre of the bed
-  SendSerialData(rapidmove & "Z" & rapidplane, True)
-  SendSerialData(rapidmove & "X" & (bedsizeX / 2) & "Y" & (bedsizeY / 2), True)
-  SendSerialData(rapidmove & "Z" & shim, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
+  SendSerialData(sRapidMove & "Z" & sgShim, True)
 
 End
 
@@ -213,16 +275,17 @@ Public Sub TextArea1_Change()
 
 End
 
-Public Sub ToggleButton1_Click()
+Public Sub tgbBed_Click()
 
-  If ToggleButton1.Value == True Then
+  If tgbBed.Value == True Then
     'Turn on heated bed
-    SendSerialData(setbedtemp & bedtempprefix & bedtemp, True)
-    ToggleButton1.Text = "Bed On"
+    SendSerialData(sSetBedTemp & sBedTempPrefix & sgBedTemp, True)
+    tgbBed.Text = "Bed On"
   Else
     'Turn off heated bed
-    SendSerialData(setbedtemp & bedtempprefix & "0.0", True)
-    ToggleButton1.Text = "Bed Off"
+    SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
+    tgbBed.Text = "Bed Off"
   Endif
 
 End
+

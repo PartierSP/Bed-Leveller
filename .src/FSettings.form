@@ -1,0 +1,225 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,62,93)
+  Arrangement = Arrange.Row
+  AutoResize = True
+  Spacing = True
+  Margin = True
+  { Frame1 Frame
+    MoveScaled(1,2,55,29)
+    Expand = True
+    Arrangement = Arrange.Horizontal
+    Spacing = True
+    Padding = 10
+    Text = ("Positional Settings")
+    { VBox1 VBox
+      MoveScaled(5,2,20,24)
+      Expand = True
+      { Label1 Label
+        MoveScaled(4,0,14,4)
+        Text = ("Bed Width (X)")
+        Alignment = Align.Right
+      }
+      { Label2 Label
+        MoveScaled(3,5,14,4)
+        Text = ("Bed Depth (Y)")
+        Alignment = Align.Right
+      }
+      { Label3 Label
+        MoveScaled(3,9,14,4)
+        Text = ("Margin")
+        Alignment = Align.Right
+      }
+      { Label11 Label
+        MoveScaled(4,13,14,4)
+        Text = ("Rapid Plain")
+        Alignment = Align.Right
+      }
+      { Label12 Label
+        MoveScaled(4,17,14,4)
+        Text = ("Shim Thickness")
+        Alignment = Align.Right
+      }
+      { Label13 Label
+        MoveScaled(2,20,16,4)
+        Text = ("Bed Temperature")
+        Alignment = Align.Right
+      }
+    }
+    { VBox2 VBox
+      MoveScaled(27,2,24,24)
+      Expand = True
+      { sbBedWidth SpinBox
+        MoveScaled(2,2,19,4)
+        MaxValue = 1000
+        Step = 5
+      }
+      { sbBedDepth SpinBox
+        MoveScaled(2,7,19,4)
+        MaxValue = 1000
+        Step = 5
+      }
+      { sbMargin SpinBox
+        MoveScaled(2,11,19,4)
+      }
+      { sbRapidPlane SpinBox
+        MoveScaled(2,15,19,4)
+        Step = 5
+      }
+      { sbShim SpinBar
+        MoveScaled(2,19,19,4)
+        MaxValue = 10
+      }
+      { sbBedTemperature SpinBox
+        MoveScaled(2,23,19,4)
+        MinValue = 15
+        MaxValue = 80
+        Value = 15
+      }
+    }
+  }
+  { Frame2 Frame
+    MoveScaled(2,27,52,29)
+    Expand = True
+    Arrangement = Arrange.Horizontal
+    Spacing = True
+    Padding = 10
+    Text = ("Communication (Requires Restart)")
+    { VBox3 VBox
+      MoveScaled(4,2,22,25)
+      Expand = True
+      { Label4 Label
+        MoveScaled(5,1,14,4)
+        Text = ("Port")
+        Alignment = Align.Right
+      }
+      { Label5 Label
+        MoveScaled(6,5,14,4)
+        Text = ("Baud")
+        Alignment = Align.Right
+      }
+      { Label6 Label
+        MoveScaled(6,8,14,4)
+        Text = ("Data bits")
+        Alignment = Align.Right
+      }
+      { Label7 Label
+        MoveScaled(6,12,14,4)
+        Text = ("Stop bits")
+        Alignment = Align.Right
+      }
+      { Label9 Label
+        MoveScaled(6,15,14,4)
+        Text = ("Parity")
+        Alignment = Align.Right
+      }
+      { Label8 Label
+        MoveScaled(6,19,14,4)
+        Text = ("Flowcontrol")
+        Alignment = Align.Right
+      }
+    }
+    { VBox4 VBox
+      MoveScaled(27,2,22,30)
+      Expand = True
+      { tbPort TextBox
+        MoveScaled(2,2,18,4)
+      }
+      { cbBaud ComboBox
+        MoveScaled(2,7,18,4)
+        ReadOnly = True
+      }
+      { cbDataBits ComboBox
+        MoveScaled(2,12,18,4)
+        ReadOnly = True
+      }
+      { cbStopBits ComboBox
+        MoveScaled(2,17,18,4)
+        ReadOnly = True
+      }
+      { cbParity ComboBox
+        MoveScaled(2,22,18,4)
+        ReadOnly = True
+      }
+      { cbFlowControl ComboBox
+        MoveScaled(2,26,18,4)
+        ReadOnly = True
+      }
+    }
+  }
+  { Frame3 Frame
+    MoveScaled(2,58,54,24)
+    Expand = True
+    Arrangement = Arrange.Horizontal
+    Spacing = True
+    Padding = 10
+    Text = ("Posting")
+    { VBox5 VBox
+      MoveScaled(4,1,22,22)
+      Expand = True
+      { Label17 Label
+        MoveScaled(6,1,14,4)
+        Text = ("Initialization")
+        Alignment = Align.Right
+      }
+      { Label10 Label
+        MoveScaled(3,5,14,4)
+        Text = ("Home")
+        Alignment = Align.Right
+      }
+      { Label14 Label
+        MoveScaled(1,9,19,4)
+        Text = ("Rapid Movement")
+        Alignment = Align.Right
+      }
+      { Label16 Label
+        MoveScaled(1,13,19,4)
+        Text = ("Set Bed Temp.")
+        Alignment = Align.Right
+      }
+      { Label15 Label
+        MoveScaled(1,18,19,4)
+        Text = ("Bed Temp. Prefix")
+        Alignment = Align.Right
+      }
+    }
+    { VBox6 VBox
+      MoveScaled(28,1,23,22)
+      Expand = True
+      { tbInitialization TextBox
+        MoveScaled(2,1,19,4)
+      }
+      { tbHome TextBox
+        MoveScaled(2,5,19,4)
+      }
+      { tbRapid TextBox
+        MoveScaled(2,9,19,4)
+      }
+      { tbSetBedTemp TextBox
+        MoveScaled(2,13,19,4)
+      }
+      { tbBedTempPrefix TextBox
+        MoveScaled(2,17,19,4)
+      }
+    }
+  }
+  { Panel1 Panel
+    MoveScaled(3,85,53,5)
+    Expand = True
+    Arrangement = Arrange.Horizontal
+    Spacing = True
+    Padding = 10
+    { Spring1 Spring
+      MoveScaled(1,1,24,3)
+    }
+    { btCancel Button
+      MoveScaled(26,0,12,4)
+      Text = Shortcut(("Cancel"), "C")
+    }
+    { btOK Button
+      MoveScaled(39,0,12,4)
+      Text = Shortcut(("OK"), "O")
+    }
+  }
+}
