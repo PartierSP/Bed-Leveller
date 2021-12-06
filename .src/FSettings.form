@@ -2,6 +2,8 @@
 
 { Form Form
   MoveScaled(0,0,62,93)
+  Text = ("Bed Leveller Settings")
+  Icon = Picture["icon.png"]
   Arrangement = Arrange.Row
   AutoResize = True
   Spacing = True

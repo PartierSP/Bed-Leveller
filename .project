@@ -1,7 +1,8 @@
 # Gambas Project File 3.0
-Title=Beb Leveler
+Title=Beb Leveller
 Startup=FMain
-Version=0.0.1
+Icon=icon.png
+Version=1.0.0
 Component=gb.image
 Component=gb.gui
 Component=gb.form

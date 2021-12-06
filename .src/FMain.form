@@ -2,13 +2,15 @@
 
 { Form Form
   MoveScaled(0,0,45,55)
+  Text = ("Bed Leveller")
+  Icon = Picture["icon.png"]
   Resizable = False
   { btnHome Button
     MoveScaled(17,28,10,7)
     Text = Shortcut(("Home"), "H")
   }
   { SerialPort3D #SerialPort
-    #MoveScaled(-2,41)
+    #MoveScaled(26,28)
     FlowControl = SerialPort.None
     PortName = "/dev/ttyUSB0"
     Speed = 115200

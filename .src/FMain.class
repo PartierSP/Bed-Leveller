@@ -53,17 +53,17 @@ Dim tbl As Table
 Dim sql As String
 Dim rs As Result
 
-  'Check if ~/.config/leveler/config.sqlite exists
-  If Exist(User.Home & "/.config/leveler/config.sqlite") == False Then
-    'Config is missing check if ~/.config/leveler directory exists
-    If Exist(User.Home & "/.config/leveler") == False Then
+  'Check if ~/.config/leveller/config.sqlite exists
+  If Exist(User.Home & "/.config/leveller/config.sqlite") == False Then
+    'Config is missing check if ~/.config/leveller directory exists
+    If Exist(User.Home & "/.config/leveller") == False Then
       'Config directory missing, create it
-      Mkdir User.Home & "/.config/leveler"
+      Mkdir User.Home & "/.config/leveller"
     Endif
     'Create config file and populate it standard values
     With db1
       .Type = "sqlite"
-      .Host = User.Home & "/.config/leveler"
+      .Host = User.Home & "/.config/leveller"
       .name = ""
       .Open
       .Databases.Add("config.sqlite")
@@ -100,7 +100,7 @@ Dim rs As Result
   'Open configuration database
   With db1
     .Type = "sqlite"
-    .Host = User.Home & "/.config/leveler"
+    .Host = User.Home & "/.config/leveller"
     .Name = "config.sqlite"
     .Open
   End With
