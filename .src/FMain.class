@@ -50,7 +50,6 @@ End
 
 Public Sub Form_Open()
 Dim tbl As Table
-Dim sql As String
 Dim rs As Result
 
   'Check if ~/.config/leveller/config.sqlite exists
