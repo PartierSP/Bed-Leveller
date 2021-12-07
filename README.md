@@ -1,6 +1,6 @@
-#Bed Leveller
+# Bed Leveller
 
-##The 3D Printer Assistant
+## The 3D Printer Assistant
 
 This project is designed assist the user with manually tramming (levelling) their 3D printer's bed with it's print head.
 
