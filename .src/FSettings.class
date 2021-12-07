@@ -34,7 +34,7 @@ Public Sub btOK_Click()
 
     'TODO: save settings
     db1.Type = "sqlite"
-    db1.Host = User.Home & "/.config/leveler"
+    db1.Host = User.Home & "/.config/leveller"
     db1.Name = "config.sqlite"
     db1.Open
     rs = db1.Exec("UPDATE settings SET value=\"" & .iBedSizeX & "\" WHERE name=\"BedSizeX\"")
