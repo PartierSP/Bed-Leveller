@@ -14,7 +14,7 @@ Public Sub btOK_Click()
 
   'Set settings
   With FMain
-    .iBedSizeX = sbBedWidth.Value 
+    .iBedSizeX = sbBedWidth.Value
     .iBedSizeY = sbBedDepth.Value
     .iMargin = sbMargin.Value
     .iRapidPlane = sbRapidPlane.Value
@@ -82,16 +82,15 @@ Public Sub Form_Open()
 
   sDataBits = ["7", "8"]
   cbDataBits.List = sDataBits
-  
+
   sStopBits = ["1", "2", "3"]
   cbStopBits.List = sStopBits
-  
+
   sParity = ["None", "Even", "Odd"]
   cbParity.List = sParity
 
   sFlowControls = ["None", "Hardware", "Software", "Both"]
   cbFlowControl.List = sFlowControls
-
 
   'Set the forms control values.
   With FMain

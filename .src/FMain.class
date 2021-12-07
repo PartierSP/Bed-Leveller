@@ -1,18 +1,18 @@
 ' Gambas class file
 
 Private db1 As New Connection
-Public iBedSizeX As Integer 
-Public iBedSizeY As Integer 
-Public iMargin As Integer 
+Public iBedSizeX As Integer
+Public iBedSizeY As Integer
+Public iMargin As Integer
 Public sInitialization As String
-Public sHome As String 
-Public sRapidMove As String 
-Public iRapidPlane As Integer 
-Public sSetBedTemp As String 
-Public sBedTempPrefix As String 
-Public sgBedTemp As Single 
-Public sgShim As Single 
-Public sPort As String 
+Public sHome As String
+Public sRapidMove As String
+Public iRapidPlane As Integer
+Public sSetBedTemp As String
+Public sBedTempPrefix As String
+Public sgBedTemp As Single
+Public sgShim As Single
+Public sPort As String
 Public iBaud As Integer
 Public iDataBits As Integer
 Public iStopBits As Integer
@@ -22,7 +22,7 @@ Public sFlowControl As String
 Public Sub SerialPort3D_Read()
 
   Dim strReceived As String
-   
+
   Try Read #SerialPort3D, strReceived, Lof(SerialPort3D)
   If Error Then
     strReceived = ""
@@ -30,8 +30,8 @@ Public Sub SerialPort3D_Read()
     TextArea1.Text = TextArea1.Text & strReceived
   Endif
 
-  Catch
-    Me.Text = Error.Text
+Catch
+  Me.Text = Error.Text
 
 End
 
@@ -44,13 +44,15 @@ Public Sub SendSerialData(strMessage As String, blnLF As Boolean)
   Write #SerialPort3D, strMessage
   SerialPort3D.Send()
 
-  Catch
-    Me.Text = Error.Text
+Catch
+  Me.Text = Error.Text
+
 End
 
 Public Sub Form_Open()
-Dim tbl As Table
-Dim rs As Result
+
+  Dim tbl As Table
+  Dim rs As Result
 
   'Check if ~/.config/leveller/config.sqlite exists
   If Exist(User.Home & "/.config/leveller/config.sqlite") == False Then
@@ -69,11 +71,11 @@ Dim rs As Result
       .Close
       .Name = "config.sqlite"
       .Open
-        tbl = .Tables.Add("settings")
-        tbl.Fields.Add("name", db.String, 10)
-        tbl.Fields.Add("value", db.String, 10)
-        tbl.PrimaryKey = ["name"]
-        tbl.Update
+      tbl = .Tables.Add("settings")
+      tbl.Fields.Add("name", db.String, 10)
+      tbl.Fields.Add("value", db.String, 10)
+      tbl.PrimaryKey = ["name"]
+      tbl.Update
       .Exec("INSERT INTO settings (name, value) VALUES(\"BedSizeX\",\"235\")")
       .Exec("INSERT INTO settings (name, value) VALUES(\"BedSizeY\",\"240\")")
       .Exec("INSERT INTO settings (name, value) VALUES(\"Margin\",\"30\")")
@@ -95,7 +97,7 @@ Dim rs As Result
     End With
 
   Endif
-  
+
   'Open configuration database
   With db1
     .Type = "sqlite"
@@ -103,7 +105,7 @@ Dim rs As Result
     .Name = "config.sqlite"
     .Open
   End With
-  
+
   'Read settings
   rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedSizeX\"")
   rs.MoveFirst
@@ -157,7 +159,7 @@ Dim rs As Result
   rs.MoveFirst
   sFlowControl = rs!value
   db1.Close
-  
+
   With SerialPort3D
     .PortName = sPort
     .Speed = iBaud
@@ -182,23 +184,23 @@ Dim rs As Result
         .FlowControl = SerialPort.Both
     End Select
   End With
-  
+
   Try serialPort3D.Open()
   If Error Then
     Message.Warning("Printer not found.  Check settings/connection and try again.")
     FSettings.Show
-   Else
+  Else
     btnHome.Enabled = True
   Endif
- 
+
 End
 
 Public Sub Form_Close()
- 
+
   'Turn off heated bed prior to exiting program
   SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
   SerialPort3D.Close()
- 
+
 End
 
 Public Sub btnHome_Click()
@@ -287,4 +289,3 @@ Public Sub tgbBed_Click()
   Endif
 
 End
-
