@@ -16,7 +16,7 @@ Public Sub btOK_Click()
     .iBedSizeY = sbBedDepth.Value
     .iMargin = sbMargin.Value
     .iRapidPlane = sbRapidPlane.Value
-'    .sgShim = sbShim.Value
+    .fShim = sbShim.Value
     .iBedTemp = sbBedTemperature.Value
     .sPort = tbPort.Text
     .iBaud = Val(cbBaud.Text)
@@ -44,7 +44,7 @@ Public Sub btOK_Click()
   
     hSettings["Locations/Margin"] = .iMargin
     hSettings["Locations/RapidPlane"] = .iRapidPlane
-    hSettings["Locations/Shim"] = .sgShim
+    hSettings["Locations/Shim"] = .fShim
     hSettings["Locations/BedTemp"] = .iBedTemp
   
     hSettings["Communications/Port"] = .sPort
@@ -100,7 +100,7 @@ Public Sub Form_Open()
     sbBedDepth.Value = .iBedSizeY
     sbMargin.Value = .iMargin
     sbRapidPlane.Value = .iRapidPlane
-    sbShim.Value = .sgShim
+    sbShim.Value = .fShim
     sbBedTemperature.Value = .iBedTemp
     tbPort.Text = .sPort
     cbBaud.Text = .iBaud

@@ -10,7 +10,7 @@ Public iRapidPlane As Integer
 Public sSetBedTemp As String
 Public sBedTempPrefix As String
 Public iBedTemp As Integer
-Public sgShim As Single
+Public fShim As Float
 Public sPort As String
 Public iBaud As Integer
 Public iDataBits As Integer
@@ -59,25 +59,25 @@ Public Sub Form_Open()
 
   iBedSizeX = hSettings["BedSize/BedSizeX", 235]
   iBedSizeY = hSettings["BedSize/BedSizeY", 240]
-
+  ' 
   sInitialization = hSettings["Post/Init", "G21 G90 T0"]
   sHome = hSettings["Post/Home", "G28"]
   sRapidMove = hSettings["Post/RapidMove", "G0"]
   sSetBedTemp = hSettings["Post/SetBedTemp", "M140"]
   sBedTempPrefix = hSettings["Post/BedTempPrefix", "S"]
-
+  
   iMargin = hSettings["Locations/Margin", 30]
   iRapidPlane = hSettings["Locations/RapidPlane", 10]
-  sgShim = hSettings["Locations/Shim", 0.2]
+  fShim = hSettings["Locations/Shim", 0.2]
   iBedTemp = hSettings["Locations/BedTemp", 60]
-
+  
   sPort = hSettings["Communications/Port", "/dev/ttyUSB0"]
   iBaud = hSettings["Communications/Baud", 115200]
   iDataBits = hSettings["Communications/DataBits", 8]
   iStopBits = hSettings["Communications/StopBits", 1]
   sParity = hSettings["Communications/Parity", "None"]
   sFlowControl = hSettings["Communications/FlowControl", "None"]
-  
+ 'hSettings.Save
   hSettings.Read(Me, "MainForm")
   hSettings.Read(vsMain, "MainFormVSMain")
 
@@ -105,7 +105,7 @@ Public Sub Form_Open()
         .FlowControl = SerialPort.Both
     End Select
   End With
-
+  
   Try serialPort3D.Open()
   If Error Then
     Message.Warning("Printer not found.  Check settings/connection and try again.")
@@ -122,6 +122,27 @@ Public Sub Form_Close()
 
   'Save Window size/location settings
   hSettings = New Settings(sConfigLoc &/ sConfigName)
+  hSettings["BedSize/BedSizeX"] = iBedSizeX
+  hSettings["BedSize/BedSizeY"] = iBedSizeY
+
+  hSettings["Post/Init"] = sInitialization
+  hSettings["Post/Home"] = sHome
+  hSettings["Post/RapidMove"] = sRapidMove
+  hSettings["Post/SetBedTemp"] = sSetBedTemp
+  hSettings["Post/BedTempPrefix"] = sBedTempPrefix
+
+  hSettings["Locations/Margin"] = iMargin
+  hSettings["Locations/RapidPlane"] = iRapidPlane
+  hSettings["Locations/Shim"] = fShim
+  hSettings["Locations/BedTemp"] = iBedTemp
+
+   hSettings["Communications/Port"] = sPort
+   hSettings["Communications/Baud"] = iBaud
+   hSettings["Communications/DataBits"] = iDataBits
+   hSettings["Communications/StopBits"] = iStopBits
+   hSettings["Communications/Parity"] = sParity
+   hSettings["Communications/FlowControl"] = sFlowControl
+
   hSettings.Write(Me, "MainForm")
   hSettings.Write(vsMain, "MainFormVSMain")
 
@@ -151,7 +172,7 @@ Public Sub btLoc1_Click()
   'Move to -X,+Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & (iBedSizeY - iMargin), True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
 
 End
 
@@ -160,7 +181,7 @@ Public Sub btnLoc2_Click()
   'Move to +X,+Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & (iBedSizeY - iMargin), True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
 
 End
 
@@ -169,7 +190,7 @@ Public Sub btnLoc3_Click()
   'Move to -X,-Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
 
 End
 
@@ -178,7 +199,7 @@ Public Sub btnLoc4_Click()
   'Move to +X,-Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
 
 End
 
@@ -194,7 +215,7 @@ Public Sub btnLoc5_Click()
   'Move to centre of the bed
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
 
 End
 
