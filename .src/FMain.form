@@ -7,7 +7,7 @@
   Arrangement = Arrange.Fill
   AutoResize = True
   Padding = 5
-  { VSplit1 VSplit
+  { vsMain VSplit
     MoveScaled(0,1,53,59)
     Expand = True
     Spacing = True

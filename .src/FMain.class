@@ -1,6 +1,5 @@
 ' Gambas class file
 
-Private db1 As New Connection
 Public iBedSizeX As Integer
 Public iBedSizeY As Integer
 Public iMargin As Integer
@@ -10,7 +9,7 @@ Public sRapidMove As String
 Public iRapidPlane As Integer
 Public sSetBedTemp As String
 Public sBedTempPrefix As String
-Public sgBedTemp As Single
+Public iBedTemp As Integer
 Public sgShim As Single
 Public sPort As String
 Public iBaud As Integer
@@ -18,6 +17,8 @@ Public iDataBits As Integer
 Public iStopBits As Integer
 Public sParity As String
 Public sFlowControl As String
+Public sConfigLoc As String = User.Home &/ ".config/leveller"
+Public sConfigName As String = "config.conf"
 
 Public Sub SerialPort3D_Read()
 
@@ -51,114 +52,34 @@ End
 
 Public Sub Form_Open()
 
-  Dim tbl As Table
-  Dim rs As Result
+  Dim hSettings As Settings
 
-  'Check if ~/.config/leveller/config.sqlite exists
-  If Exist(User.Home & "/.config/leveller/config.sqlite") == False Then
-    'Config is missing check if ~/.config/leveller directory exists
-    If Exist(User.Home & "/.config/leveller") == False Then
-      'Config directory missing, create it
-      Mkdir User.Home & "/.config/leveller"
-    Endif
-    'Create config file and populate it standard values
-    With db1
-      .Type = "sqlite"
-      .Host = User.Home & "/.config/leveller"
-      .name = ""
-      .Open
-      .Databases.Add("config.sqlite")
-      .Close
-      .Name = "config.sqlite"
-      .Open
-      tbl = .Tables.Add("settings")
-      tbl.Fields.Add("name", db.String, 10)
-      tbl.Fields.Add("value", db.String, 10)
-      tbl.PrimaryKey = ["name"]
-      tbl.Update
-      .Exec("INSERT INTO settings (name, value) VALUES(\"BedSizeX\",\"235\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"BedSizeY\",\"240\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Margin\",\"30\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Home\",\"G28\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Init\",\"G21 G90 T0\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"RapidMove\",\"G0\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"RapidPlane\",\"10\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"SetBedTemp\",\"M140\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"BedTempPrefix\",\"S\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"BedTemp\",\"60\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Shim\",\"0.2\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Port\",\"/dev/ttyUSB0\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Baud\",\"115200\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"DataBits\",\"8\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"StopBits\",\"1\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Parity\",\"None\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"FlowControl\",\"None\")")
-      .Close
-    End With
+  'Load settings
+  hSettings = New Settings(sConfigLoc &/ sConfigName)
 
-  Endif
+  iBedSizeX = hSettings["BedSize/BedSizeX", 235]
+  iBedSizeY = hSettings["BedSize/BedSizeY", 240]
 
-  'Open configuration database
-  With db1
-    .Type = "sqlite"
-    .Host = User.Home & "/.config/leveller"
-    .Name = "config.sqlite"
-    .Open
-  End With
+  sInitialization = hSettings["Post/Init", "G21 G90 T0"]
+  sHome = hSettings["Post/Home", "G28"]
+  sRapidMove = hSettings["Post/RapidMove", "G0"]
+  sSetBedTemp = hSettings["Post/SetBedTemp", "M140"]
+  sBedTempPrefix = hSettings["Post/BedTempPrefix", "S"]
 
-  'Read settings
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedSizeX\"")
-  rs.MoveFirst
-  iBedSizeX = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedSizeY\"")
-  rs.MoveFirst
-  iBedSizeY = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Margin\"")
-  rs.MoveFirst
-  iMargin = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Home\"")
-  rs.MoveFirst
-  sHome = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Init\"")
-  rs.MoveFirst
-  sInitialization = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"RapidMove\"")
-  rs.MoveFirst
-  sRapidMove = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"RapidPlane\"")
-  rs.MoveFirst
-  iRapidPlane = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"SetBedTemp\"")
-  rs.MoveFirst
-  sSetBedTemp = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedTempPrefix\"")
-  rs.MoveFirst
-  sBedTempPrefix = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedTemp\"")
-  rs.MoveFirst
-  sgBedTemp = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Shim\"")
-  rs.MoveFirst
-  sgShim = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Port\"")
-  rs.MoveFirst
-  sPort = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Baud\"")
-  rs.MoveFirst
-  iBaud = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"DataBits\"")
-  rs.MoveFirst
-  iDataBits = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"StopBits\"")
-  rs.MoveFirst
-  iStopBits = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Parity\"")
-  rs.MoveFirst
-  sParity = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"FlowControl\"")
-  rs.MoveFirst
-  sFlowControl = rs!value
-  db1.Close
+  iMargin = hSettings["Locations/Margin", 30]
+  iRapidPlane = hSettings["Locations/RapidPlane", 10]
+  sgShim = hSettings["Locations/Shim", 0.2]
+  iBedTemp = hSettings["Locations/BedTemp", 60]
+
+  sPort = hSettings["Communications/Port", "/dev/ttyUSB0"]
+  iBaud = hSettings["Communications/Baud", 115200]
+  iDataBits = hSettings["Communications/DataBits", 8]
+  iStopBits = hSettings["Communications/StopBits", 1]
+  sParity = hSettings["Communications/Parity", "None"]
+  sFlowControl = hSettings["Communications/FlowControl", "None"]
+  
+  hSettings.Read(Me, "MainForm")
+  hSettings.Read(vsMain, "MainFormVSMain")
 
   With SerialPort3D
     .PortName = sPort
@@ -196,6 +117,13 @@ Public Sub Form_Open()
 End
 
 Public Sub Form_Close()
+
+  Dim hSettings As Settings
+
+  'Save Window size/location settings
+  hSettings = New Settings(sConfigLoc &/ sConfigName)
+  hSettings.Write(Me, "MainForm")
+  hSettings.Write(vsMain, "MainFormVSMain")
 
   'Turn off heated bed prior to exiting program
   SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
@@ -280,7 +208,7 @@ Public Sub tgbBed_Click()
 
   If tgbBed.Value == True Then
     'Turn on heated bed
-    SendSerialData(sSetBedTemp & sBedTempPrefix & sgBedTemp, True)
+    SendSerialData(sSetBedTemp & sBedTempPrefix & iBedTemp, True)
     tgbBed.Text = "Bed On"
   Else
     'Turn off heated bed
