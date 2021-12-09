@@ -1,7 +1,7 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,62,93)
+  MoveScaled(0,0,62,97)
   Text = ("Bed Leveller Settings")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Row
@@ -9,14 +9,14 @@
   Spacing = True
   Margin = True
   { Frame1 Frame
-    MoveScaled(1,2,55,29)
+    MoveScaled(1,2,57,32)
     Expand = True
     Arrangement = Arrange.Horizontal
     Spacing = True
     Padding = 10
     Text = ("Positional Settings")
     { VBox1 VBox
-      MoveScaled(5,2,20,24)
+      MoveScaled(5,2,20,29)
       Expand = True
       { Label1 Label
         MoveScaled(4,0,14,4)
@@ -48,9 +48,14 @@
         Text = ("Bed Temperature")
         Alignment = Align.Right
       }
+      { Label18 Label
+        MoveScaled(2,23,16,4)
+        Text = ("Hot-End Temp.")
+        Alignment = Align.Right
+      }
     }
     { VBox2 VBox
-      MoveScaled(27,2,24,24)
+      MoveScaled(27,2,24,33)
       Expand = True
       { sbBedWidth SpinBox
         MoveScaled(2,2,19,4)
@@ -79,10 +84,17 @@
         MaxValue = 80
         Value = 15
       }
+      { sbHETemperature SpinBox
+        MoveScaled(2,27,19,4)
+        MinValue = 50
+        MaxValue = 250
+        Step = 5
+        Value = 50
+      }
     }
   }
   { Frame2 Frame
-    MoveScaled(2,27,52,29)
+    MoveScaled(7,35,52,28)
     Expand = True
     Arrangement = Arrange.Horizontal
     Spacing = True
@@ -151,14 +163,14 @@
     }
   }
   { Frame3 Frame
-    MoveScaled(2,58,54,24)
+    MoveScaled(4,62,54,32)
     Expand = True
     Arrangement = Arrange.Horizontal
     Spacing = True
     Padding = 10
     Text = ("Posting")
     { VBox5 VBox
-      MoveScaled(4,1,22,22)
+      MoveScaled(4,1,22,30)
       Expand = True
       { Label17 Label
         MoveScaled(6,1,14,4)
@@ -185,9 +197,19 @@
         Text = ("Bed Temp. Prefix")
         Alignment = Align.Right
       }
+      { Label19 Label
+        MoveScaled(1,22,19,4)
+        Text = ("Set Hot-End Temp.")
+        Alignment = Align.Right
+      }
+      { Label20 Label
+        MoveScaled(1,26,19,4)
+        Text = ("H.E. Temp. Prefix")
+        Alignment = Align.Right
+      }
     }
     { VBox6 VBox
-      MoveScaled(28,1,23,22)
+      MoveScaled(28,1,23,30)
       Expand = True
       { tbInitialization TextBox
         MoveScaled(2,1,19,4)
@@ -204,10 +226,16 @@
       { tbBedTempPrefix TextBox
         MoveScaled(2,17,19,4)
       }
+      { tbSetHETemp TextBox
+        MoveScaled(2,21,19,4)
+      }
+      { tbHETempPrefix TextBox
+        MoveScaled(2,25,19,4)
+      }
     }
   }
   { Panel1 Panel
-    MoveScaled(3,85,53,5)
+    MoveScaled(3,91,53,5)
     Expand = True
     Arrangement = Arrange.Horizontal
     Spacing = True

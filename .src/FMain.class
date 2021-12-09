@@ -9,7 +9,10 @@ Public sRapidMove As String
 Public iRapidPlane As Integer
 Public sSetBedTemp As String
 Public sBedTempPrefix As String
+Public sSetHETemp As String
+Public sHETempPrefix As String
 Public iBedTemp As Integer
+Public iHETemp As Integer
 Public fShim As Float
 Public sPort As String
 Public iBaud As Integer
@@ -65,11 +68,14 @@ Public Sub Form_Open()
   sRapidMove = hSettings["Post/RapidMove", "G0"]
   sSetBedTemp = hSettings["Post/SetBedTemp", "M140"]
   sBedTempPrefix = hSettings["Post/BedTempPrefix", "S"]
+  sSetHETemp = hSettings["Post/SetHETemp", "M104"]
+  sHETempPrefix = hSettings["Post/HETempPrefix", "S"]
   
   iMargin = hSettings["Locations/Margin", 30]
   iRapidPlane = hSettings["Locations/RapidPlane", 10]
   fShim = hSettings["Locations/Shim", 0.2]
   iBedTemp = hSettings["Locations/BedTemp", 60]
+  iHETemp = hSettings["Locations/HETemp", 200]
   
   sPort = hSettings["Communications/Port", "/dev/ttyUSB0"]
   iBaud = hSettings["Communications/Baud", 115200]
@@ -130,11 +136,14 @@ Public Sub Form_Close()
   hSettings["Post/RapidMove"] = sRapidMove
   hSettings["Post/SetBedTemp"] = sSetBedTemp
   hSettings["Post/BedTempPrefix"] = sBedTempPrefix
+  hSettings["Post/SetHETemp"] = sSetHETemp
+  hSettings["Post/HETempPrefix"] = sHETempPrefix
 
   hSettings["Locations/Margin"] = iMargin
   hSettings["Locations/RapidPlane"] = iRapidPlane
   hSettings["Locations/Shim"] = fShim
   hSettings["Locations/BedTemp"] = iBedTemp
+  hSettings["Locations/HETemp"] = iHETemp
 
    hSettings["Communications/Port"] = sPort
    hSettings["Communications/Baud"] = iBaud
@@ -164,6 +173,7 @@ Public Sub btnHome_Click()
   btnLoc4.Enabled = True
   btnLoc5.Enabled = True
   tgbBed.Enabled = True
+  tgbHotEnd.Enabled = True
 
 End
 
@@ -230,11 +240,25 @@ Public Sub tgbBed_Click()
   If tgbBed.Value == True Then
     'Turn on heated bed
     SendSerialData(sSetBedTemp & sBedTempPrefix & iBedTemp, True)
-    tgbBed.Text = "Bed On"
+    tgbBed.Text = "&Bed On"
   Else
     'Turn off heated bed
     SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
-    tgbBed.Text = "Bed Off"
+    tgbBed.Text = "&Bed Off"
+  Endif
+
+End
+
+Public Sub tgbHotEnd_Click()
+
+  If tgbHotEnd.Value == True Then
+    'Turn on heated bed
+    SendSerialData(sSetHETemp & sHETempPrefix & iHETemp, True)
+    tgbHotEnd.Text = "Hot &End On"
+  Else
+    'Turn off heated bed
+    SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
+    tgbHotEnd.Text = "Hot &End Off"
   Endif
 
 End

@@ -2,7 +2,7 @@
 Title=Beb Leveller
 Startup=FMain
 Icon=icon.png
-Version=1.1.2
+Version=1.2.0
 Component=gb.image
 Component=gb.gui
 Component=gb.form

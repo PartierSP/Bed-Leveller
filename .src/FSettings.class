@@ -18,6 +18,7 @@ Public Sub btOK_Click()
     .iRapidPlane = sbRapidPlane.Value
     .fShim = sbShim.Value
     .iBedTemp = sbBedTemperature.Value
+    .iHETemp = sbHETemperature.Value
     .sPort = tbPort.Text
     .iBaud = Val(cbBaud.Text)
     .iDataBits = Val(cbDataBits.Text)
@@ -29,6 +30,8 @@ Public Sub btOK_Click()
     .sRapidMove = tbRapid.Text
     .sSetBedTemp = tbSetBedTemp.Text
     .sBedTempPrefix = tbBedTempPrefix.Text
+    .sSetHETemp = tbSetHETemp.Text
+    .sHETempPrefix = tbHETempPrefix.Text
 
     'Save settings to config
     hSettings = New Settings(.sConfigLoc &/ .sConfigName)
@@ -41,11 +44,14 @@ Public Sub btOK_Click()
     hSettings["Post/RapidMove"] = .sRapidMove
     hSettings["Post/SetBedTemp"] = .sSetBedTemp
     hSettings["Post/BedTempPrefix"] = .sBedTempPrefix
-  
+    hSettings["Post/SetHETemp"] = .sSetHETemp
+    hSettings["Post/HETempPrefix"] = .sHETempPrefix
+
     hSettings["Locations/Margin"] = .iMargin
     hSettings["Locations/RapidPlane"] = .iRapidPlane
     hSettings["Locations/Shim"] = .fShim
     hSettings["Locations/BedTemp"] = .iBedTemp
+    hSettings["Locations/HETemp"] = .iHETemp
   
     hSettings["Communications/Port"] = .sPort
     hSettings["Communications/Baud"] = .iBaud
@@ -102,6 +108,7 @@ Public Sub Form_Open()
     sbRapidPlane.Value = .iRapidPlane
     sbShim.Value = .fShim
     sbBedTemperature.Value = .iBedTemp
+    sbHETemperature.Value = .iHETemp
     tbPort.Text = .sPort
     cbBaud.Text = .iBaud
     cbDataBits.Text = .iDataBits
@@ -113,6 +120,8 @@ Public Sub Form_Open()
     tbRapid.Text = FMain.sRapidMove
     tbSetBedTemp.Text = FMain.sSetBedTemp
     tbBedTempPrefix.Text = FMain.sBedTempPrefix
+    tbSetHETemp.Text = FMain.sSetHETemp
+    tbHETempPrefix.Text = FMain.sHETempPrefix
   End With
 
 End

@@ -1,14 +1,14 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,54,61)
+  MoveScaled(0,0,56,62)
   Text = ("Bed Leveller")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
   AutoResize = True
   Padding = 5
   { vsMain VSplit
-    MoveScaled(0,1,53,59)
+    MoveScaled(-1,1,55,59)
     Expand = True
     Spacing = True
     { Panel2 Panel
@@ -81,36 +81,38 @@
       }
     }
     { Panel7 HBox
-      MoveScaled(1,33,52,6)
+      MoveScaled(2,33,52,6)
       AutoResize = True
-      { Spring8 Spring
-        MoveScaled(1,2,2,2)
+      { btnHome Button
+        MoveScaled(1,1,10,4)
+        Text = Shortcut(("Home"), "H")
+      }
+      { Spring7 Spring
+        MoveScaled(11,2,2,2)
       }
       { tgbBed ToggleButton
-        MoveScaled(2,1,11,4)
+        MoveScaled(13,1,11,4)
         Enabled = False
         Text = Shortcut(("Bed Off"), "B")
       }
-      { Spring7 Spring
-        MoveScaled(13,3,4,1)
-      }
-      { btnHome Button
-        MoveScaled(18,1,10,4)
-        Text = Shortcut(("Home"), "H")
-      }
       { Spring5 Spring
-        MoveScaled(29,2,3,2)
+        MoveScaled(25,2,2,2)
       }
-      { btnSetting Button
-        MoveScaled(34,1,11,4)
-        Text = Shortcut(("Settings"), "S")
+      { tgbHotEnd ToggleButton
+        MoveScaled(27,1,11,4)
+        Enabled = False
+        Text = Shortcut(("Hot End Off"), "E")
       }
       { Spring6 Spring
-        MoveScaled(46,3,5,1)
+        MoveScaled(38,2,2,2)
+      }
+      { btnSetting Button
+        MoveScaled(40,1,11,4)
+        Text = Shortcut(("Settings"), "S")
       }
     }
     { Panel4 Panel
-      MoveScaled(1,41,41,18)
+      MoveScaled(2,40,41,18)
       Expand = True
       Arrangement = Arrange.Fill
       AutoResize = True
