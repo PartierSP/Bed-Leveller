@@ -90,18 +90,18 @@
       { Spring7 Spring
         MoveScaled(11,2,2,2)
       }
-      { tgbBed ToggleButton
-        MoveScaled(13,1,11,4)
+      { tgbHotEnd ToggleButton
+        MoveScaled(14,1,11,4)
         Enabled = False
-        Text = Shortcut(("Bed Off"), "B")
+        Text = Shortcut(("Hot End Off"), "E")
       }
       { Spring5 Spring
         MoveScaled(25,2,2,2)
       }
-      { tgbHotEnd ToggleButton
+      { tgbBed ToggleButton
         MoveScaled(27,1,11,4)
         Enabled = False
-        Text = Shortcut(("Hot End Off"), "E")
+        Text = Shortcut(("Bed Off"), "B")
       }
       { Spring6 Spring
         MoveScaled(38,2,2,2)
@@ -118,6 +118,7 @@
       AutoResize = True
       { TextArea1 TextArea
         MoveScaled(0,0,39,16)
+        Enabled = False
         Expand = True
       }
     }
