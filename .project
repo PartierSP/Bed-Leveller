@@ -6,7 +6,6 @@ Version=1.2.0
 Component=gb.image
 Component=gb.gui
 Component=gb.form
-Component=gb.db
 Component=gb.settings
 Component=gb.net
 Description="This program assists with the task of manually tramming (levelling) a 3D printer's bed to it's print head."
