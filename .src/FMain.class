@@ -112,8 +112,12 @@ Public Sub Form_Open()
     End Select
   End With
   
+  'Update Location button names
+  UpdateButtonNames
+
   Try serialPort3D.Open()
   If Error Then
+    btnHome.Enabled = False
     Message.Warning("Printer not found.  Check settings/connection and try again.")
     FSettings.Show
   Else
@@ -260,5 +264,15 @@ Public Sub tgbHotEnd_Click()
     SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
     tgbHotEnd.Text = "Hot &End Off"
   Endif
+
+End
+
+Public Sub UpdateButtonNames()
+
+  btLoc1.Text = "X" & Str(iMargin) & " Y" & Str(iBedSizeY - iMargin)
+  btnLoc2.Text = "X" & Str(iBedSizeX - iMargin) & " Y" & Str(iBedSizeY - iMargin)
+  btnLoc3.Text = "X" & Str(iMargin) & " Y" & Str(iMargin)
+  btnLoc4.Text = "X" & Str(iBedSizeX - iMargin) & " Y" & Str(iMargin)
+  btnLoc5.Text = "X" & Str(iBedSizeX / 2) & " Y" & Str(iBedSizeY / 2)
 
 End

@@ -59,6 +59,9 @@ Public Sub btOK_Click()
     hSettings["Communications/StopBits"] = .iStopBits
     hSettings["Communications/Parity"] = .sParity
     hSettings["Communications/FlowControl"] = .sFlowControl
+
+    'Update location button text
+    .UpdateButtonNames
   End With
 
   Me.Close

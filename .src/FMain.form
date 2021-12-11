@@ -23,10 +23,10 @@
         Background = Color.Gray
         Expand = True
         { VBox1 VBox
-          MoveScaled(1,2,10.8571,21.8571)
+          MoveScaled(1,2,13,22)
           Padding = 10
           { btLoc1 Button
-            MoveScaled(0,0,10,7)
+            MoveScaled(0,0,14,7)
             Enabled = False
             Text = ("-X,+Y")
           }
@@ -34,22 +34,22 @@
             MoveScaled(4,9,2,3)
           }
           { btnLoc3 Button
-            MoveScaled(0,14,10,7)
+            MoveScaled(0,14,13,7)
             Enabled = False
             Text = ("-X,-Y")
           }
         }
         { Panel6 Panel
-          MoveScaled(15,2,3,21)
+          MoveScaled(15,2,3,22)
           Expand = True
         }
         { VBox2 VBox
-          MoveScaled(21,2,10,21)
+          MoveScaled(19,2,13,22)
           { Spring2 Spring
             MoveScaled(4,2,3,4)
           }
           { btnLoc5 Button
-            MoveScaled(0,7,9,8)
+            MoveScaled(0,7,13,8)
             Enabled = False
             Text = ("Centre")
           }
@@ -58,14 +58,14 @@
           }
         }
         { Panel3 Panel
-          MoveScaled(33,3,3,21)
+          MoveScaled(33,2,3,22)
           Expand = True
         }
         { VBox3 VBox
-          MoveScaled(39,3,10.8571,21.8571)
+          MoveScaled(37,3,13,21)
           Padding = 10
           { btnLoc2 Button
-            MoveScaled(0,0,10,7)
+            MoveScaled(0,0,13,7)
             Enabled = False
             Text = ("+X,+Y")
           }
@@ -73,28 +73,18 @@
             MoveScaled(4,9,2,4)
           }
           { btnLoc4 Button
-            MoveScaled(0,14,10,7)
+            MoveScaled(0,14,13,7)
             Enabled = False
             Text = ("+X,-Y")
           }
         }
       }
     }
-    { Panel5 Panel
-      MoveScaled(3,32,51,26)
+    { VBox4 VBox
+      MoveScaled(3,32,51,27)
       Expand = True
-      AutoResize = True
-      { Panel4 Panel
-        MoveScaled(1,7,41,18)
-        Expand = True
-        Arrangement = Arrange.Fill
-        AutoResize = True
-        { TextArea1 TextArea
-          MoveScaled(0,0,39,16)
-          Enabled = False
-          Expand = True
-        }
-      }
+      Spacing = True
+      Padding = 5
       { Panel7 HBox
         MoveScaled(0,0,52,6)
         AutoResize = True
@@ -126,10 +116,20 @@
           Text = Shortcut(("Settings"), "S")
         }
       }
+      { Panel4 Panel
+        MoveScaled(1,7,41,18)
+        Expand = True
+        Arrangement = Arrange.Fill
+        { TextArea1 TextArea
+          MoveScaled(0,0,39,16)
+          Enabled = False
+          Expand = True
+        }
+      }
     }
   }
   { SerialPort3D #SerialPort
-    #MoveScaled(45,46)
+    #MoveScaled(47,46)
     FlowControl = SerialPort.None
     PortName = "/dev/ttyUSB0"
     Speed = 115200
