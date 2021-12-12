@@ -75,33 +75,40 @@
             Padding = 5
             { sbBedWidth SpinBox
               MoveScaled(2,2,19,4)
+              ToolTip = ("Maximum X travel")
               MaxValue = 1000
               Step = 5
             }
             { sbBedDepth SpinBox
               MoveScaled(2,7,19,4)
+              ToolTip = ("Maximum Y travel")
               MaxValue = 1000
               Step = 5
             }
             { sbMargin SpinBox
               MoveScaled(2,11,19,4)
+              ToolTip = ("Distance from bed edge to make calibrations")
             }
             { sbRapidPlane SpinBox
               MoveScaled(2,15,19,4)
+              ToolTip = ("Distance to lift above bed before moving")
               Step = 5
             }
             { sbShim SpinBar
               MoveScaled(2,19,19,4)
+              ToolTip = ("Thickness of shim used for calibration")
               MaxValue = 10
             }
             { sbBedTemperature SpinBox
               MoveScaled(2,23,19,4)
+              ToolTip = ("Bed temperature set point")
               MinValue = 15
               MaxValue = 80
               Value = 15
             }
             { sbHETemperature SpinBox
               MoveScaled(2,27,19,4)
+              ToolTip = ("Extruder temperature set point")
               MinValue = 50
               MaxValue = 250
               Step = 5
@@ -169,24 +176,31 @@
             Padding = 5
             { tbInitialization TextBox
               MoveScaled(2,1,19,4)
+              ToolTip = ("Initializations commands to reset printer")
             }
             { tbHome TextBox
               MoveScaled(2,5,19,4)
+              ToolTip = ("Command to home printer")
             }
             { tbRapid TextBox
               MoveScaled(2,9,19,4)
+              ToolTip = ("Command to initialize rapid movements")
             }
             { tbSetBedTemp TextBox
               MoveScaled(2,13,19,4)
+              ToolTip = ("Command to change bed temperature")
             }
             { tbBedTempPrefix TextBox
               MoveScaled(2,17,19,4)
+              ToolTip = ("Identifier used to specify a bed temperature value")
             }
             { tbSetHETemp TextBox
               MoveScaled(2,21,19,4)
+              ToolTip = ("Command to change hot end  temperature")
             }
             { tbHETempPrefix TextBox
               MoveScaled(2,25,19,4)
+              ToolTip = ("Identifier used to specify a hot end temperature value")
             }
           }
         }
@@ -245,25 +259,31 @@
             Padding = 5
             { tbPort TextBox
               MoveScaled(2,2,18,4)
+              ToolTip = ("Linux serial (USB) port")
             }
             { cbBaud ComboBox
               MoveScaled(2,7,18,4)
+              ToolTip = ("Printer communication speed")
               ReadOnly = True
             }
             { cbDataBits ComboBox
               MoveScaled(2,12,18,4)
+              ToolTip = ("number of data bit per byte printer uses")
               ReadOnly = True
             }
             { cbStopBits ComboBox
               MoveScaled(2,17,18,4)
+              ToolTip = ("number of stop bit per byte printer uses")
               ReadOnly = True
             }
             { cbParity ComboBox
               MoveScaled(2,22,18,4)
+              ToolTip = ("Printer's parity setting")
               ReadOnly = True
             }
             { cbFlowControl ComboBox
               MoveScaled(2,26,18,4)
+              ToolTip = ("What type of flow control the printer uses")
               ReadOnly = True
             }
           }
