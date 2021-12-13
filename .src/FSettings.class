@@ -16,6 +16,8 @@ Public Sub btOK_Click()
     .iBedSizeY = sbBedDepth.Value
     .iMargin = sbMargin.Value
     .iRapidPlane = sbRapidPlane.Value
+    .iCleanHeight = sbCleanHeight.Value
+    .sCleanLoc = cbCleanLoc.Text
     .fShim = sbShim.Value
     .iBedTemp = sbBedTemperature.Value
     .iHETemp = sbHETemperature.Value
@@ -52,6 +54,8 @@ Public Sub btOK_Click()
     hSettings["Locations/Shim"] = .fShim
     hSettings["Locations/BedTemp"] = .iBedTemp
     hSettings["Locations/HETemp"] = .iHETemp
+    hSettings["Locations/CleanHeight"] = .iCleanHeight
+    hSettings["Locations/CleanLoc"] = .sCleanLoc
   
     hSettings["Communications/Port"] = .sPort
     hSettings["Communications/Baud"] = .iBaud
@@ -77,6 +81,7 @@ End
 Public Sub Form_Open()
 
   Dim sBaudRates As New String[7]
+  Dim sCleanLoc As New String[4]
   Dim sDataBits As New String[2]
   Dim sStopBits As New String[3]
   Dim sParity As New String[3]
@@ -88,6 +93,9 @@ Public Sub Form_Open()
   hSettings.Read(Me, "SettingForm")
 
   'Fill in Combo Boxes
+  sCleanLoc = ["Home", "Left", "Middle", "Right"]
+  cbCleanLoc.List = sCleanLoc
+
   sBaudRates = ["1200", "2400", "4800", "9600", "28800", "57600", "115200"]
   cbBaud.List = sBaudRates
 
@@ -112,6 +120,8 @@ Public Sub Form_Open()
     sbShim.Value = .fShim
     sbBedTemperature.Value = .iBedTemp
     sbHETemperature.Value = .iHETemp
+    sbCleanHeight.Text = .iCleanHeight
+    cbCleanLoc.Text = .sCleanLoc
     tbPort.Text = .sPort
     cbBaud.Text = .iBaud
     cbDataBits.Text = .iDataBits

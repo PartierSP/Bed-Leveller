@@ -1,31 +1,31 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,58,62)
+  MoveScaled(0,0,71,62)
   Text = ("Bed Leveller")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
   AutoResize = True
   Padding = 5
   { vsMain VSplit
-    MoveScaled(1,1,56,60)
+    MoveScaled(1,1,69,60)
     Expand = True
     Spacing = True
     { Panel2 Panel
-      MoveScaled(3,3,50,28)
+      MoveScaled(3,3,53,28)
       Expand = True
       Arrangement = Arrange.Fill
       AutoResize = True
       Spacing = True
       Padding = 10
       { Panel1 HBox
-        MoveScaled(0,0,51,26)
+        MoveScaled(1,1,51,26)
         Background = Color.Gray
         Expand = True
         { VBox1 VBox
           MoveScaled(1,2,13,22)
           Padding = 10
-          { btLoc1 Button
+          { btnLoc1 Button
             MoveScaled(0,0,14,7)
             Enabled = False
             Text = ("-X,+Y")
@@ -81,13 +81,14 @@
       }
     }
     { VBox4 VBox
-      MoveScaled(3,32,51,27)
+      MoveScaled(3,32,65,27)
       Expand = True
       Spacing = True
       Padding = 5
       { Panel7 HBox
-        MoveScaled(0,0,52,6)
+        MoveScaled(1,1,63,6)
         AutoResize = True
+        Padding = 5
         { btnHome Button
           MoveScaled(1,1,10,4)
           Text = Shortcut(("Home"), "H")
@@ -96,28 +97,36 @@
           MoveScaled(11,2,2,2)
         }
         { tgbHotEnd ToggleButton
-          MoveScaled(14,1,11,4)
+          MoveScaled(13,1,11,4)
           Enabled = False
           Text = Shortcut(("Hot End Off"), "E")
         }
-        { Spring5 Spring
-          MoveScaled(25,2,2,2)
+        { Spring8 Spring
+          MoveScaled(24,2,2,2)
         }
         { tgbBed ToggleButton
-          MoveScaled(27,1,11,4)
+          MoveScaled(26,1,11,4)
           Enabled = False
           Text = Shortcut(("Bed Off"), "B")
         }
+        { Spring5 Spring
+          MoveScaled(37,2,2,2)
+        }
+        { btnClean Button
+          MoveScaled(40,1,10,4)
+          Enabled = False
+          Text = Shortcut(("Clean Pos"), "C")
+        }
         { Spring6 Spring
-          MoveScaled(38,2,2,2)
+          MoveScaled(50,2,1,2)
         }
         { btnSetting Button
-          MoveScaled(40,1,11,4)
+          MoveScaled(51,1,11,4)
           Text = Shortcut(("Settings"), "S")
         }
       }
       { Panel4 Panel
-        MoveScaled(1,7,41,18)
+        MoveScaled(1,8,41,18)
         Expand = True
         Arrangement = Arrange.Fill
         { TextArea1 TextArea
@@ -125,6 +134,11 @@
           Enabled = False
           Expand = True
         }
+      }
+      { Timer1 #Timer
+        #MoveScaled(52,13)
+        Enabled = True
+        Delay = 100
       }
     }
   }

@@ -20,9 +20,10 @@ Public iDataBits As Integer
 Public iStopBits As Integer
 Public sParity As String
 Public sFlowControl As String
+Public iCleanHeight As Integer
+Public sCleanLoc As String
 Public sConfigLoc As String = User.Home &/ ".config/leveller"
 Public sConfigName As String = "config.conf"
-
 Public Sub SerialPort3D_Read()
 
   Dim strReceived As String
@@ -70,20 +71,22 @@ Public Sub Form_Open()
   sBedTempPrefix = hSettings["Post/BedTempPrefix", "S"]
   sSetHETemp = hSettings["Post/SetHETemp", "M104"]
   sHETempPrefix = hSettings["Post/HETempPrefix", "S"]
-  
+
   iMargin = hSettings["Locations/Margin", 30]
   iRapidPlane = hSettings["Locations/RapidPlane", 10]
   fShim = hSettings["Locations/Shim", 0.2]
   iBedTemp = hSettings["Locations/BedTemp", 60]
   iHETemp = hSettings["Locations/HETemp", 200]
-  
+  iCleanHeight = hSettings["Locations/CleanHeight", 200]
+  sCleanLoc = hSettings["Locations/CleanLoc", "Middle"]
+
   sPort = hSettings["Communications/Port", "/dev/ttyUSB0"]
   iBaud = hSettings["Communications/Baud", 115200]
   iDataBits = hSettings["Communications/DataBits", 8]
   iStopBits = hSettings["Communications/StopBits", 1]
   sParity = hSettings["Communications/Parity", "None"]
   sFlowControl = hSettings["Communications/FlowControl", "None"]
- 'hSettings.Save
+
   hSettings.Read(Me, "MainForm")
   hSettings.Read(vsMain, "MainFormVSMain")
 
@@ -148,13 +151,15 @@ Public Sub Form_Close()
   hSettings["Locations/Shim"] = fShim
   hSettings["Locations/BedTemp"] = iBedTemp
   hSettings["Locations/HETemp"] = iHETemp
+  hSettings["Locations/CleanHeight"] = iCleanHeight
+  hSettings["Locations/CleanLoc"] = sCleanLoc
 
-   hSettings["Communications/Port"] = sPort
-   hSettings["Communications/Baud"] = iBaud
-   hSettings["Communications/DataBits"] = iDataBits
-   hSettings["Communications/StopBits"] = iStopBits
-   hSettings["Communications/Parity"] = sParity
-   hSettings["Communications/FlowControl"] = sFlowControl
+  hSettings["Communications/Port"] = sPort
+  hSettings["Communications/Baud"] = iBaud
+  hSettings["Communications/DataBits"] = iDataBits
+  hSettings["Communications/StopBits"] = iStopBits
+  hSettings["Communications/Parity"] = sParity
+  hSettings["Communications/FlowControl"] = sFlowControl
 
   hSettings.Write(Me, "MainForm")
   hSettings.Write(vsMain, "MainFormVSMain")
@@ -171,17 +176,18 @@ Public Sub btnHome_Click()
   SendSerialData(Chr$(13), True)    'First communication sometimes results in error.  Sending a blank line lets this fault occure on this non-critial line.
   SendSerialData(sInitialization, True)
   SendSerialData(sHome, True)
-  btLoc1.Enabled = True
+  btnLoc1.Enabled = True
   btnLoc2.Enabled = True
   btnLoc3.Enabled = True
   btnLoc4.Enabled = True
   btnLoc5.Enabled = True
+  btnClean.Enabled = True
   tgbBed.Enabled = True
   tgbHotEnd.Enabled = True
 
 End
 
-Public Sub btLoc1_Click()
+Public Sub btnLoc1_Click()
 
   'Move to -X,+Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
@@ -217,19 +223,19 @@ Public Sub btnLoc4_Click()
 
 End
 
-Public Sub btnSetting_Click()
-
-  'Open Settings form
-  FSettings.Show
-
-End
-
 Public Sub btnLoc5_Click()
 
   'Move to centre of the bed
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
+
+End
+
+Public Sub btnSetting_Click()
+
+  'Open Settings form
+  FSettings.Show
 
 End
 
@@ -269,10 +275,68 @@ End
 
 Public Sub UpdateButtonNames()
 
-  btLoc1.Text = "X" & Str(iMargin) & " Y" & Str(iBedSizeY - iMargin)
+  btnLoc1.Text = "X" & Str(iMargin) & " Y" & Str(iBedSizeY - iMargin)
   btnLoc2.Text = "X" & Str(iBedSizeX - iMargin) & " Y" & Str(iBedSizeY - iMargin)
   btnLoc3.Text = "X" & Str(iMargin) & " Y" & Str(iMargin)
   btnLoc4.Text = "X" & Str(iBedSizeX - iMargin) & " Y" & Str(iMargin)
   btnLoc5.Text = "X" & Str(iBedSizeX / 2) & " Y" & Str(iBedSizeY / 2)
+
+End
+
+Public Sub Form_Resize()
+
+  If Me.Width < 400 Then
+    Me.Width = Me.Width + 15
+  Endif
+
+  If Me.Height < 300 Then
+    Me.Height = Me.height + 15
+  Endif
+
+End
+
+Public Sub Timer1_Timer()
+
+  Form_Resize
+
+End
+
+Public Sub btnClean_Click()
+
+  'Incase an axis gets bumped during cleaning, force rehoming printer
+  btnLoc1.Enabled = False
+  btnLoc2.Enabled = False
+  btnLoc3.Enabled = False
+  btnLoc4.Enabled = False
+  btnLoc5.Enabled = False
+  btnClean.Enabled = False
+  btnHome.Enabled = True
+
+     '''''''''''''''''''''''''''''''''''''''''''''
+   '''''''''''''''''''''''''''''''''''''''''''''''''
+  '''FIXME:  UNTESTED PRINTER CODE.  DO NOT RUN!!!'''
+   '''''''''''''''''''''''''''''''''''''''''''''''''
+     '''''''''''''''''''''''''''''''''''''''''''''
+  ' Select sCleanLoc
+  '   Case "Home"
+  '     'Move to Home Clean position
+  '     SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+  '     SendSerialData(sRapidMove & "X0 Y0", True)
+  ' 
+  '   Case "Left"
+  '     'Move to Left Clean position
+  '     SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+  '     SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
+  ' 
+  '   Case "Middle"
+  '     'Move to Middle Clean position
+  '     SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+  '     SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
+  ' 
+  '   Case "Right"
+  '     'Move to +X,-Y position
+  '     SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+  '     SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
+  ' End Select
 
 End
