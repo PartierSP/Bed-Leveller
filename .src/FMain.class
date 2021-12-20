@@ -35,13 +35,11 @@ Public Sub SerialPort3D_Read()
   If Error Then
     strReceived = ""
   Else
-    Debug Asc(strReceived, 1), Asc(strReceived, 2), Asc(strReceived, 3), Asc(strReceived, 4)
     Select Left(strReceived, 4) 
       Case "  TT"
-        'Got a Hot End temperature reading
+        'Got a temperature reading
         ReadTemperature(strReceived)
       Case Else
-        'Print Asc(strReceived, 1), Asc(strReceived, 2), Asc(strReceived, 3), Asc(strReceived, 4),
         TextArea1.Text = TextArea1.Text & strReceived
     End Select
   Endif
@@ -381,6 +379,8 @@ Public Sub ReadTemperature(strReceived As String)
 
   LCDHotEnd.Text = Format(Val(sTemp[2]), "0##.0")
   LCDBed.Text = Format(Val(sTemp[6]), "0##.0")
+  LBHotEnd.Text = "Hot E(" & Format(sTemp[4], "0") & ")"
+  LBBed.Text = "Bed (" & Format(sTemp[8], "0") & ")"
   PBHotEnd.Value = Val(sTemp[10]) / 127
   PBBed.Value = Val(sTemp[12]) / 127
 End
