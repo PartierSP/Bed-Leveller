@@ -1,7 +1,7 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,52,64)
+  MoveScaled(0,0,52,67)
   Text = ("Bed Leveller Settings")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
@@ -9,26 +9,27 @@
   Spacing = True
   Margin = True
   { VBox7 VBox
-    MoveScaled(1,1,50,62)
+    MoveScaled(1,1,50,65)
     Expand = True
     { TabStrip1 TabStrip
-      MoveScaled(0,1,49,53)
+      MoveScaled(0,1,49,56)
       Expand = True
       Arrangement = Arrange.Fill
       Count = 3
       Index = 0
       Text = ("Positional Settings")
       { ScrollView1 ScrollView
-        MoveScaled(1,1,47,45)
+        MoveScaled(1,1,47,49)
         Arrangement = Arrange.Row
         Padding = 5
+        Tablet = True
         { HBox1 HBox
-          MoveScaled(1,1,45,43)
+          MoveScaled(1,1,45,47)
           Expand = True
           Spacing = True
           Padding = 5
           { VBox1 VBox
-            MoveScaled(1,1,20,41)
+            MoveScaled(1,0,20,44)
             Expand = True
             Spacing = True
             Padding = 5
@@ -84,7 +85,7 @@
             }
           }
           { VBox2 VBox
-            MoveScaled(22,1,22,41)
+            MoveScaled(22,0,22,44)
             Expand = True
             Spacing = True
             Padding = 5
@@ -151,16 +152,17 @@
       Index = 1
       Text = ("Posting")
       { ScrollView2 ScrollView
-        MoveScaled(1,1,47,43)
+        MoveScaled(1,1,47,44)
         Arrangement = Arrange.Row
         Padding = 5
+        Tablet = True
         { HBox2 HBox
-          MoveScaled(1,1,45,41)
+          MoveScaled(1,1,45,42)
           Expand = True
           Spacing = True
           Padding = 5
           { VBox5 VBox
-            MoveScaled(1,1,20,39)
+            MoveScaled(1,1,20,40)
             Expand = True
             Spacing = True
             Padding = 5
@@ -211,7 +213,7 @@
             }
           }
           { VBox6 VBox
-            MoveScaled(22,1,22,39)
+            MoveScaled(22,1,22,40)
             Expand = True
             Spacing = True
             Padding = 5
@@ -261,6 +263,7 @@
         Arrangement = Arrange.Row
         Spacing = True
         Padding = 5
+        Tablet = True
         { VBox8 VBox
           MoveScaled(1,1,45,35)
           Expand = True
@@ -352,7 +355,7 @@
       Index = 0
     }
     { Panel1 Panel
-      MoveScaled(1,55,48,6)
+      MoveScaled(1,58,48,6)
       Arrangement = Arrange.Horizontal
       Spacing = True
       Padding = 10
