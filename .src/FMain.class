@@ -3,7 +3,7 @@
 Public iBedSizeX As Integer
 Public iBedSizeY As Integer
 Public iMargin As Integer
-Public sInitialization As String
+Public sInitialization As New String[4]
 Public sHome As String
 Public sRapidMove As String
 Public iRapidPlane As Integer
@@ -28,11 +28,22 @@ Public Sub SerialPort3D_Read()
 
   Dim strReceived As String
 
+  'Small pause to allow full line to be buffered
+  Wait 0.01
+
   Try Read #SerialPort3D, strReceived, Lof(SerialPort3D)
   If Error Then
     strReceived = ""
   Else
-    TextArea1.Text = TextArea1.Text & strReceived
+    Debug Asc(strReceived, 1), Asc(strReceived, 2), Asc(strReceived, 3), Asc(strReceived, 4)
+    Select Left(strReceived, 4) 
+      Case "  TT"
+        'Got a Hot End temperature reading
+        ReadTemperature(strReceived)
+      Case Else
+        'Print Asc(strReceived, 1), Asc(strReceived, 2), Asc(strReceived, 3), Asc(strReceived, 4),
+        TextArea1.Text = TextArea1.Text & strReceived
+    End Select
   Endif
 
 Catch
@@ -64,7 +75,9 @@ Public Sub Form_Open()
   iBedSizeX = hSettings["BedSize/BedSizeX", 235]
   iBedSizeY = hSettings["BedSize/BedSizeY", 240]
   ' 
-  sInitialization = hSettings["Post/Init", "G21 G90 T0"]
+  sInitialization[1] = hSettings["Post/Init1", "G21 G90 T0"]
+  sInitialization[2] = hSettings["Post/Init2", "M155 S2"]
+  sInitialization[3] = hSettings["Post/Init3", ""]
   sHome = hSettings["Post/Home", "G28"]
   sRapidMove = hSettings["Post/RapidMove", "G0"]
   sSetBedTemp = hSettings["Post/SetBedTemp", "M140"]
@@ -114,7 +127,7 @@ Public Sub Form_Open()
         .FlowControl = SerialPort.Both
     End Select
   End With
-  
+
   'Update Location button names
   UpdateButtonNames
 
@@ -138,7 +151,9 @@ Public Sub Form_Close()
   hSettings["BedSize/BedSizeX"] = iBedSizeX
   hSettings["BedSize/BedSizeY"] = iBedSizeY
 
-  hSettings["Post/Init"] = sInitialization
+  hSettings["Post/Init1"] = sInitialization[1]
+  hSettings["Post/Init2"] = sInitialization[2]
+  hSettings["Post/Init3"] = sInitialization[3]
   hSettings["Post/Home"] = sHome
   hSettings["Post/RapidMove"] = sRapidMove
   hSettings["Post/SetBedTemp"] = sSetBedTemp
@@ -164,8 +179,9 @@ Public Sub Form_Close()
   hSettings.Write(Me, "MainForm")
   hSettings.Write(vsMain, "MainFormVSMain")
 
-  'Turn off heated bed prior to exiting program
+  'Turn off heated bed and hot end prior to exiting program
   SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
+  SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
   SerialPort3D.Close()
 
 End
@@ -174,7 +190,10 @@ Public Sub btnHome_Click()
 
   'sHome Printer
   SendSerialData(Chr$(13), True)    'First communication sometimes results in error.  Sending a blank line lets this fault occure on this non-critial line.
-  SendSerialData(sInitialization, True)
+  SendSerialData(sInitialization[1], True)
+  SendSerialData(sInitialization[2], True)
+  SendSerialData(sInitialization[3], True)
+  SendSerialData("G92 E0", True)
   SendSerialData(sHome, True)
   btnLoc1.Enabled = True
   btnLoc2.Enabled = True
@@ -312,31 +331,56 @@ Public Sub btnClean_Click()
   btnClean.Enabled = False
   btnHome.Enabled = True
 
-     '''''''''''''''''''''''''''''''''''''''''''''
-   '''''''''''''''''''''''''''''''''''''''''''''''''
-  '''FIXME:  UNTESTED PRINTER CODE.  DO NOT RUN!!!'''
-   '''''''''''''''''''''''''''''''''''''''''''''''''
-     '''''''''''''''''''''''''''''''''''''''''''''
-  ' Select sCleanLoc
-  '   Case "Home"
-  '     'Move to Home Clean position
-  '     SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
-  '     SendSerialData(sRapidMove & "X0 Y0", True)
-  ' 
-  '   Case "Left"
-  '     'Move to Left Clean position
-  '     SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
-  '     SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
-  ' 
-  '   Case "Middle"
-  '     'Move to Middle Clean position
-  '     SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
-  '     SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
-  ' 
-  '   Case "Right"
-  '     'Move to +X,-Y position
-  '     SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
-  '     SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
-  ' End Select
+  Select sCleanLoc
+    Case "Home"
+      'Move to Home Clean position
+      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+      SendSerialData(sRapidMove & "X0 Y0", True)
+  
+    Case "Left"
+      'Move to Left Clean position
+      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+      SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
+  
+    Case "Middle"
+      'Move to Middle Clean position
+      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+      SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & iMargin, True)
 
+    Case "Right"
+      'Move to +X,-Y position
+      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+      SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
+  End Select
+
+End
+
+Public Sub ReadTemperature(strReceived As String)
+
+  Dim sTemp As New String[13]
+  Dim i As Integer
+
+  'Remove ending cruff
+  While (Right(strReceived, 1) > "9") Or (Right(strReceived, 1) < "0")
+    strReceived = Left(strReceived, -1)
+  Wend
+
+  'Split temperature data into an array
+  sTemp = Split(strReceived, " ")
+
+  'Clean array
+  For i = 2 To 12 Step 2
+    'Remove starting cruff
+    While (Left(sTemp[i], 1) > "9") Or (Left(sTemp[i], 1) < "0")
+      sTemp[i] = Right(sTemp[i], -1)
+    Wend
+  
+    'Remove duplicatication of value
+    sTemp[i] = Right(sTemp[i], Len(sTemp[i]) / 2)
+  Next
+
+  LCDHotEnd.Text = Format(Val(sTemp[2]), "0##.0")
+  LCDBed.Text = Format(Val(sTemp[6]), "0##.0")
+  PBHotEnd.Value = Val(sTemp[10]) / 127
+  PBBed.Value = Val(sTemp[12]) / 127
 End

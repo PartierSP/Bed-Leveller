@@ -19,11 +19,11 @@
       Index = 0
       Text = ("Positional Settings")
       { ScrollView1 ScrollView
-        MoveScaled(1,1,48,45)
+        MoveScaled(1,1,47,45)
         Arrangement = Arrange.Row
         Padding = 5
         { HBox1 HBox
-          MoveScaled(1,1,46,43)
+          MoveScaled(1,1,45,43)
           Expand = True
           Spacing = True
           Padding = 5
@@ -77,9 +77,14 @@
               Text = ("Cleaning Location")
               Alignment = Align.Right
             }
+            { Label24 Label
+              MoveScaled(1,35,17,4)
+              Text = ("Retraction Amount")
+              Alignment = Align.Right
+            }
           }
           { VBox2 VBox
-            MoveScaled(22,1,23,41)
+            MoveScaled(22,1,22,41)
             Expand = True
             Spacing = True
             Padding = 5
@@ -135,92 +140,115 @@
               ToolTip = ("Location over the print bed to go to for cleaning.")
               ReadOnly = True
             }
+            { sbRetraction SpinBar
+              MoveScaled(2,37,19,4)
+              ToolTip = ("Extruder retraction distance (to eliminate nozzle blob)")
+              MaxValue = 10
+            }
           }
         }
       }
       Index = 1
       Text = ("Posting")
       { ScrollView2 ScrollView
-        MoveScaled(1,1,48,36)
+        MoveScaled(1,1,47,43)
         Arrangement = Arrange.Row
         Padding = 5
         { HBox2 HBox
-          MoveScaled(1,1,46,34)
+          MoveScaled(1,1,45,41)
           Expand = True
           Spacing = True
           Padding = 5
           { VBox5 VBox
-            MoveScaled(1,1,20,32)
+            MoveScaled(1,1,20,39)
             Expand = True
             Spacing = True
             Padding = 5
             { Label17 Label
-              MoveScaled(6,1,14,4)
-              Text = ("Initialization")
+              MoveScaled(1,1,18,4)
+              Text = ("Initialization Ln1")
+              Alignment = Align.Right
+            }
+            { Label25 Label
+              MoveScaled(1,5,18,4)
+              Text = ("Initialization Ln2")
+              Alignment = Align.Right
+            }
+            { Label26 Label
+              MoveScaled(1,9,18,4)
+              Text = ("Initialization Ln3")
               Alignment = Align.Right
             }
             { Label10 Label
-              MoveScaled(3,5,14,4)
+              MoveScaled(4,12,14,4)
               Text = ("Home")
               Alignment = Align.Right
             }
             { Label14 Label
-              MoveScaled(1,9,19,4)
+              MoveScaled(0,16,19,4)
               Text = ("Rapid Movement")
               Alignment = Align.Right
             }
             { Label16 Label
-              MoveScaled(1,13,19,4)
+              MoveScaled(0,20,19,4)
               Text = ("Set Bed Temp.")
               Alignment = Align.Right
             }
             { Label15 Label
-              MoveScaled(1,18,19,4)
+              MoveScaled(0,25,19,4)
               Text = ("Bed Temp. Prefix")
               Alignment = Align.Right
             }
             { Label19 Label
-              MoveScaled(1,22,19,4)
+              MoveScaled(0,29,19,4)
               Text = ("Set Hot-End Temp.")
               Alignment = Align.Right
             }
             { Label20 Label
-              MoveScaled(1,26,19,4)
+              MoveScaled(0,33,19,4)
               Text = ("H.E. Temp. Prefix")
               Alignment = Align.Right
             }
           }
           { VBox6 VBox
-            MoveScaled(22,1,23,32)
+            MoveScaled(22,1,22,39)
             Expand = True
             Spacing = True
             Padding = 5
-            { tbInitialization TextBox
+            { tbInitialization1 TextBox
               MoveScaled(2,1,19,4)
               ToolTip = ("Initializations commands to reset printer")
             }
-            { tbHome TextBox
+            { tbInitialization2 TextBox
               MoveScaled(2,5,19,4)
+              ToolTip = ("Initializations commands to reset printer")
+            }
+            { tbInitialization3 TextBox
+              MoveScaled(2,9,19,4)
+              ToolTip = ("Initializations commands to reset printer")
+            }
+            { tbHome TextBox
+              MoveScaled(2,13,19,4)
               ToolTip = ("Command to home printer")
             }
             { tbRapid TextBox
-              MoveScaled(2,9,19,4)
+              MoveScaled(2,17,19,4)
               ToolTip = ("Command to initialize rapid movements")
             }
             { tbSetBedTemp TextBox
-              MoveScaled(2,13,19,4)
+              MoveScaled(2,21,19,4)
               ToolTip = ("Command to change bed temperature")
             }
             { tbBedTempPrefix TextBox
-              MoveScaled(2,17,19,4)
+              MoveScaled(2,25,19,4)
               ToolTip = ("Identifier used to specify a bed temperature value")
             }
             { tbSetHETemp TextBox
-              MoveScaled(2,21,19,4)
+              MoveScaled(2,29,19,4)
               ToolTip = ("Command to change hot end  temperature")
             }
             { tbHETempPrefix TextBox
-              MoveScaled(2,25,19,4)
+              MoveScaled(2,33,19,4)
               ToolTip = ("Identifier used to specify a hot end temperature value")
             }
           }

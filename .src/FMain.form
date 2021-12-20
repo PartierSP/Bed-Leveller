@@ -1,92 +1,133 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,71,62)
+  MoveScaled(0,0,78,66)
   Text = ("Bed Leveller")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
   AutoResize = True
   Padding = 5
   { vsMain VSplit
-    MoveScaled(1,1,69,60)
+    MoveScaled(1,1,74,64)
     Expand = True
     Spacing = True
-    { Panel2 Panel
-      MoveScaled(3,3,53,28)
-      Expand = True
-      Arrangement = Arrange.Fill
-      AutoResize = True
-      Spacing = True
-      Padding = 10
-      { Panel1 HBox
-        MoveScaled(1,1,51,26)
-        Background = Color.Gray
+    { Panel8 Panel
+      MoveScaled(3,2,67,32)
+      Arrangement = Arrange.Horizontal
+      { Panel2 Panel
+        MoveScaled(1,1,53,28)
         Expand = True
-        { VBox1 VBox
-          MoveScaled(1,2,13,22)
-          Padding = 10
-          { btnLoc1 Button
-            MoveScaled(0,0,14,7)
-            Enabled = False
-            Text = ("-X,+Y")
+        Arrangement = Arrange.Fill
+        AutoResize = True
+        Spacing = True
+        Padding = 10
+        { Panel1 HBox
+          MoveScaled(1,1,51,26)
+          Background = Color.Gray
+          Expand = True
+          { VBox1 VBox
+            MoveScaled(1,2,13,22)
+            Padding = 10
+            { btnLoc1 Button
+              MoveScaled(0,0,14,7)
+              Enabled = False
+              Text = ("-X,+Y")
+            }
+            { Spring4 Spring
+              MoveScaled(4,9,2,3)
+            }
+            { btnLoc3 Button
+              MoveScaled(0,14,13,7)
+              Enabled = False
+              Text = ("-X,-Y")
+            }
           }
-          { Spring4 Spring
-            MoveScaled(4,9,2,3)
+          { Panel6 Panel
+            MoveScaled(15,2,3,22)
+            Expand = True
           }
-          { btnLoc3 Button
-            MoveScaled(0,14,13,7)
-            Enabled = False
-            Text = ("-X,-Y")
+          { VBox2 VBox
+            MoveScaled(19,2,13,22)
+            { Spring2 Spring
+              MoveScaled(4,2,3,4)
+            }
+            { btnLoc5 Button
+              MoveScaled(0,7,13,8)
+              Enabled = False
+              Text = ("Centre")
+            }
+            { Spring3 Spring
+              MoveScaled(4,17,2,3)
+            }
+          }
+          { Panel3 Panel
+            MoveScaled(33,2,3,22)
+            Expand = True
+          }
+          { VBox3 VBox
+            MoveScaled(37,3,13,21)
+            Padding = 10
+            { btnLoc2 Button
+              MoveScaled(0,0,13,7)
+              Enabled = False
+              Text = ("+X,+Y")
+            }
+            { Spring1 Spring
+              MoveScaled(4,9,2,4)
+            }
+            { btnLoc4 Button
+              MoveScaled(0,14,13,7)
+              Enabled = False
+              Text = ("+X,-Y")
+            }
           }
         }
-        { Panel6 Panel
-          MoveScaled(15,2,3,22)
+      }
+      { Panel5 Panel
+        MoveScaled(55,1,11,28)
+        Arrangement = Arrange.Vertical
+        AutoResize = True
+        Padding = 5
+        { Label1 Label
+          MoveScaled(0,1,8,3)
+          Text = ("Hot End")
+          Alignment = Align.Center
+        }
+        { LCDHotEnd LCDLabel
+          MoveScaled(1,3,9,5)
+          Text = ("000.0")
+          Alignment = Align.Center
+        }
+        { PBHotEnd ProgressBar
+          MoveScaled(1,8,8,3)
           Expand = True
         }
-        { VBox2 VBox
-          MoveScaled(19,2,13,22)
-          { Spring2 Spring
-            MoveScaled(4,2,3,4)
-          }
-          { btnLoc5 Button
-            MoveScaled(0,7,13,8)
-            Enabled = False
-            Text = ("Centre")
-          }
-          { Spring3 Spring
-            MoveScaled(4,17,2,3)
-          }
+        { Separator1 Separator
+          MoveScaled(1,12,9,1)
         }
-        { Panel3 Panel
-          MoveScaled(33,2,3,22)
+        { Label2 Label
+          MoveScaled(1,13,8,3)
+          Text = ("Bed")
+          Alignment = Align.Center
+        }
+        { LCDBed LCDLabel
+          MoveScaled(1,16,9,5)
+          Text = ("000.0")
+          Alignment = Align.Center
+        }
+        { PBBed ProgressBar
+          MoveScaled(1,21,9,4)
           Expand = True
-        }
-        { VBox3 VBox
-          MoveScaled(37,3,13,21)
-          Padding = 10
-          { btnLoc2 Button
-            MoveScaled(0,0,13,7)
-            Enabled = False
-            Text = ("+X,+Y")
-          }
-          { Spring1 Spring
-            MoveScaled(4,9,2,4)
-          }
-          { btnLoc4 Button
-            MoveScaled(0,14,13,7)
-            Enabled = False
-            Text = ("+X,-Y")
-          }
         }
       }
     }
     { VBox4 VBox
-      MoveScaled(3,32,65,27)
+      MoveScaled(2,35,66,27)
       Expand = True
       Spacing = True
       Padding = 5
       { Panel7 HBox
-        MoveScaled(1,1,63,6)
+        MoveScaled(1,1,64,6)
         AutoResize = True
         Padding = 5
         { btnHome Button

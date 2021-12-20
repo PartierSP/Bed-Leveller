@@ -27,7 +27,9 @@ Public Sub btOK_Click()
     .iStopBits = Val(cbStopBits.Text)
     .sParity = cbParity.Text
     .sFlowControl = cbFlowControl.Text
-    .sInitialization = tbInitialization.Text
+    .sInitialization[1] = tbInitialization1.Text
+    .sInitialization[2] = tbInitialization2.Text
+    .sInitialization[3] = tbInitialization3.Text
     .sHome = tbHome.Text
     .sRapidMove = tbRapid.Text
     .sSetBedTemp = tbSetBedTemp.Text
@@ -41,7 +43,9 @@ Public Sub btOK_Click()
     hSettings["BedSize/BedSizeX"] = .iBedSizeX
     hSettings["BedSize/BedSizeY"] = .iBedSizeY
   
-    hSettings["Post/Init"] = .sInitialization
+    hSettings["Post/Init1"] = .sInitialization[1]
+    hSettings["Post/Init2"] = .sInitialization[2]
+    hSettings["Post/Init3"] = .sInitialization[3]
     hSettings["Post/Home"] = .sHome
     hSettings["Post/RapidMove"] = .sRapidMove
     hSettings["Post/SetBedTemp"] = .sSetBedTemp
@@ -128,7 +132,9 @@ Public Sub Form_Open()
     cbStopBits.Text = .iStopBits
     cbParity.Text = .sParity
     cbFlowControl.Text = .sFlowControl
-    tbInitialization.Text = FMain.sInitialization
+    tbInitialization1.Text = FMain.sInitialization[1]
+    tbInitialization2.Text = FMain.sInitialization[2]
+    tbInitialization3.Text = FMain.sInitialization[3]
     tbHome.Text = FMain.sHome
     tbRapid.Text = FMain.sRapidMove
     tbSetBedTemp.Text = FMain.sSetBedTemp
