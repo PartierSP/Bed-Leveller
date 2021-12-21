@@ -14,6 +14,7 @@ Public sHETempPrefix As String
 Public iBedTemp As Integer
 Public iHETemp As Integer
 Public fShim As Float
+Public fRetraction As Float
 Public sPort As String
 Public iBaud As Integer
 Public iDataBits As Integer
@@ -24,6 +25,7 @@ Public iCleanHeight As Integer
 Public sCleanLoc As String
 Public sConfigLoc As String = User.Home &/ ".config/leveller"
 Public sConfigName As String = "config.conf"
+
 Public Sub SerialPort3D_Read()
 
   Dim strReceived As String
@@ -90,6 +92,7 @@ Public Sub Form_Open()
   iHETemp = hSettings["Locations/HETemp", 200]
   iCleanHeight = hSettings["Locations/CleanHeight", 200]
   sCleanLoc = hSettings["Locations/CleanLoc", "Middle"]
+  fRetraction = hSettings["Locations/Retraction", 2]
 
   sPort = hSettings["Communications/Port", "/dev/ttyUSB0"]
   iBaud = hSettings["Communications/Baud", 115200]
@@ -166,6 +169,7 @@ Public Sub Form_Close()
   hSettings["Locations/HETemp"] = iHETemp
   hSettings["Locations/CleanHeight"] = iCleanHeight
   hSettings["Locations/CleanLoc"] = sCleanLoc
+  hSettings["Locations/Retraction"] = fRetraction
 
   hSettings["Communications/Port"] = sPort
   hSettings["Communications/Baud"] = iBaud
@@ -351,6 +355,10 @@ Public Sub btnClean_Click()
       SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
   End Select
 
+  'Perform a retract if Hot End is >90% of iHETemp
+  If Val(LCDHotEnd.Text) > (0.9 * iHETemp) Then
+    SendSerialData(sRapidMove & "E" & "-" & fRetraction, True)
+  Endif
 End
 
 Public Sub ReadTemperature(strReceived As String)

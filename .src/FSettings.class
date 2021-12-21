@@ -18,6 +18,7 @@ Public Sub btOK_Click()
     .iRapidPlane = sbRapidPlane.Value
     .iCleanHeight = sbCleanHeight.Value
     .sCleanLoc = cbCleanLoc.Text
+    .fRetraction = sbRetraction.Value
     .fShim = sbShim.Value
     .iBedTemp = sbBedTemperature.Value
     .iHETemp = sbHETemperature.Value
@@ -60,6 +61,7 @@ Public Sub btOK_Click()
     hSettings["Locations/HETemp"] = .iHETemp
     hSettings["Locations/CleanHeight"] = .iCleanHeight
     hSettings["Locations/CleanLoc"] = .sCleanLoc
+    hSettings["Locations/Retraction"] = .fRetraction
   
     hSettings["Communications/Port"] = .sPort
     hSettings["Communications/Baud"] = .iBaud
@@ -126,6 +128,7 @@ Public Sub Form_Open()
     sbHETemperature.Value = .iHETemp
     sbCleanHeight.Text = .iCleanHeight
     cbCleanLoc.Text = .sCleanLoc
+    sbRetraction.Value = .fRetraction
     tbPort.Text = .sPort
     cbBaud.Text = .iBaud
     cbDataBits.Text = .iDataBits
