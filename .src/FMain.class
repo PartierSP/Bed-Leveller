@@ -29,7 +29,7 @@ Public Sub SerialPort3D_Read()
   Dim strReceived As String
 
   'Small pause to allow full line to be buffered
-  Wait 0.01
+  Sleep 0.01
 
   Try Read #SerialPort3D, strReceived, Lof(SerialPort3D)
   If Error Then
