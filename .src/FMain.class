@@ -186,9 +186,13 @@ Public Sub Form_Close()
   SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
   SerialPort3D.Close()
 
+  FSettings.Close
+
 End
 
 Public Sub btnHome_Click()
+
+  ResetBtnColors()
 
   'sHome Printer
   SendSerialData(Chr$(13), True)    'First communication sometimes results in error.  Sending a blank line lets this fault occure on this non-critial line.
@@ -206,50 +210,78 @@ Public Sub btnHome_Click()
   tgbBed.Enabled = True
   tgbHotEnd.Enabled = True
 
+  btnHome.Background = Color.SelectedBackground
+  btnHome.Foreground = Color.SelectedForeground
+
 End
 
 Public Sub btnLoc1_Click()
+
+  ResetBtnColors()
 
   'Move to -X,+Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & (iBedSizeY - iMargin), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
 
+  btnLoc1.Background = Color.SelectedBackground
+  btnLoc1.Foreground = Color.SelectedForeground
+
 End
 
 Public Sub btnLoc2_Click()
+
+  ResetBtnColors()
 
   'Move to +X,+Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & (iBedSizeY - iMargin), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
 
+  btnLoc2.Background = Color.SelectedBackground
+  btnLoc2.Foreground = Color.SelectedForeground
+
 End
 
 Public Sub btnLoc3_Click()
+
+  ResetBtnColors()
 
   'Move to -X,-Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
 
+  btnLoc3.Background = Color.SelectedBackground
+  btnLoc3.Foreground = Color.SelectedForeground
+
 End
 
 Public Sub btnLoc4_Click()
+
+  ResetBtnColors()
 
   'Move to +X,-Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
 
+  btnLoc4.Background = Color.SelectedBackground
+  btnLoc4.Foreground = Color.SelectedForeground
+
 End
 
 Public Sub btnLoc5_Click()
+
+  ResetBtnColors()
 
   'Move to centre of the bed
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
+
+  btnLoc5.Background = Color.SelectedBackground
+  btnLoc5.Foreground = Color.SelectedForeground
 
 End
 
@@ -324,6 +356,8 @@ End
 
 Public Sub btnClean_Click()
 
+  ResetBtnColors()
+
   'Incase an axis gets bumped during cleaning, force rehoming printer
   btnLoc1.Enabled = False
   btnLoc2.Enabled = False
@@ -359,6 +393,10 @@ Public Sub btnClean_Click()
   If Val(LCDHotEnd.Text) > (0.9 * iHETemp) Then
     SendSerialData(sRapidMove & "E" & "-" & fRetraction, True)
   Endif
+
+  btnClean.Background = Color.SelectedBackground
+  btnClean.Foreground = Color.SelectedForeground
+
 End
 
 Public Sub ReadTemperature(strReceived As String)
@@ -380,15 +418,54 @@ Public Sub ReadTemperature(strReceived As String)
     While (Left(sTemp[i], 1) > "9") Or (Left(sTemp[i], 1) < "0")
       sTemp[i] = Right(sTemp[i], -1)
     Wend
-  
+
     'Remove duplicatication of value
     sTemp[i] = Right(sTemp[i], Len(sTemp[i]) / 2)
   Next
 
+  'Update displays
   LCDHotEnd.Text = Format(Val(sTemp[2]), "0##.0")
   LCDBed.Text = Format(Val(sTemp[6]), "0##.0")
   LBHotEnd.Text = "Hot E(" & Format(sTemp[4], "0") & ")"
   LBBed.Text = "Bed (" & Format(sTemp[8], "0") & ")"
   PBHotEnd.Value = Val(sTemp[10]) / 127
   PBBed.Value = Val(sTemp[12]) / 127
+  
+  'Gradually change color of LCD's to red the hotter they get
+  If Val(LCDHotEnd.Text) > 30 Then
+    i = (Int(Val(LCDHotEnd.Text)) - 30) * 2
+    If i > 255 Then i = 255
+    i = i * &H10000&
+    LCDHotEnd.Foreground = i
+  Else 
+    LCDHotEnd.Foreground = 0    'Black
+  Endif
+
+  If Val(LCDBed.Text) > 20 Then
+    i = (Int(Val(LCDBed.Text)) - 20) * 4
+    If i > 255 Then i = 255
+    i = i * &H10000&
+    LCDBed.Foreground = i
+  Else 
+    LCDBed.Foreground = 0   'Black
+  Endif
+End
+
+Public Sub ResetBtnColors()
+
+  btnClean.Background = -1
+  btnHome.Background = -1
+  btnLoc1.Background = -1
+  btnLoc2.Background = -1
+  btnLoc3.Background = -1
+  btnLoc4.Background = -1
+  btnLoc5.Background = -1
+  btnClean.Foreground = -1
+  btnHome.Foreground = -1
+  btnLoc1.Foreground = -1
+  btnLoc2.Foreground = -1
+  btnLoc3.Foreground = -1
+  btnLoc4.Foreground = -1
+  btnLoc5.Foreground = -1
+
 End
