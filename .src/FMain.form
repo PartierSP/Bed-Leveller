@@ -12,8 +12,10 @@
     Expand = True
     Spacing = True
     { Panel8 Panel
-      MoveScaled(3,2,69,32)
+      MoveScaled(3,2,69,30)
       Arrangement = Arrange.Horizontal
+      Spacing = True
+      Padding = 5
       { Panel2 Panel
         MoveScaled(1,1,53,28)
         Expand = True
@@ -87,11 +89,12 @@
         MoveScaled(55,1,13,28)
         Arrangement = Arrange.Vertical
         AutoResize = True
+        Spacing = True
         Padding = 5
         { LBHotEnd Label
           MoveScaled(0,1,9,3)
-          Text = ("Hot E (-)")
           Alignment = Align.Center
+          Text = ("Hot E (-)")
         }
         { LCDHotEnd LCDLabel
           MoveScaled(1,3,9,5)
@@ -107,8 +110,8 @@
         }
         { LBBed Label
           MoveScaled(1,13,8,3)
-          Text = ("Bed (-)")
           Alignment = Align.Center
+          Text = ("Bed (-)")
         }
         { LCDBed LCDLabel
           MoveScaled(1,16,9,5)

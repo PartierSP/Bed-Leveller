@@ -1,7 +1,7 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,52,67)
+  MoveScaled(0,0,52,65)
   Text = ("Bed Leveller Settings")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
@@ -9,8 +9,9 @@
   Spacing = True
   Margin = True
   { VBox7 VBox
-    MoveScaled(1,1,50,65)
+    MoveScaled(1,1,50,63)
     Expand = True
+    Spacing = True
     { TabStrip1 TabStrip
       MoveScaled(0,1,49,56)
       Expand = True
@@ -22,7 +23,6 @@
         MoveScaled(1,1,47,49)
         Arrangement = Arrange.Row
         Padding = 5
-        Tablet = True
         { HBox1 HBox
           MoveScaled(1,1,45,47)
           Expand = True
@@ -35,53 +35,53 @@
             Padding = 5
             { Label1 Label
               MoveScaled(4,0,14,4)
-              Text = ("Bed Width (X)")
               Alignment = Align.Right
+              Text = ("Bed Width (X)")
             }
             { Label2 Label
               MoveScaled(3,5,14,4)
-              Text = ("Bed Depth (Y)")
               Alignment = Align.Right
+              Text = ("Bed Depth (Y)")
             }
             { Label3 Label
               MoveScaled(3,9,14,4)
-              Text = ("Margin")
               Alignment = Align.Right
+              Text = ("Margin")
             }
             { Label11 Label
               MoveScaled(4,13,14,4)
-              Text = ("Rapid Plain")
               Alignment = Align.Right
+              Text = ("Rapid Plain")
             }
             { Label12 Label
               MoveScaled(4,17,14,4)
-              Text = ("Shim Thickness")
               Alignment = Align.Right
+              Text = ("Shim Thickness")
             }
             { Label13 Label
               MoveScaled(2,20,16,4)
-              Text = ("Bed Temperature")
               Alignment = Align.Right
+              Text = ("Bed Temperature")
             }
             { Label18 Label
               MoveScaled(2,23,16,4)
-              Text = ("Hot-End Temp.")
               Alignment = Align.Right
+              Text = ("Hot-End Temp.")
             }
             { Label22 Label
               MoveScaled(2,27,16,4)
-              Text = ("Cleaning Height")
               Alignment = Align.Right
+              Text = ("Cleaning Height")
             }
             { Label23 Label
               MoveScaled(2,31,16,4)
-              Text = ("Cleaning Location")
               Alignment = Align.Right
+              Text = ("Cleaning Location")
             }
             { Label24 Label
               MoveScaled(1,35,17,4)
-              Text = ("Retraction Amount")
               Alignment = Align.Right
+              Text = ("Retraction Amount")
             }
           }
           { VBox2 VBox
@@ -155,7 +155,6 @@
         MoveScaled(1,1,47,44)
         Arrangement = Arrange.Row
         Padding = 5
-        Tablet = True
         { HBox2 HBox
           MoveScaled(1,1,45,42)
           Expand = True
@@ -168,48 +167,48 @@
             Padding = 5
             { Label17 Label
               MoveScaled(1,1,18,4)
-              Text = ("Initialization Ln1")
               Alignment = Align.Right
+              Text = ("Initialization Ln1")
             }
             { Label25 Label
               MoveScaled(1,5,18,4)
-              Text = ("Initialization Ln2")
               Alignment = Align.Right
+              Text = ("Initialization Ln2")
             }
             { Label26 Label
               MoveScaled(1,9,18,4)
-              Text = ("Initialization Ln3")
               Alignment = Align.Right
+              Text = ("Initialization Ln3")
             }
             { Label10 Label
               MoveScaled(4,12,14,4)
-              Text = ("Home")
               Alignment = Align.Right
+              Text = ("Home")
             }
             { Label14 Label
               MoveScaled(0,16,19,4)
-              Text = ("Rapid Movement")
               Alignment = Align.Right
+              Text = ("Rapid Movement")
             }
             { Label16 Label
               MoveScaled(0,20,19,4)
-              Text = ("Set Bed Temp.")
               Alignment = Align.Right
+              Text = ("Set Bed Temp.")
             }
             { Label15 Label
               MoveScaled(0,25,19,4)
-              Text = ("Bed Temp. Prefix")
               Alignment = Align.Right
+              Text = ("Bed Temp. Prefix")
             }
             { Label19 Label
               MoveScaled(0,29,19,4)
-              Text = ("Set Hot-End Temp.")
               Alignment = Align.Right
+              Text = ("Set Hot-End Temp.")
             }
             { Label20 Label
               MoveScaled(0,33,19,4)
-              Text = ("H.E. Temp. Prefix")
               Alignment = Align.Right
+              Text = ("H.E. Temp. Prefix")
             }
           }
           { VBox6 VBox
@@ -263,15 +262,14 @@
         Arrangement = Arrange.Row
         Spacing = True
         Padding = 5
-        Tablet = True
         { VBox8 VBox
           MoveScaled(1,1,45,35)
           Expand = True
           { Label21 Label
             MoveScaled(2,1,39,4)
             AutoResize = True
-            Text = ("Changes in this tab requires restart.")
             Alignment = Align.Center
+            Text = ("Changes in this tab requires restart.")
           }
           { HBox3 HBox
             MoveScaled(1,6,43,28)
@@ -285,33 +283,33 @@
               Padding = 5
               { Label4 Label
                 MoveScaled(2,1,14,4)
-                Text = ("Port")
                 Alignment = Align.Right
+                Text = ("Port")
               }
               { Label5 Label
                 MoveScaled(3,5,14,4)
-                Text = ("Baud")
                 Alignment = Align.Right
+                Text = ("Baud")
               }
               { Label6 Label
                 MoveScaled(3,8,14,4)
-                Text = ("Data bits")
                 Alignment = Align.Right
+                Text = ("Data bits")
               }
               { Label7 Label
                 MoveScaled(3,12,14,4)
-                Text = ("Stop bits")
                 Alignment = Align.Right
+                Text = ("Stop bits")
               }
               { Label9 Label
                 MoveScaled(3,15,14,4)
-                Text = ("Parity")
                 Alignment = Align.Right
+                Text = ("Parity")
               }
               { Label8 Label
                 MoveScaled(3,19,14,4)
-                Text = ("Flowcontrol")
                 Alignment = Align.Right
+                Text = ("Flowcontrol")
               }
             }
             { VBox4 VBox
@@ -355,7 +353,7 @@
       Index = 0
     }
     { Panel1 Panel
-      MoveScaled(1,58,48,6)
+      MoveScaled(1,57,48,5)
       Arrangement = Arrange.Horizontal
       Spacing = True
       Padding = 10
