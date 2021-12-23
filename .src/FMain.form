@@ -1,61 +1,195 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,45,55)
+  MoveScaled(0,0,78,66)
   Text = ("Bed Leveller")
   Icon = Picture["icon.png"]
-  Resizable = False
-  { btnHome Button
-    MoveScaled(17,28,10,7)
-    Text = Shortcut(("Home"), "H")
+  Arrangement = Arrange.Fill
+  AutoResize = True
+  Padding = 5
+  { vsMain VSplit
+    MoveScaled(1,1,74,64)
+    Expand = True
+    Spacing = True
+    { Panel8 Panel
+      MoveScaled(3,2,69,30)
+      Arrangement = Arrange.Horizontal
+      Spacing = True
+      Padding = 5
+      { Panel2 Panel
+        MoveScaled(1,1,53,28)
+        Expand = True
+        Arrangement = Arrange.Fill
+        AutoResize = True
+        Spacing = True
+        Padding = 10
+        { Panel1 HBox
+          MoveScaled(1,1,51,26)
+          Background = Color.Gray
+          Expand = True
+          { VBox1 VBox
+            MoveScaled(1,2,13,22)
+            Padding = 10
+            { btnLoc1 Button
+              MoveScaled(0,0,14,7)
+              Enabled = False
+              Text = ("-X,+Y")
+            }
+            { Spring4 Spring
+              MoveScaled(4,9,2,3)
+            }
+            { btnLoc3 Button
+              MoveScaled(0,14,13,7)
+              Enabled = False
+              Text = ("-X,-Y")
+            }
+          }
+          { Panel6 Panel
+            MoveScaled(15,2,3,22)
+            Expand = True
+          }
+          { VBox2 VBox
+            MoveScaled(19,2,13,22)
+            { Spring2 Spring
+              MoveScaled(4,2,3,4)
+            }
+            { btnLoc5 Button
+              MoveScaled(0,7,13,8)
+              Enabled = False
+              Text = ("Centre")
+            }
+            { Spring3 Spring
+              MoveScaled(4,17,2,3)
+            }
+          }
+          { Panel3 Panel
+            MoveScaled(33,2,3,22)
+            Expand = True
+          }
+          { VBox3 VBox
+            MoveScaled(37,3,13,21)
+            Padding = 10
+            { btnLoc2 Button
+              MoveScaled(0,0,13,7)
+              Enabled = False
+              Text = ("+X,+Y")
+            }
+            { Spring1 Spring
+              MoveScaled(4,9,2,4)
+            }
+            { btnLoc4 Button
+              MoveScaled(0,14,13,7)
+              Enabled = False
+              Text = ("+X,-Y")
+            }
+          }
+        }
+      }
+      { Panel5 Panel
+        MoveScaled(55,1,13,28)
+        Arrangement = Arrange.Vertical
+        AutoResize = True
+        Spacing = True
+        Padding = 5
+        { LBHotEnd Label
+          MoveScaled(0,1,9,3)
+          Alignment = Align.Center
+          Text = ("Hot E (-)")
+        }
+        { LCDHotEnd LCDLabel
+          MoveScaled(1,3,9,5)
+          Text = ("---.-")
+          Alignment = Align.Center
+        }
+        { PBHotEnd ProgressBar
+          MoveScaled(1,8,8,3)
+          Expand = True
+        }
+        { Separator1 Separator
+          MoveScaled(1,12,9,1)
+        }
+        { LBBed Label
+          MoveScaled(1,13,8,3)
+          Alignment = Align.Center
+          Text = ("Bed (-)")
+        }
+        { LCDBed LCDLabel
+          MoveScaled(1,16,9,5)
+          Text = ("---.-")
+          Alignment = Align.Center
+        }
+        { PBBed ProgressBar
+          MoveScaled(1,21,9,4)
+          Expand = True
+        }
+      }
+    }
+    { VBox4 VBox
+      MoveScaled(2,35,66,27)
+      Expand = True
+      Spacing = True
+      Padding = 5
+      { Panel7 HBox
+        MoveScaled(1,1,64,6)
+        AutoResize = True
+        Padding = 5
+        { btnHome Button
+          MoveScaled(1,1,10,4)
+          Text = Shortcut(("Home"), "H")
+        }
+        { Spring7 Spring
+          MoveScaled(11,2,2,2)
+        }
+        { tgbHotEnd ToggleButton
+          MoveScaled(13,1,11,4)
+          Enabled = False
+          Text = Shortcut(("Hot End Off"), "E")
+        }
+        { Spring8 Spring
+          MoveScaled(24,2,2,2)
+        }
+        { tgbBed ToggleButton
+          MoveScaled(26,1,11,4)
+          Enabled = False
+          Text = Shortcut(("Bed Off"), "B")
+        }
+        { Spring5 Spring
+          MoveScaled(37,2,2,2)
+        }
+        { btnClean Button
+          MoveScaled(40,1,10,4)
+          Enabled = False
+          Text = Shortcut(("Clean Pos"), "C")
+        }
+        { Spring6 Spring
+          MoveScaled(50,2,1,2)
+        }
+        { btnSetting Button
+          MoveScaled(51,1,11,4)
+          Text = Shortcut(("Settings"), "S")
+        }
+      }
+      { Panel4 Panel
+        MoveScaled(1,8,41,18)
+        Expand = True
+        Arrangement = Arrange.Fill
+        { TextArea1 TextArea
+          MoveScaled(0,0,39,16)
+          Enabled = False
+          Expand = True
+        }
+      }
+      { Timer1 #Timer
+        #MoveScaled(52,13)
+        Enabled = True
+        Delay = 100
+      }
+    }
   }
   { SerialPort3D #SerialPort
-    #MoveScaled(26,28)
+    #MoveScaled(47,46)
     FlowControl = SerialPort.None
     PortName = "/dev/ttyUSB0"
     Speed = 115200
-  }
-  { TextArea1 TextArea
-    MoveScaled(3,37,39,16)
-    Enabled = False
-  }
-  { tgbBed ToggleButton
-    MoveScaled(3,28,11,7)
-    Enabled = False
-    Text = Shortcut(("Bed Off"), "B")
-  }
-  { btnSetting Button
-    MoveScaled(31,28,11,7)
-    Text = Shortcut(("Settings"), "S")
-  }
-  { Panel1 Panel
-    MoveScaled(1,1,42,25)
-    Background = Color.Gray
-    Border = Border.Plain
-    { btnLoc3 Button
-      MoveScaled(1,16,10,7)
-      Enabled = False
-      Text = ("-X,-Y")
-    }
-    { btLoc1 Button
-      MoveScaled(1,2,10,7)
-      Enabled = False
-      Text = ("-X,+Y")
-    }
-    { btnLoc5 Button
-      MoveScaled(16,9,9,8)
-      Enabled = False
-      Text = ("Centre")
-    }
-    { btnLoc2 Button
-      MoveScaled(30,2,10,7)
-      Enabled = False
-      Text = ("+X,+Y")
-    }
-    { btnLoc4 Button
-      MoveScaled(30,16,10,7)
-      Enabled = False
-      Text = ("+X,-Y")
-    }
   }
 }

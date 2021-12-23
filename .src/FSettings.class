@@ -1,7 +1,5 @@
 ' Gambas class file
 
-Private db1 As New Connection
-
 Public Sub Run() As Boolean
 
   Return Not Me.ShowModal()
@@ -10,52 +8,71 @@ End
 
 Public Sub btOK_Click()
 
-  Dim rs As Result
+  Dim hSettings As Settings
 
-  'Set settings
   With FMain
-    .iBedSizeX = sbBedWidth.Value 
+    'Set settings
+    .iBedSizeX = sbBedWidth.Value
     .iBedSizeY = sbBedDepth.Value
     .iMargin = sbMargin.Value
     .iRapidPlane = sbRapidPlane.Value
-    .sgShim = sbShim.Value
-    .sgBedTemp = sbBedTemperature.Value
+    .iCleanHeight = sbCleanHeight.Value
+    .sCleanLoc = cbCleanLoc.Text
+    .fRetraction = sbRetraction.Value
+    .fShim = sbShim.Value
+    .iBedTemp = sbBedTemperature.Value
+    .iHETemp = sbHETemperature.Value
     .sPort = tbPort.Text
     .iBaud = Val(cbBaud.Text)
     .iDataBits = Val(cbDataBits.Text)
     .iStopBits = Val(cbStopBits.Text)
     .sParity = cbParity.Text
     .sFlowControl = cbFlowControl.Text
-    .sInitialization = tbInitialization.Text
+    .sInitialization[1] = tbInitialization1.Text
+    .sInitialization[2] = tbInitialization2.Text
+    .sInitialization[3] = tbInitialization3.Text
     .sHome = tbHome.Text
     .sRapidMove = tbRapid.Text
     .sSetBedTemp = tbSetBedTemp.Text
     .sBedTempPrefix = tbBedTempPrefix.Text
+    .sSetHETemp = tbSetHETemp.Text
+    .sHETempPrefix = tbHETempPrefix.Text
 
-    'TODO: save settings
-    db1.Type = "sqlite"
-    db1.Host = User.Home & "/.config/leveller"
-    db1.Name = "config.sqlite"
-    db1.Open
-    rs = db1.Exec("UPDATE settings SET value=\"" & .iBedSizeX & "\" WHERE name=\"BedSizeX\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .iBedSizeY & "\" WHERE name=\"BedSizeY\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .iMargin & "\" WHERE name=\"Margin\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sHome & "\" WHERE name=\"Home\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sInitialization & "\" WHERE name=\"Init\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sRapidMove & "\" WHERE name=\"RapidMove\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sRapidMove & "\" WHERE name=\"RapidMove\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .iRapidPlane & "\" WHERE name=\"RapidPlane\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sSetBedTemp & "\" WHERE name=\"SetBedTemp\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sBedTempPrefix & "\" WHERE name=\"BedTempPrefix\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sgBedTemp & "\" WHERE name=\"BedTemp\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sgShim & "\" WHERE name=\"Shim\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sPort & "\" WHERE name=\"Port\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .iBaud & "\" WHERE name=\"Baud\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .iDataBits & "\" WHERE name=\"DataBits\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .iStopBits & "\" WHERE name=\"StopBits\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sParity & "\" WHERE name=\"Parity\"")
-    rs = db1.Exec("UPDATE settings SET value=\"" & .sFlowControl & "\" WHERE name=\"FlowControl\"")
-    db1.Close
+    'Save settings to config
+    hSettings = New Settings(.sConfigLoc &/ .sConfigName)
+  
+    hSettings["BedSize/BedSizeX"] = .iBedSizeX
+    hSettings["BedSize/BedSizeY"] = .iBedSizeY
+  
+    hSettings["Post/Init1"] = .sInitialization[1]
+    hSettings["Post/Init2"] = .sInitialization[2]
+    hSettings["Post/Init3"] = .sInitialization[3]
+    hSettings["Post/Home"] = .sHome
+    hSettings["Post/RapidMove"] = .sRapidMove
+    hSettings["Post/SetBedTemp"] = .sSetBedTemp
+    hSettings["Post/BedTempPrefix"] = .sBedTempPrefix
+    hSettings["Post/SetHETemp"] = .sSetHETemp
+    hSettings["Post/HETempPrefix"] = .sHETempPrefix
+
+    hSettings["Locations/Margin"] = .iMargin
+    hSettings["Locations/RapidPlane"] = .iRapidPlane
+    hSettings["Locations/Shim"] = .fShim
+    hSettings["Locations/BedTemp"] = .iBedTemp
+    hSettings["Locations/HETemp"] = .iHETemp
+    hSettings["Locations/CleanHeight"] = .iCleanHeight
+    hSettings["Locations/CleanLoc"] = .sCleanLoc
+    hSettings["Locations/Retraction"] = .fRetraction
+  
+    hSettings["Communications/Port"] = .sPort
+    hSettings["Communications/Baud"] = .iBaud
+    hSettings["Communications/DataBits"] = .iDataBits
+    hSettings["Communications/StopBits"] = .iStopBits
+    hSettings["Communications/Parity"] = .sParity
+    hSettings["Communications/FlowControl"] = .sFlowControl
+
+    'Update location button text
+    .UpdateButtonNames
+
   End With
 
   Me.Close
@@ -71,27 +88,35 @@ End
 Public Sub Form_Open()
 
   Dim sBaudRates As New String[7]
+  Dim sCleanLoc As New String[4]
   Dim sDataBits As New String[2]
   Dim sStopBits As New String[3]
   Dim sParity As New String[3]
   Dim sFlowControls As New String[4]
+  Dim hSettings As Settings
+
+  'Retrieve Setting form settings.
+  hSettings = New Settings(FMain.sConfigLoc &/ FMain.sConfigName)
+  hSettings.Read(Me, "SettingForm")
 
   'Fill in Combo Boxes
+  sCleanLoc = ["Home", "Left", "Middle", "Right"]
+  cbCleanLoc.List = sCleanLoc
+
   sBaudRates = ["1200", "2400", "4800", "9600", "28800", "57600", "115200"]
   cbBaud.List = sBaudRates
 
   sDataBits = ["7", "8"]
   cbDataBits.List = sDataBits
-  
+
   sStopBits = ["1", "2", "3"]
   cbStopBits.List = sStopBits
-  
+
   sParity = ["None", "Even", "Odd"]
   cbParity.List = sParity
 
   sFlowControls = ["None", "Hardware", "Software", "Both"]
   cbFlowControl.List = sFlowControls
-
 
   'Set the forms control values.
   With FMain
@@ -99,19 +124,37 @@ Public Sub Form_Open()
     sbBedDepth.Value = .iBedSizeY
     sbMargin.Value = .iMargin
     sbRapidPlane.Value = .iRapidPlane
-    sbShim.Value = .sgShim
-    sbBedTemperature.Value = .sgBedTemp
+    sbShim.Value = .fShim
+    sbBedTemperature.Value = .iBedTemp
+    sbHETemperature.Value = .iHETemp
+    sbCleanHeight.Text = .iCleanHeight
+    cbCleanLoc.Text = .sCleanLoc
+    sbRetraction.Value = .fRetraction
     tbPort.Text = .sPort
     cbBaud.Text = .iBaud
     cbDataBits.Text = .iDataBits
     cbStopBits.Text = .iStopBits
     cbParity.Text = .sParity
     cbFlowControl.Text = .sFlowControl
-    tbInitialization.Text = FMain.sInitialization
+    tbInitialization1.Text = FMain.sInitialization[1]
+    tbInitialization2.Text = FMain.sInitialization[2]
+    tbInitialization3.Text = FMain.sInitialization[3]
     tbHome.Text = FMain.sHome
     tbRapid.Text = FMain.sRapidMove
     tbSetBedTemp.Text = FMain.sSetBedTemp
     tbBedTempPrefix.Text = FMain.sBedTempPrefix
+    tbSetHETemp.Text = FMain.sSetHETemp
+    tbHETempPrefix.Text = FMain.sHETempPrefix
   End With
+
+End
+
+Public Sub Form_Close()
+
+  Dim hSettings As Settings
+
+  'Save Setting form settings.
+  hSettings = New Settings(FMain.sConfigLoc &/ FMain.sConfigName)
+  hSettings.Write(Me, "SettingForm")
 
 End

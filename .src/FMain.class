@@ -1,37 +1,53 @@
 ' Gambas class file
 
-Private db1 As New Connection
-Public iBedSizeX As Integer 
-Public iBedSizeY As Integer 
-Public iMargin As Integer 
-Public sInitialization As String
-Public sHome As String 
-Public sRapidMove As String 
-Public iRapidPlane As Integer 
-Public sSetBedTemp As String 
-Public sBedTempPrefix As String 
-Public sgBedTemp As Single 
-Public sgShim As Single 
-Public sPort As String 
+Public iBedSizeX As Integer
+Public iBedSizeY As Integer
+Public iMargin As Integer
+Public sInitialization As New String[4]
+Public sHome As String
+Public sRapidMove As String
+Public iRapidPlane As Integer
+Public sSetBedTemp As String
+Public sBedTempPrefix As String
+Public sSetHETemp As String
+Public sHETempPrefix As String
+Public iBedTemp As Integer
+Public iHETemp As Integer
+Public fShim As Float
+Public fRetraction As Float
+Public sPort As String
 Public iBaud As Integer
 Public iDataBits As Integer
 Public iStopBits As Integer
 Public sParity As String
 Public sFlowControl As String
+Public iCleanHeight As Integer
+Public sCleanLoc As String
+Public sConfigLoc As String = User.Home &/ ".config/leveller"
+Public sConfigName As String = "config.conf"
 
 Public Sub SerialPort3D_Read()
 
   Dim strReceived As String
-   
+
+  'Small pause to allow full line to be buffered
+  Sleep 0.01
+
   Try Read #SerialPort3D, strReceived, Lof(SerialPort3D)
   If Error Then
     strReceived = ""
   Else
-    TextArea1.Text = TextArea1.Text & strReceived
+    Select Left(strReceived, 4) 
+      Case "  TT"
+        'Got a temperature reading
+        ReadTemperature(strReceived)
+      Case Else
+        TextArea1.Text = TextArea1.Text & strReceived
+    End Select
   Endif
 
-  Catch
-    Me.Text = Error.Text
+Catch
+  Me.Text = Error.Text
 
 End
 
@@ -44,120 +60,50 @@ Public Sub SendSerialData(strMessage As String, blnLF As Boolean)
   Write #SerialPort3D, strMessage
   SerialPort3D.Send()
 
-  Catch
-    Me.Text = Error.Text
+Catch
+  Me.Text = Error.Text
+
 End
 
 Public Sub Form_Open()
-Dim tbl As Table
-Dim rs As Result
 
-  'Check if ~/.config/leveller/config.sqlite exists
-  If Exist(User.Home & "/.config/leveller/config.sqlite") == False Then
-    'Config is missing check if ~/.config/leveller directory exists
-    If Exist(User.Home & "/.config/leveller") == False Then
-      'Config directory missing, create it
-      Mkdir User.Home & "/.config/leveller"
-    Endif
-    'Create config file and populate it standard values
-    With db1
-      .Type = "sqlite"
-      .Host = User.Home & "/.config/leveller"
-      .name = ""
-      .Open
-      .Databases.Add("config.sqlite")
-      .Close
-      .Name = "config.sqlite"
-      .Open
-        tbl = .Tables.Add("settings")
-        tbl.Fields.Add("name", db.String, 10)
-        tbl.Fields.Add("value", db.String, 10)
-        tbl.PrimaryKey = ["name"]
-        tbl.Update
-      .Exec("INSERT INTO settings (name, value) VALUES(\"BedSizeX\",\"235\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"BedSizeY\",\"240\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Margin\",\"30\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Home\",\"G28\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Init\",\"G21 G90 T0\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"RapidMove\",\"G0\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"RapidPlane\",\"10\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"SetBedTemp\",\"M140\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"BedTempPrefix\",\"S\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"BedTemp\",\"60\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Shim\",\"0.2\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Port\",\"/dev/ttyUSB0\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Baud\",\"115200\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"DataBits\",\"8\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"StopBits\",\"1\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"Parity\",\"None\")")
-      .Exec("INSERT INTO settings (name, value) VALUES(\"FlowControl\",\"None\")")
-      .Close
-    End With
+  Dim hSettings As Settings
 
-  Endif
-  
-  'Open configuration database
-  With db1
-    .Type = "sqlite"
-    .Host = User.Home & "/.config/leveller"
-    .Name = "config.sqlite"
-    .Open
-  End With
-  
-  'Read settings
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedSizeX\"")
-  rs.MoveFirst
-  iBedSizeX = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedSizeY\"")
-  rs.MoveFirst
-  iBedSizeY = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Margin\"")
-  rs.MoveFirst
-  iMargin = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Home\"")
-  rs.MoveFirst
-  sHome = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Init\"")
-  rs.MoveFirst
-  sInitialization = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"RapidMove\"")
-  rs.MoveFirst
-  sRapidMove = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"RapidPlane\"")
-  rs.MoveFirst
-  iRapidPlane = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"SetBedTemp\"")
-  rs.MoveFirst
-  sSetBedTemp = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedTempPrefix\"")
-  rs.MoveFirst
-  sBedTempPrefix = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"BedTemp\"")
-  rs.MoveFirst
-  sgBedTemp = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Shim\"")
-  rs.MoveFirst
-  sgShim = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Port\"")
-  rs.MoveFirst
-  sPort = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Baud\"")
-  rs.MoveFirst
-  iBaud = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"DataBits\"")
-  rs.MoveFirst
-  iDataBits = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"StopBits\"")
-  rs.MoveFirst
-  iStopBits = Val(rs!value)
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"Parity\"")
-  rs.MoveFirst
-  sParity = rs!value
-  rs = db1.Exec("SELECT * FROM settings WHERE name=\"FlowControl\"")
-  rs.MoveFirst
-  sFlowControl = rs!value
-  db1.Close
-  
+  'Load settings
+  hSettings = New Settings(sConfigLoc &/ sConfigName)
+
+  iBedSizeX = hSettings["BedSize/BedSizeX", 235]
+  iBedSizeY = hSettings["BedSize/BedSizeY", 240]
+  ' 
+  sInitialization[1] = hSettings["Post/Init1", "G21 G90 T0"]
+  sInitialization[2] = hSettings["Post/Init2", "M155 S2"]
+  sInitialization[3] = hSettings["Post/Init3", ""]
+  sHome = hSettings["Post/Home", "G28"]
+  sRapidMove = hSettings["Post/RapidMove", "G0"]
+  sSetBedTemp = hSettings["Post/SetBedTemp", "M140"]
+  sBedTempPrefix = hSettings["Post/BedTempPrefix", "S"]
+  sSetHETemp = hSettings["Post/SetHETemp", "M104"]
+  sHETempPrefix = hSettings["Post/HETempPrefix", "S"]
+
+  iMargin = hSettings["Locations/Margin", 30]
+  iRapidPlane = hSettings["Locations/RapidPlane", 10]
+  fShim = hSettings["Locations/Shim", 0.2]
+  iBedTemp = hSettings["Locations/BedTemp", 60]
+  iHETemp = hSettings["Locations/HETemp", 200]
+  iCleanHeight = hSettings["Locations/CleanHeight", 200]
+  sCleanLoc = hSettings["Locations/CleanLoc", "Middle"]
+  fRetraction = hSettings["Locations/Retraction", 2]
+
+  sPort = hSettings["Communications/Port", "/dev/ttyUSB0"]
+  iBaud = hSettings["Communications/Baud", 115200]
+  iDataBits = hSettings["Communications/DataBits", 8]
+  iStopBits = hSettings["Communications/StopBits", 1]
+  sParity = hSettings["Communications/Parity", "None"]
+  sFlowControl = hSettings["Communications/FlowControl", "None"]
+
+  hSettings.Read(Me, "MainForm")
+  hSettings.Read(vsMain, "MainFormVSMain")
+
   With SerialPort3D
     .PortName = sPort
     .Speed = iBaud
@@ -182,73 +128,160 @@ Dim rs As Result
         .FlowControl = SerialPort.Both
     End Select
   End With
-  
+
+  'Update Location button names
+  UpdateButtonNames
+
   Try serialPort3D.Open()
   If Error Then
+    btnHome.Enabled = False
     Message.Warning("Printer not found.  Check settings/connection and try again.")
     FSettings.Show
-   Else
+  Else
     btnHome.Enabled = True
   Endif
- 
+
 End
 
 Public Sub Form_Close()
- 
-  'Turn off heated bed prior to exiting program
+
+  Dim hSettings As Settings
+
+  'Save Window size/location settings
+  hSettings = New Settings(sConfigLoc &/ sConfigName)
+  hSettings["BedSize/BedSizeX"] = iBedSizeX
+  hSettings["BedSize/BedSizeY"] = iBedSizeY
+
+  hSettings["Post/Init1"] = sInitialization[1]
+  hSettings["Post/Init2"] = sInitialization[2]
+  hSettings["Post/Init3"] = sInitialization[3]
+  hSettings["Post/Home"] = sHome
+  hSettings["Post/RapidMove"] = sRapidMove
+  hSettings["Post/SetBedTemp"] = sSetBedTemp
+  hSettings["Post/BedTempPrefix"] = sBedTempPrefix
+  hSettings["Post/SetHETemp"] = sSetHETemp
+  hSettings["Post/HETempPrefix"] = sHETempPrefix
+
+  hSettings["Locations/Margin"] = iMargin
+  hSettings["Locations/RapidPlane"] = iRapidPlane
+  hSettings["Locations/Shim"] = fShim
+  hSettings["Locations/BedTemp"] = iBedTemp
+  hSettings["Locations/HETemp"] = iHETemp
+  hSettings["Locations/CleanHeight"] = iCleanHeight
+  hSettings["Locations/CleanLoc"] = sCleanLoc
+  hSettings["Locations/Retraction"] = fRetraction
+
+  hSettings["Communications/Port"] = sPort
+  hSettings["Communications/Baud"] = iBaud
+  hSettings["Communications/DataBits"] = iDataBits
+  hSettings["Communications/StopBits"] = iStopBits
+  hSettings["Communications/Parity"] = sParity
+  hSettings["Communications/FlowControl"] = sFlowControl
+
+  hSettings.Write(Me, "MainForm")
+  hSettings.Write(vsMain, "MainFormVSMain")
+
+  'Turn off heated bed and hot end prior to exiting program
   SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
+  SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
   SerialPort3D.Close()
- 
+
+  FSettings.Close
+
 End
 
 Public Sub btnHome_Click()
 
+  ResetBtnColors()
+
   'sHome Printer
   SendSerialData(Chr$(13), True)    'First communication sometimes results in error.  Sending a blank line lets this fault occure on this non-critial line.
-  SendSerialData(sInitialization, True)
+  SendSerialData(sInitialization[1], True)
+  SendSerialData(sInitialization[2], True)
+  SendSerialData(sInitialization[3], True)
+  SendSerialData("G92 E0", True)
   SendSerialData(sHome, True)
-  btLoc1.Enabled = True
+  btnLoc1.Enabled = True
   btnLoc2.Enabled = True
   btnLoc3.Enabled = True
   btnLoc4.Enabled = True
   btnLoc5.Enabled = True
+  btnClean.Enabled = True
   tgbBed.Enabled = True
+  tgbHotEnd.Enabled = True
+
+  btnHome.Background = Color.SelectedBackground
+  btnHome.Foreground = Color.SelectedForeground
 
 End
 
-Public Sub btLoc1_Click()
+Public Sub btnLoc1_Click()
+
+  ResetBtnColors()
 
   'Move to -X,+Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & (iBedSizeY - iMargin), True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
+
+  btnLoc1.Background = Color.SelectedBackground
+  btnLoc1.Foreground = Color.SelectedForeground
 
 End
 
 Public Sub btnLoc2_Click()
 
+  ResetBtnColors()
+
   'Move to +X,+Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & (iBedSizeY - iMargin), True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
+
+  btnLoc2.Background = Color.SelectedBackground
+  btnLoc2.Foreground = Color.SelectedForeground
 
 End
 
 Public Sub btnLoc3_Click()
 
+  ResetBtnColors()
+
   'Move to -X,-Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
+
+  btnLoc3.Background = Color.SelectedBackground
+  btnLoc3.Foreground = Color.SelectedForeground
 
 End
 
 Public Sub btnLoc4_Click()
 
+  ResetBtnColors()
+
   'Move to +X,-Y position
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
+
+  btnLoc4.Background = Color.SelectedBackground
+  btnLoc4.Foreground = Color.SelectedForeground
+
+End
+
+Public Sub btnLoc5_Click()
+
+  ResetBtnColors()
+
+  'Move to centre of the bed
+  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
+  SendSerialData(sRapidMove & "Z" & fShim, True)
+
+  btnLoc5.Background = Color.SelectedBackground
+  btnLoc5.Foreground = Color.SelectedForeground
 
 End
 
@@ -256,15 +289,6 @@ Public Sub btnSetting_Click()
 
   'Open Settings form
   FSettings.Show
-
-End
-
-Public Sub btnLoc5_Click()
-
-  'Move to centre of the bed
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
-  SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
-  SendSerialData(sRapidMove & "Z" & sgShim, True)
 
 End
 
@@ -278,15 +302,170 @@ Public Sub tgbBed_Click()
 
   If tgbBed.Value == True Then
     'Turn on heated bed
-    SendSerialData(sSetBedTemp & sBedTempPrefix & sgBedTemp, True)
-    tgbBed.Text = "Bed On"
+    SendSerialData(sSetBedTemp & sBedTempPrefix & iBedTemp, True)
+    tgbBed.Text = "&Bed On"
   Else
     'Turn off heated bed
     SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
-    tgbBed.Text = "Bed Off"
+    tgbBed.Text = "&Bed Off"
   Endif
 
 End
 
+Public Sub tgbHotEnd_Click()
 
+  If tgbHotEnd.Value == True Then
+    'Turn on heated bed
+    SendSerialData(sSetHETemp & sHETempPrefix & iHETemp, True)
+    tgbHotEnd.Text = "Hot &End On"
+  Else
+    'Turn off heated bed
+    SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
+    tgbHotEnd.Text = "Hot &End Off"
+  Endif
 
+End
+
+Public Sub UpdateButtonNames()
+
+  btnLoc1.Text = "X" & Str(iMargin) & " Y" & Str(iBedSizeY - iMargin)
+  btnLoc2.Text = "X" & Str(iBedSizeX - iMargin) & " Y" & Str(iBedSizeY - iMargin)
+  btnLoc3.Text = "X" & Str(iMargin) & " Y" & Str(iMargin)
+  btnLoc4.Text = "X" & Str(iBedSizeX - iMargin) & " Y" & Str(iMargin)
+  btnLoc5.Text = "X" & Str(iBedSizeX / 2) & " Y" & Str(iBedSizeY / 2)
+
+End
+
+Public Sub Form_Resize()
+
+  If Me.Width < 400 Then
+    Me.Width = Me.Width + 15
+  Endif
+
+  If Me.Height < 300 Then
+    Me.Height = Me.height + 15
+  Endif
+
+End
+
+Public Sub Timer1_Timer()
+
+  Form_Resize
+
+End
+
+Public Sub btnClean_Click()
+
+  ResetBtnColors()
+
+  'Incase an axis gets bumped during cleaning, force rehoming printer
+  btnLoc1.Enabled = False
+  btnLoc2.Enabled = False
+  btnLoc3.Enabled = False
+  btnLoc4.Enabled = False
+  btnLoc5.Enabled = False
+  btnClean.Enabled = False
+  btnHome.Enabled = True
+
+  Select sCleanLoc
+    Case "Home"
+      'Move to Home Clean position
+      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+      SendSerialData(sRapidMove & "X0 Y0", True)
+  
+    Case "Left"
+      'Move to Left Clean position
+      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+      SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
+  
+    Case "Middle"
+      'Move to Middle Clean position
+      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+      SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & iMargin, True)
+
+    Case "Right"
+      'Move to +X,-Y position
+      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+      SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
+  End Select
+
+  'Perform a retract if Hot End is >90% of iHETemp
+  If Val(LCDHotEnd.Text) > (0.9 * iHETemp) Then
+    SendSerialData(sRapidMove & "E" & "-" & fRetraction, True)
+  Endif
+
+  btnClean.Background = Color.SelectedBackground
+  btnClean.Foreground = Color.SelectedForeground
+
+End
+
+Public Sub ReadTemperature(strReceived As String)
+
+  Dim sTemp As New String[13]
+  Dim i As Integer
+
+  'Remove ending cruff
+  While (Right(strReceived, 1) > "9") Or (Right(strReceived, 1) < "0")
+    strReceived = Left(strReceived, -1)
+  Wend
+
+  'Split temperature data into an array
+  sTemp = Split(strReceived, " ")
+
+  'Clean array
+  For i = 2 To 12 Step 2
+    'Remove starting cruff
+    While (Left(sTemp[i], 1) > "9") Or (Left(sTemp[i], 1) < "0")
+      sTemp[i] = Right(sTemp[i], -1)
+    Wend
+
+    'Remove duplicatication of value
+    sTemp[i] = Right(sTemp[i], Len(sTemp[i]) / 2)
+  Next
+
+  'Update displays
+  LCDHotEnd.Text = Format(Val(sTemp[2]), "0##.0")
+  LCDBed.Text = Format(Val(sTemp[6]), "0##.0")
+  LBHotEnd.Text = "Hot E(" & Format(sTemp[4], "0") & ")"
+  LBBed.Text = "Bed (" & Format(sTemp[8], "0") & ")"
+  PBHotEnd.Value = Val(sTemp[10]) / 127
+  PBBed.Value = Val(sTemp[12]) / 127
+  
+  'Gradually change color of LCD's to red the hotter they get
+  If Val(LCDHotEnd.Text) > 30 Then
+    i = (Int(Val(LCDHotEnd.Text)) - 30) * 2
+    If i > 255 Then i = 255
+    i = i * &H10000&
+    LCDHotEnd.Foreground = i
+  Else 
+    LCDHotEnd.Foreground = 0    'Black
+  Endif
+
+  If Val(LCDBed.Text) > 20 Then
+    i = (Int(Val(LCDBed.Text)) - 20) * 4
+    If i > 255 Then i = 255
+    i = i * &H10000&
+    LCDBed.Foreground = i
+  Else 
+    LCDBed.Foreground = 0   'Black
+  Endif
+End
+
+Public Sub ResetBtnColors()
+
+  btnClean.Background = -1
+  btnHome.Background = -1
+  btnLoc1.Background = -1
+  btnLoc2.Background = -1
+  btnLoc3.Background = -1
+  btnLoc4.Background = -1
+  btnLoc5.Background = -1
+  btnClean.Foreground = -1
+  btnHome.Foreground = -1
+  btnLoc1.Foreground = -1
+  btnLoc2.Foreground = -1
+  btnLoc3.Foreground = -1
+  btnLoc4.Foreground = -1
+  btnLoc5.Foreground = -1
+
+End
