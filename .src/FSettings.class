@@ -72,6 +72,7 @@ Public Sub btOK_Click()
 
     'Update location button text
     .UpdateButtonNames
+
   End With
 
   Me.Close
