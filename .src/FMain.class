@@ -72,12 +72,12 @@ Public Sub Form_Open()
   'Load settings
   hSettings = New Settings(sConfigLoc &/ sConfigName)
 
-  iBedSizeX = hSettings["BedSize/BedSizeX", 235]
-  iBedSizeY = hSettings["BedSize/BedSizeY", 240]
+  iBedSizeX = hSettings["BedSize/BedSizeX", 220]
+  iBedSizeY = hSettings["BedSize/BedSizeY", 220]
   ' 
   sInitialization[1] = hSettings["Post/Init1", "G21 G90 T0"]
   sInitialization[2] = hSettings["Post/Init2", "M155 S2"]
-  sInitialization[3] = hSettings["Post/Init3", ""]
+  sInitialization[3] = hSettings["Post/Init3", "G92 E0"]
   sHome = hSettings["Post/Home", "G28"]
   sRapidMove = hSettings["Post/RapidMove", "G0"]
   sSetBedTemp = hSettings["Post/SetBedTemp", "M140"]
@@ -199,7 +199,6 @@ Public Sub btnHome_Click()
   SendSerialData(sInitialization[1], True)
   SendSerialData(sInitialization[2], True)
   SendSerialData(sInitialization[3], True)
-  SendSerialData("G92 E0", True)
   SendSerialData(sHome, True)
   btnLoc1.Enabled = True
   btnLoc2.Enabled = True
@@ -400,6 +399,35 @@ Public Sub btnClean_Click()
 End
 
 Public Sub ReadTemperature(strReceived As String)
+
+  ' Temperature lines from printers contain the following:
+  '     - Hot end temperature [###.#0] (repeated 2x)
+  '     - Hot end temperature set point [###.#0] (repeated 2x)
+  '     - Bed temperature reading [###.#0] (repeated 2x)
+  '     - Bed temperature set point [###.#0] (repeated 2x)
+  '     - Hot end power level [###] (repeated 2x)
+  '     - Bed power level [###] (repeated 2x)
+  '
+  ' Chamber temperatures currently not supported / tested
+  '
+  ' Sample of a temperature line sent from printer is as following:
+  ' "  TT:: 19.9619.96 / / 0.000.00 BB:: 20.0820.08 / / 0.000.00@@:: 00 BB@@:: 00 "
+  '    \  / \        / \ / \      / \  / \        / \ / \      /\  / \/ \    / \/
+  '     \/   \      /   |   \    /   \/   \      /   |   \    /  \/  |   \  /   |
+  '      |    \    /    |    \  /     |    \    /    |    \  /    |  |    \/     --- Bed power level (0~127)
+  '      |     \  /     |     \/      |     \  /     |     \/     |  |     --- Bed power header
+  '      |      \/      |      |      |      \/      |      |     |   --- Hot end power level (0~127)
+  '      |       |      |      |      |       |      |      |      --- Hot end power header
+  '      |       |      |      |      |       |      |       ---Bed temperature setting (repeated 2x)
+  '      |       |      |      |      |       |       --- Bed temperature setting header
+  '      |       |      |      |      |        --- Current bed temperature reading (repeated 2x)
+  '      |       |      |      |       --- Current bed temerature header
+  '      |       |      |       --- Hot end temperature setting (repeated 2x)
+  '      |       |       --- Hot end temperature setting header
+  '      |        --- Current hot end temperature reading (repeated 2x)
+  '       --- Current hot end temperature header
+  '
+  'TODO: Get more printer temperature reports to test durability.  May require advanced parsing.
 
   Dim sTemp As New String[13]
   Dim i As Integer
