@@ -260,7 +260,6 @@
       { ScrollView3 ScrollView
         MoveScaled(1,1,47,37)
         Arrangement = Arrange.Row
-        Spacing = True
         Padding = 5
         { VBox8 VBox
           MoveScaled(1,1,45,35)
