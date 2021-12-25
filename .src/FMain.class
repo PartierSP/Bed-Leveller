@@ -137,6 +137,7 @@ Public Sub Form_Open()
     btnHome.Enabled = False
     Message.Warning("Printer not found.  Check settings/connection and try again.")
     FSettings.Show
+    FSettings.TabStrip1.Index = 2
   Else
     btnHome.Enabled = True
   Endif

@@ -12,8 +12,9 @@
     MoveScaled(1,1,50,63)
     Expand = True
     Spacing = True
-    { TabStrip1 TabStrip
+    { !TabStrip1 TabStrip
       MoveScaled(0,1,49,56)
+      #Public = True
       Expand = True
       Arrangement = Arrange.Fill
       Count = 3
