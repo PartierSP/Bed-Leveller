@@ -104,7 +104,7 @@
             }
             { sbMargin SpinBox
               MoveScaled(2,9,19,4)
-              ToolTip = ("Distance from bed edge to make calibrations")
+              ToolTip = ("Distance from bed edge to make calibrations (must be less then bed width/depth)")
             }
             { sbRapidPlane SpinBox
               MoveScaled(2,13,19,4)

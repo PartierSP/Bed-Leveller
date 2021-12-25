@@ -25,6 +25,7 @@ Public iCleanHeight As Integer
 Public sCleanLoc As String
 Public sConfigLoc As String = User.Home &/ ".config/leveller"
 Public sConfigName As String = "config.conf"
+Public bFirstRun As Boolean
 
 Public Sub SerialPort3D_Read()
 
@@ -72,9 +73,9 @@ Public Sub Form_Open()
   'Load settings
   hSettings = New Settings(sConfigLoc &/ sConfigName)
 
-  iBedSizeX = hSettings["BedSize/BedSizeX", 220]
-  iBedSizeY = hSettings["BedSize/BedSizeY", 220]
-  ' 
+  iBedSizeX = hSettings["BedSize/BedSizeX", 0]
+  iBedSizeY = hSettings["BedSize/BedSizeY", 0]
+
   sInitialization[1] = hSettings["Post/Init1", "G21 G90 T0"]
   sInitialization[2] = hSettings["Post/Init2", "M155 S2"]
   sInitialization[3] = hSettings["Post/Init3", "G92 E0"]
@@ -104,43 +105,51 @@ Public Sub Form_Open()
   hSettings.Read(Me, "MainForm")
   hSettings.Read(vsMain, "MainFormVSMain")
 
-  With SerialPort3D
-    .PortName = sPort
-    .Speed = iBaud
-    .DataBits = iDataBits
-    .StopBits = iStopBits
-    Select sParity
-      Case "None"
-        .Parity = SerialPort.None
-      Case "Odd"
-        .Parity = SerialPort.Odd
-      Case "Event"
-        .Parity = SerialPort.Even
-    End Select
-    Select sFlowControl
-      Case "None"
-        .FlowControl = SerialPort.None
-      Case "Hardware"
-        .FlowControl = SerialPort.Hardware
-      Case "Software"
-        .FlowControl = SerialPort.Software
-      Case "Both"
-        .FlowControl = SerialPort.Both
-    End Select
-  End With
+  bFirstRun = hSettings["System/FirstRun", True]  'If this setting isn't found, set First Run to True until OK is clicked on fSettings.
 
-  'Update Location button names
-  UpdateButtonNames
-
-  Try serialPort3D.Open()
-  If Error Then
+  If bFirstRun = True Then 
     btnHome.Enabled = False
-    Message.Warning("Printer not found.  Check settings/connection and try again.")
+    Message.Warning("Welcome to Bed Leveller.  Please configure all settings before continuing.")
     FSettings.Show
-    FSettings.TabStrip1.Index = 2
   Else
-    btnHome.Enabled = True
-  Endif
+    With SerialPort3D
+      .PortName = sPort
+      .Speed = iBaud
+      .DataBits = iDataBits
+      .StopBits = iStopBits
+      Select sParity
+        Case "None"
+          .Parity = SerialPort.None
+        Case "Odd"
+          .Parity = SerialPort.Odd
+        Case "Event"
+          .Parity = SerialPort.Even
+      End Select
+      Select sFlowControl
+        Case "None"
+          .FlowControl = SerialPort.None
+        Case "Hardware"
+          .FlowControl = SerialPort.Hardware
+        Case "Software"
+          .FlowControl = SerialPort.Software
+        Case "Both"
+          .FlowControl = SerialPort.Both
+      End Select
+    End With
+
+    'Update Location button names
+    UpdateButtonNames
+
+    Try serialPort3D.Open()
+    If Error Then
+      btnHome.Enabled = False
+      Message.Warning("Printer not found.  Check settings/connection and try again.")
+      FSettings.Show
+      FSettings.TabStrip1.Index = 2
+    Else
+      btnHome.Enabled = True
+    Endif
+  Endif 
 
 End
 

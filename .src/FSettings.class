@@ -10,6 +10,12 @@ Public Sub btOK_Click()
 
   Dim hSettings As Settings
 
+  'Check if Margin value is sane
+  If (sbMargin.Value >= sbBedDepth.Value) Or (sbMargin.Value >= sbBedWidth.Value) Then 
+    Message("Margin must be smaller then Bed Width and Bed Depth")
+    Goto EndSub
+  Endif
+
   With FMain
     'Set settings
     .iBedSizeX = sbBedWidth.Value
@@ -40,10 +46,10 @@ Public Sub btOK_Click()
 
     'Save settings to config
     hSettings = New Settings(.sConfigLoc &/ .sConfigName)
-  
+
     hSettings["BedSize/BedSizeX"] = .iBedSizeX
     hSettings["BedSize/BedSizeY"] = .iBedSizeY
-  
+
     hSettings["Post/Init1"] = .sInitialization[1]
     hSettings["Post/Init2"] = .sInitialization[2]
     hSettings["Post/Init3"] = .sInitialization[3]
@@ -70,12 +76,25 @@ Public Sub btOK_Click()
     hSettings["Communications/Parity"] = .sParity
     hSettings["Communications/FlowControl"] = .sFlowControl
 
+    hSettings["System/FirstRun"] = False
+
+    'Write settings to disk early in case this is a First Run.
+    hSettings.Save
+
     'Update location button text
     .UpdateButtonNames
+
+    'Check if this is a First Run.  If so, re-initialize start up to get communitations working.
+    If .bFirstRun = True Then 
+      .bFirstRun = False
+      .Form_Open()
+    Endif
 
   End With
 
   Me.Close
+
+  EndSub:
 
 End
 
