@@ -78,8 +78,8 @@ Public Sub Form_Open()
   iBedSizeY = hSettings["BedSize/BedSizeY", 0]
 
   sInitialization[1] = hSettings["Post/Init1", "G21 G90 T0"]
-  sInitialization[2] = hSettings["Post/Init2", ""]
-  sInitialization[3] = hSettings["Post/Init3", "G92 E0"]
+  sInitialization[2] = hSettings["Post/Init2", "G92 E0"]
+  sInitialization[3] = hSettings["Post/Init3", ""]
   sHome = hSettings["Post/Home", "G28"]
   sRapidMove = hSettings["Post/RapidMove", "G0"]
   sSetBedTemp = hSettings["Post/SetBedTemp", "M140"]

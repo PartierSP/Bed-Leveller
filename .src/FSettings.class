@@ -160,12 +160,12 @@ Public Sub Form_Open()
     tbInitialization1.Text = FMain.sInitialization[1]
     tbInitialization2.Text = FMain.sInitialization[2]
     tbInitialization3.Text = FMain.sInitialization[3]
-    tbHome.Text = FMain.sHome
-    tbRapid.Text = FMain.sRapidMove
-    tbSetBedTemp.Text = FMain.sSetBedTemp
-    tbBedTempPrefix.Text = FMain.sBedTempPrefix
-    tbSetHETemp.Text = FMain.sSetHETemp
-    tbHETempPrefix.Text = FMain.sHETempPrefix
+    tbHome.Text = .sHome
+    tbRapid.Text = .sRapidMove
+    tbSetBedTemp.Text = .sSetBedTemp
+    tbBedTempPrefix.Text = .sBedTempPrefix
+    tbSetHETemp.Text = .sSetHETemp
+    tbHETempPrefix.Text = .sHETempPrefix
     tbGetTemperatures.Text = .sGetTemperatures
   End With
 
