@@ -12,7 +12,7 @@
     Expand = True
     Spacing = True
     { Panel8 Panel
-      MoveScaled(3,2,69,30)
+      MoveScaled(2,2,69,30)
       Arrangement = Arrange.Horizontal
       Spacing = True
       Padding = 5
@@ -175,7 +175,6 @@
         Arrangement = Arrange.Fill
         { TextArea1 TextArea
           MoveScaled(0,0,39,16)
-          Enabled = False
           Expand = True
         }
       }
@@ -187,7 +186,7 @@
       { tmrGetTemp #Timer
         #MoveScaled(44,18)
         Enabled = True
-        Delay = 2000
+        Delay = 5000
       }
     }
   }

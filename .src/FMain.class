@@ -27,6 +27,8 @@ Public sConfigLoc As String = User.Home &/ ".config/leveller"
 Public sConfigName As String = "config.conf"
 Public bFirstRun As Boolean
 Public sGetTemperatures As String
+Public sMessage As String
+Public sDwell As String
 
 Public Sub SerialPort3D_Read()
 
@@ -87,6 +89,8 @@ Public Sub Form_Open()
   sSetHETemp = hSettings["Post/SetHETemp", "M104"]
   sHETempPrefix = hSettings["Post/HETempPrefix", "S"]
   sGetTemperatures = hSettings["Post/GetTemperatures", "M105"]
+  sMessage = hSettings["Post/Message", "M117"]
+  sDwell = hSettings["Post/Dwell", "G4"]
 
   iMargin = hSettings["Locations/Margin", 30]
   iRapidPlane = hSettings["Locations/RapidPlane", 10]
@@ -174,6 +178,8 @@ Public Sub Form_Close()
   hSettings["Post/SetHETemp"] = sSetHETemp
   hSettings["Post/HETempPrefix"] = sHETempPrefix
   hSettings["Post/GetTemperatures"] = sGetTemperatures
+  hSettings["Post/Message"] = sMessage
+  hSettings["Post/Dwell"] = sDwell
 
   hSettings["Locations/Margin"] = iMargin
   hSettings["Locations/RapidPlane"] = iRapidPlane
@@ -209,10 +215,13 @@ Public Sub btnHome_Click()
 
   'sHome Printer
   SendSerialData(Chr$(13), True)    'First communication sometimes results in error.  Sending a blank line lets this fault occure on this non-critial line.
+  SendSerialData(sMessage & " Homing...", True)
   SendSerialData(sInitialization[1], True)
   SendSerialData(sInitialization[2], True)
   SendSerialData(sInitialization[3], True)
   SendSerialData(sHome, True)
+  SendSerialData(sDwell, True)
+  SendSerialData(sMessage & " Ready.", True)
   btnLoc1.Enabled = True
   btnLoc2.Enabled = True
   btnLoc3.Enabled = True
@@ -232,9 +241,12 @@ Public Sub btnLoc1_Click()
   ResetBtnColors()
 
   'Move to -X,+Y position
+  SendSerialData(sMessage & " Moving...", True)
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & (iBedSizeY - iMargin), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
+  SendSerialData(sDwell, True)
+  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
 
   btnLoc1.Background = Color.SelectedBackground
   btnLoc1.Foreground = Color.SelectedForeground
@@ -246,9 +258,12 @@ Public Sub btnLoc2_Click()
   ResetBtnColors()
 
   'Move to +X,+Y position
+  SendSerialData(sMessage & " Moving...", True)
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & (iBedSizeY - iMargin), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
+  SendSerialData(sDwell, True)
+  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
 
   btnLoc2.Background = Color.SelectedBackground
   btnLoc2.Foreground = Color.SelectedForeground
@@ -260,9 +275,12 @@ Public Sub btnLoc3_Click()
   ResetBtnColors()
 
   'Move to -X,-Y position
+  SendSerialData(sMessage & " Moving...", True)
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
+  SendSerialData(sDwell, True)
+  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
 
   btnLoc3.Background = Color.SelectedBackground
   btnLoc3.Foreground = Color.SelectedForeground
@@ -274,9 +292,12 @@ Public Sub btnLoc4_Click()
   ResetBtnColors()
 
   'Move to +X,-Y position
+  SendSerialData(sMessage & " Moving...", True)
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
+  SendSerialData(sDwell, True)
+  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
 
   btnLoc4.Background = Color.SelectedBackground
   btnLoc4.Foreground = Color.SelectedForeground
@@ -288,9 +309,12 @@ Public Sub btnLoc5_Click()
   ResetBtnColors()
 
   'Move to centre of the bed
+  SendSerialData(sMessage & " Moving...", True)
   SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
+  SendSerialData(sDwell, True)
+  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
 
   btnLoc5.Background = Color.SelectedBackground
   btnLoc5.Foreground = Color.SelectedForeground
@@ -379,6 +403,7 @@ Public Sub btnClean_Click()
   btnClean.Enabled = False
   btnHome.Enabled = True
 
+  SendSerialData(sMessage & " Moving...", True)
   Select sCleanLoc
     Case "Home"
       'Move to Home Clean position
@@ -405,6 +430,9 @@ Public Sub btnClean_Click()
   If Val(LCDHotEnd.Text) > (0.9 * iHETemp) Then
     SendSerialData(sRapidMove & "E" & "-" & fRetraction, True)
   Endif
+
+  SendSerialData(sDwell, True)
+  SendSerialData(sMessage & " Clean/inspect nozzle.", True)
 
   btnClean.Background = Color.SelectedBackground
   btnClean.Foreground = Color.SelectedForeground

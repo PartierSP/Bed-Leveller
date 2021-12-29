@@ -1,7 +1,7 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,52,65)
+  MoveScaled(0,0,52,74)
   Text = ("Bed Leveller Settings")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
@@ -9,11 +9,11 @@
   Spacing = True
   Margin = True
   { VBox7 VBox
-    MoveScaled(1,1,50,63)
+    MoveScaled(1,1,50,72)
     Expand = True
     Spacing = True
     { !TabStrip1 TabStrip
-      MoveScaled(0,1,49,56)
+      MoveScaled(0,1,49,65)
       #Public = True
       Expand = True
       Arrangement = Arrange.Fill
@@ -153,16 +153,16 @@
       Index = 1
       Text = ("Posting")
       { ScrollView2 ScrollView
-        MoveScaled(1,1,47,49)
+        MoveScaled(1,1,47,59)
         Arrangement = Arrange.Row
         Padding = 5
         { HBox2 HBox
-          MoveScaled(1,1,45,47)
+          MoveScaled(1,1,45,57)
           Expand = True
           Spacing = True
           Padding = 5
           { VBox5 VBox
-            MoveScaled(1,1,20,45)
+            MoveScaled(1,1,20,55)
             Expand = True
             Spacing = True
             Padding = 5
@@ -216,9 +216,19 @@
               Alignment = Align.Right
               Text = ("Report Temperature")
             }
+            { Label28 Label
+              MoveScaled(0,41,19,4)
+              Alignment = Align.Right
+              Text = ("Dwell")
+            }
+            { Label29 Label
+              MoveScaled(0,45,19,4)
+              Alignment = Align.Right
+              Text = ("Send Message")
+            }
           }
           { VBox6 VBox
-            MoveScaled(22,1,22,45)
+            MoveScaled(22,1,22,55)
             Expand = True
             Spacing = True
             Padding = 5
@@ -261,6 +271,14 @@
             { tbGetTemperatures TextBox
               MoveScaled(2,37,19,4)
               ToolTip = ("Command to get printer to list current temperatures")
+            }
+            { tbDwell TextBox
+              MoveScaled(2,41,19,4)
+              ToolTip = ("Command to pause printer program for a moment")
+            }
+            { tbMessage TextBox
+              MoveScaled(2,45,19,4)
+              ToolTip = ("Command to send a message to the printer's screen.")
             }
           }
         }
@@ -362,7 +380,7 @@
       Index = 0
     }
     { Panel1 Panel
-      MoveScaled(1,57,48,5)
+      MoveScaled(1,66,48,5)
       Arrangement = Arrange.Horizontal
       Spacing = True
       Padding = 10

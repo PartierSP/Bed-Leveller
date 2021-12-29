@@ -2,7 +2,7 @@
 Title=Bed Leveller
 Startup=FMain
 Icon=icon.png
-Version=2.0.6
+Version=2.0.7
 Component=gb.image
 Component=gb.gui
 Component=gb.form
