@@ -26,6 +26,7 @@ Public sCleanLoc As String
 Public sConfigLoc As String = User.Home &/ ".config/leveller"
 Public sConfigName As String = "config.conf"
 Public bFirstRun As Boolean
+Public sGetTemperatures As String
 
 Public Sub SerialPort3D_Read()
 
@@ -39,7 +40,7 @@ Public Sub SerialPort3D_Read()
     strReceived = ""
   Else
     Select Left(strReceived, 4) 
-      Case "  TT"
+      Case "ok T"
         'Got a temperature reading
         ReadTemperature(strReceived)
       Case Else
@@ -77,7 +78,7 @@ Public Sub Form_Open()
   iBedSizeY = hSettings["BedSize/BedSizeY", 0]
 
   sInitialization[1] = hSettings["Post/Init1", "G21 G90 T0"]
-  sInitialization[2] = hSettings["Post/Init2", "M155 S2"]
+  sInitialization[2] = hSettings["Post/Init2", ""]
   sInitialization[3] = hSettings["Post/Init3", "G92 E0"]
   sHome = hSettings["Post/Home", "G28"]
   sRapidMove = hSettings["Post/RapidMove", "G0"]
@@ -85,6 +86,7 @@ Public Sub Form_Open()
   sBedTempPrefix = hSettings["Post/BedTempPrefix", "S"]
   sSetHETemp = hSettings["Post/SetHETemp", "M104"]
   sHETempPrefix = hSettings["Post/HETempPrefix", "S"]
+  sGetTemperatures = hSettings["Post/GetTemperatures", "M105"]
 
   iMargin = hSettings["Locations/Margin", 30]
   iRapidPlane = hSettings["Locations/RapidPlane", 10]
@@ -171,6 +173,7 @@ Public Sub Form_Close()
   hSettings["Post/BedTempPrefix"] = sBedTempPrefix
   hSettings["Post/SetHETemp"] = sSetHETemp
   hSettings["Post/HETempPrefix"] = sHETempPrefix
+  hSettings["Post/GetTemperatures"] = sGetTemperatures
 
   hSettings["Locations/Margin"] = iMargin
   hSettings["Locations/RapidPlane"] = iRapidPlane
@@ -357,7 +360,7 @@ Public Sub Form_Resize()
 
 End
 
-Public Sub Timer1_Timer()
+Public Sub tmrResize_Timer()
 
   Form_Resize
 
@@ -411,63 +414,58 @@ End
 Public Sub ReadTemperature(strReceived As String)
 
   ' Temperature lines from printers contain the following:
-  '     - Hot end temperature [###.#0] (repeated 2x)
-  '     - Hot end temperature set point [###.#0] (repeated 2x)
-  '     - Bed temperature reading [###.#0] (repeated 2x)
-  '     - Bed temperature set point [###.#0] (repeated 2x)
-  '     - Hot end power level [###] (repeated 2x)
-  '     - Bed power level [###] (repeated 2x)
+  '     - Hot end temperature [###.#0]
+  '     - Hot end temperature set point [###.#0]
+  '     - Bed temperature reading [###.#0]
+  '     - Bed temperature set point [###.#0]
+  '     - Hot end power level [###]
+  '     - Bed power level [###]
   '
   ' Chamber temperatures currently not supported / tested
   '
   ' Sample of a temperature line sent from printer is as following:
-  ' "  TT:: 19.9619.96 / / 0.000.00 BB:: 20.0820.08 / / 0.000.00@@:: 00 BB@@:: 00 "
-  '    \  / \        / \ / \      / \  / \        / \ / \      /\  / \/ \    / \/
-  '     \/   \      /   |   \    /   \/   \      /   |   \    /  \/  |   \  /   |
-  '      |    \    /    |    \  /     |    \    /    |    \  /    |  |    \/     --- Bed power level (0~127)
-  '      |     \  /     |     \/      |     \  /     |     \/     |  |     --- Bed power header
-  '      |      \/      |      |      |      \/      |      |     |   --- Hot end power level (0~127)
-  '      |       |      |      |      |       |      |      |      --- Hot end power header
-  '      |       |      |      |      |       |      |       ---Bed temperature setting (repeated 2x)
-  '      |       |      |      |      |       |       --- Bed temperature setting header
-  '      |       |      |      |      |        --- Current bed temperature reading (repeated 2x)
-  '      |       |      |      |       --- Current bed temerature header
-  '      |       |      |       --- Hot end temperature setting (repeated 2x)
-  '      |       |       --- Hot end temperature setting header
-  '      |        --- Current hot end temperature reading (repeated 2x)
+  ' "ok  T:19.96 /0.00 B:20.08 /0.00 @:0 B@:0 "
+  '      \/\   / |\  / \/\   / |\  / \/| \ /|
+  '      |  \ /  | \/   | \ /  | \/   ||  | |
+  '      |   |   |  |   |  |   |  |   ||  |  --- Bed power level (0~127)
+  '      |   |   |  |   |  |   |  |   ||   --- Bed power header
+  '      |   |   |  |   |  |   |  |   | --- Hot end power level (0~127)
+  '      |   |   |  |   |  |   |  |    --- Hot end power header
+  '      |   |   |  |   |  |   |   ---Bed temperature setting
+  '      |   |   |  |   |  |    --- Bed temperature setting header
+  '      |   |   |  |   |   --- Current bed temperature reading
+  '      |   |   |  |    --- Current bed temerature header
+  '      |   |   |   --- Hot end temperature setting
+  '      |   |    --- Hot end temperature setting header
+  '      |    --- Current hot end temperature reading
   '       --- Current hot end temperature header
-  '
-  'TODO: Get more printer temperature reports to test durability.  May require advanced parsing.
 
-  Dim sTemp As New String[13]
+  Dim sTemp As New String[6]
   Dim i As Integer
-
+  
   'Remove ending cruff
   While (Right(strReceived, 1) > "9") Or (Right(strReceived, 1) < "0")
     strReceived = Left(strReceived, -1)
   Wend
-
+  
   'Split temperature data into an array
   sTemp = Split(strReceived, " ")
-
+  
   'Clean array
-  For i = 2 To 12 Step 2
+  For i = 1 To 6
     'Remove starting cruff
     While (Left(sTemp[i], 1) > "9") Or (Left(sTemp[i], 1) < "0")
       sTemp[i] = Right(sTemp[i], -1)
     Wend
-
-    'Remove duplicatication of value
-    sTemp[i] = Right(sTemp[i], Len(sTemp[i]) / 2)
   Next
-
+  
   'Update displays
-  LCDHotEnd.Text = Format(Val(sTemp[2]), "0##.0")
-  LCDBed.Text = Format(Val(sTemp[6]), "0##.0")
-  LBHotEnd.Text = "Hot E(" & Format(sTemp[4], "0") & ")"
-  LBBed.Text = "Bed (" & Format(sTemp[8], "0") & ")"
-  PBHotEnd.Value = Val(sTemp[10]) / 127
-  PBBed.Value = Val(sTemp[12]) / 127
+  LCDHotEnd.Text = Format(Val(sTemp[1]), "0##.0")
+  LCDBed.Text = Format(Val(sTemp[3]), "0##.0")
+  LBHotEnd.Text = "Hot E(" & Format(sTemp[2], "0") & ")"
+  LBBed.Text = "Bed (" & Format(sTemp[4], "0") & ")"
+  PBHotEnd.Value = Val(sTemp[5]) / 127
+  PBBed.Value = Val(sTemp[6]) / 127
   
   'Gradually change color of LCD's to red the hotter they get
   If Val(LCDHotEnd.Text) > 30 Then
@@ -505,5 +503,13 @@ Public Sub ResetBtnColors()
   btnLoc3.Foreground = -1
   btnLoc4.Foreground = -1
   btnLoc5.Foreground = -1
+
+End
+
+Public Sub tmrGetTemp_Timer()
+
+  tmrGetTemp.Enabled = False
+  SendSerialData(sGetTemperatures, True)
+  tmrGetTemp.Enabled = True
 
 End

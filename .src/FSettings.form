@@ -30,7 +30,7 @@
           Spacing = True
           Padding = 5
           { VBox1 VBox
-            MoveScaled(1,0,20,44)
+            MoveScaled(1,1,20,44)
             Expand = True
             Spacing = True
             Padding = 5
@@ -86,7 +86,7 @@
             }
           }
           { VBox2 VBox
-            MoveScaled(22,0,22,44)
+            MoveScaled(22,1,22,44)
             Expand = True
             Spacing = True
             Padding = 5
@@ -153,16 +153,16 @@
       Index = 1
       Text = ("Posting")
       { ScrollView2 ScrollView
-        MoveScaled(1,1,47,44)
+        MoveScaled(1,1,47,49)
         Arrangement = Arrange.Row
         Padding = 5
         { HBox2 HBox
-          MoveScaled(1,1,45,42)
+          MoveScaled(1,1,45,47)
           Expand = True
           Spacing = True
           Padding = 5
           { VBox5 VBox
-            MoveScaled(1,1,20,40)
+            MoveScaled(1,1,20,45)
             Expand = True
             Spacing = True
             Padding = 5
@@ -211,9 +211,14 @@
               Alignment = Align.Right
               Text = ("H.E. Temp. Prefix")
             }
+            { Label27 Label
+              MoveScaled(0,37,19,4)
+              Alignment = Align.Right
+              Text = ("Report Temperature")
+            }
           }
           { VBox6 VBox
-            MoveScaled(22,1,22,40)
+            MoveScaled(22,1,22,45)
             Expand = True
             Spacing = True
             Padding = 5
@@ -252,6 +257,10 @@
             { tbHETempPrefix TextBox
               MoveScaled(2,33,19,4)
               ToolTip = ("Identifier used to specify a hot end temperature value")
+            }
+            { tbGetTemperatures TextBox
+              MoveScaled(2,37,19,4)
+              ToolTip = ("Command to get printer to list current temperatures")
             }
           }
         }

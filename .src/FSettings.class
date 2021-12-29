@@ -43,6 +43,7 @@ Public Sub btOK_Click()
     .sBedTempPrefix = tbBedTempPrefix.Text
     .sSetHETemp = tbSetHETemp.Text
     .sHETempPrefix = tbHETempPrefix.Text
+    .sGetTemperatures = tbGetTemperatures.Text
 
     'Save settings to config
     hSettings = New Settings(.sConfigLoc &/ .sConfigName)
@@ -59,6 +60,7 @@ Public Sub btOK_Click()
     hSettings["Post/BedTempPrefix"] = .sBedTempPrefix
     hSettings["Post/SetHETemp"] = .sSetHETemp
     hSettings["Post/HETempPrefix"] = .sHETempPrefix
+    hSettings["Post/GetTemperatures"] = .sGetTemperatures
 
     hSettings["Locations/Margin"] = .iMargin
     hSettings["Locations/RapidPlane"] = .iRapidPlane
@@ -164,6 +166,7 @@ Public Sub Form_Open()
     tbBedTempPrefix.Text = FMain.sBedTempPrefix
     tbSetHETemp.Text = FMain.sSetHETemp
     tbHETempPrefix.Text = FMain.sHETempPrefix
+    tbGetTemperatures.Text = .sGetTemperatures
   End With
 
 End

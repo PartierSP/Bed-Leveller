@@ -179,10 +179,15 @@
           Expand = True
         }
       }
-      { Timer1 #Timer
-        #MoveScaled(52,13)
+      { tmrResize #Timer
+        #MoveScaled(52,10)
         Enabled = True
         Delay = 100
+      }
+      { tmrGetTemp #Timer
+        #MoveScaled(44,18)
+        Enabled = True
+        Delay = 2000
       }
     }
   }
