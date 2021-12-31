@@ -29,6 +29,7 @@ Public bFirstRun As Boolean
 Public sGetTemperatures As String
 Public sMessage As String
 Public sDwell As String
+Public bBusy As Boolean = False
 
 Public Sub SerialPort3D_Read()
 
@@ -46,7 +47,12 @@ Public Sub SerialPort3D_Read()
         'Got a temperature reading
         ReadTemperature(strReceived)
       Case Else
-        TextArea1.Text = TextArea1.Text & strReceived
+        If Left(strReceived, 3) = " T:" Then 
+          strReceived = "ok" & strReceived
+          ReadTemperature(strReceived)
+        Else
+          TextArea1.Text = TextArea1.Text & strReceived
+        Endif 
     End Select
   Endif
 
@@ -238,86 +244,116 @@ End
 
 Public Sub btnLoc1_Click()
 
-  ResetBtnColors()
+  If bBusy = False Then 
+    bBusy = True
 
-  'Move to -X,+Y position
-  SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
-  SendSerialData(sRapidMove & "X" & iMargin & "Y" & (iBedSizeY - iMargin), True)
-  SendSerialData(sRapidMove & "Z" & fShim, True)
-  SendSerialData(sDwell, True)
-  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+    ResetBtnColors()
 
-  btnLoc1.Background = Color.SelectedBackground
-  btnLoc1.Foreground = Color.SelectedForeground
+    'Move to -X,+Y position
+    SendSerialData(sMessage & " Moving...", True)
+    SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+    SendSerialData(sRapidMove & "X" & iMargin & "Y" & (iBedSizeY - iMargin), True)
+    SendSerialData(sRapidMove & "Z" & fShim, True)
+    SendSerialData(sDwell, True)
+    SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+
+    btnLoc1.Background = Color.SelectedBackground
+    btnLoc1.Foreground = Color.SelectedForeground
+
+    bBusy = False
+  Endif 
 
 End
 
 Public Sub btnLoc2_Click()
 
-  ResetBtnColors()
+  If bBusy = False Then 
+    bBusy = True
 
-  'Move to +X,+Y position
-  SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
-  SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & (iBedSizeY - iMargin), True)
-  SendSerialData(sRapidMove & "Z" & fShim, True)
-  SendSerialData(sDwell, True)
-  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+    ResetBtnColors()
+  
+    'Move to +X,+Y position
+    SendSerialData(sMessage & " Moving...", True)
+    SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+    SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & (iBedSizeY - iMargin), True)
+    SendSerialData(sRapidMove & "Z" & fShim, True)
+    SendSerialData(sDwell, True)
+    SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+  
+    btnLoc2.Background = Color.SelectedBackground
+    btnLoc2.Foreground = Color.SelectedForeground
 
-  btnLoc2.Background = Color.SelectedBackground
-  btnLoc2.Foreground = Color.SelectedForeground
+    bBusy = False
+  Endif
 
 End
 
 Public Sub btnLoc3_Click()
 
-  ResetBtnColors()
+  If bBusy = False Then 
+    bBusy = True
 
-  'Move to -X,-Y position
-  SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
-  SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
-  SendSerialData(sRapidMove & "Z" & fShim, True)
-  SendSerialData(sDwell, True)
-  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+    ResetBtnColors()
+  
+    'Move to -X,-Y position
+    SendSerialData(sMessage & " Moving...", True)
+    SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+    SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
+    SendSerialData(sRapidMove & "Z" & fShim, True)
+    SendSerialData(sDwell, True)
+    SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+  
+    btnLoc3.Background = Color.SelectedBackground
+    btnLoc3.Foreground = Color.SelectedForeground
 
-  btnLoc3.Background = Color.SelectedBackground
-  btnLoc3.Foreground = Color.SelectedForeground
+    bBusy = False
+  Endif 
 
 End
 
 Public Sub btnLoc4_Click()
 
-  ResetBtnColors()
+  If bBusy = False Then 
+    bBusy = True
 
-  'Move to +X,-Y position
-  SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
-  SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
-  SendSerialData(sRapidMove & "Z" & fShim, True)
-  SendSerialData(sDwell, True)
-  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+    ResetBtnColors()
+  
+    'Move to +X,-Y position
+    SendSerialData(sMessage & " Moving...", True)
+    SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+    SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
+    SendSerialData(sRapidMove & "Z" & fShim, True)
+    SendSerialData(sDwell, True)
+    SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+  
+    btnLoc4.Background = Color.SelectedBackground
+    btnLoc4.Foreground = Color.SelectedForeground
 
-  btnLoc4.Background = Color.SelectedBackground
-  btnLoc4.Foreground = Color.SelectedForeground
+    bBusy = False
+  Endif 
 
 End
 
 Public Sub btnLoc5_Click()
 
-  ResetBtnColors()
+  If bBusy = False Then 
+    bBusy = True
 
-  'Move to centre of the bed
-  SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
-  SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
-  SendSerialData(sRapidMove & "Z" & fShim, True)
-  SendSerialData(sDwell, True)
-  SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+    ResetBtnColors()
+  
+    'Move to centre of the bed
+    SendSerialData(sMessage & " Moving...", True)
+    SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+    SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
+    SendSerialData(sRapidMove & "Z" & fShim, True)
+    SendSerialData(sDwell, True)
+    SendSerialData(sMessage & " Use " & fShim & " shim to set.", True)
+  
+    btnLoc5.Background = Color.SelectedBackground
+    btnLoc5.Foreground = Color.SelectedForeground
 
-  btnLoc5.Background = Color.SelectedBackground
-  btnLoc5.Foreground = Color.SelectedForeground
+    bBusy = False
+  Endif
 
 End
 
@@ -336,29 +372,57 @@ End
 
 Public Sub tgbBed_Click()
 
-  If tgbBed.Value == True Then
-    'Turn on heated bed
-    SendSerialData(sSetBedTemp & sBedTempPrefix & iBedTemp, True)
-    tgbBed.Text = "&Bed On"
-  Else
-    'Turn off heated bed
-    SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
-    tgbBed.Text = "&Bed Off"
-  Endif
+  If bBusy = False Then 
+    bBusy = True
+
+    If tgbBed.Value = True Then
+      'Turn on heated bed
+      SendSerialData(sSetBedTemp & sBedTempPrefix & iBedTemp, True)
+      tgbBed.Text = "&Bed On"
+    Else
+      'Turn off heated bed
+      SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
+      tgbBed.Text = "&Bed Off"
+    Endif
+
+    bBusy = False
+  Else 
+    'Was busy so need to undo the click.
+    'FIXME: This causes a stack overflow.
+    ' If tgbBed.Value = True Then 
+    '   tgbBed.Value = False
+    ' Else 
+    '   tgbBed.Value = True
+    ' Endif 
+  Endif 
 
 End
 
 Public Sub tgbHotEnd_Click()
 
-  If tgbHotEnd.Value == True Then
-    'Turn on heated bed
-    SendSerialData(sSetHETemp & sHETempPrefix & iHETemp, True)
-    tgbHotEnd.Text = "Hot &End On"
-  Else
-    'Turn off heated bed
-    SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
-    tgbHotEnd.Text = "Hot &End Off"
-  Endif
+  If 1 = 0 Then 
+'  If bBusy = False Then 
+    bBusy = True
+
+    If tgbHotEnd.Value == True Then
+      'Turn on heated bed
+      SendSerialData(sSetHETemp & sHETempPrefix & iHETemp, True)
+      tgbHotEnd.Text = "Hot &End On"
+    Else
+      'Turn off heated bed
+      SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
+      tgbHotEnd.Text = "Hot &End Off"
+    Endif
+
+    bBusy = False
+  Else 
+    'Was busy so need to undo the click.
+    If tgbHotEnd.Value = True Then
+      tgbHotEnd.Value = False
+    Else 
+      tgbHotEnd.Value = True
+    Endif
+  Endif 
 
 End
 
@@ -392,50 +456,56 @@ End
 
 Public Sub btnClean_Click()
 
-  ResetBtnColors()
+  If bBusy = False Then 
+    bBusy = True
 
-  'Incase an axis gets bumped during cleaning, force rehoming printer
-  btnLoc1.Enabled = False
-  btnLoc2.Enabled = False
-  btnLoc3.Enabled = False
-  btnLoc4.Enabled = False
-  btnLoc5.Enabled = False
-  btnClean.Enabled = False
-  btnHome.Enabled = True
-
-  SendSerialData(sMessage & " Moving...", True)
-  Select sCleanLoc
-    Case "Home"
-      'Move to Home Clean position
-      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
-      SendSerialData(sRapidMove & "X0 Y0", True)
+    ResetBtnColors()
   
-    Case "Left"
-      'Move to Left Clean position
-      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
-      SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
+    'Incase an axis gets bumped during cleaning, force rehoming printer
+    btnLoc1.Enabled = False
+    btnLoc2.Enabled = False
+    btnLoc3.Enabled = False
+    btnLoc4.Enabled = False
+    btnLoc5.Enabled = False
+    btnClean.Enabled = False
+    btnHome.Enabled = True
   
-    Case "Middle"
-      'Move to Middle Clean position
-      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
-      SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & iMargin, True)
-
-    Case "Right"
-      'Move to +X,-Y position
-      SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
-      SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
-  End Select
-
-  'Perform a retract if Hot End is >90% of iHETemp
-  If Val(LCDHotEnd.Text) > (0.9 * iHETemp) Then
-    SendSerialData(sRapidMove & "E" & "-" & fRetraction, True)
-  Endif
-
-  SendSerialData(sDwell, True)
-  SendSerialData(sMessage & " Clean/inspect nozzle.", True)
-
-  btnClean.Background = Color.SelectedBackground
-  btnClean.Foreground = Color.SelectedForeground
+    SendSerialData(sMessage & " Moving...", True)
+    Select sCleanLoc
+      Case "Home"
+        'Move to Home Clean position
+        SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+        SendSerialData(sRapidMove & "X0 Y0", True)
+    
+      Case "Left"
+        'Move to Left Clean position
+        SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+        SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
+    
+      Case "Middle"
+        'Move to Middle Clean position
+        SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+        SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & iMargin, True)
+  
+      Case "Right"
+        'Move to +X,-Y position
+        SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
+        SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
+    End Select
+  
+    'Perform a retract if Hot End is >90% of iHETemp
+    If Val(LCDHotEnd.Text) > (0.9 * iHETemp) Then
+      SendSerialData(sRapidMove & "E" & "-" & fRetraction, True)
+    Endif
+  
+    SendSerialData(sDwell, True)
+    SendSerialData(sMessage & " Clean/inspect nozzle.", True)
+  
+    btnClean.Background = Color.SelectedBackground
+    btnClean.Foreground = Color.SelectedForeground
+    
+    bBusy = False
+  Endif 
 
 End
 
@@ -536,8 +606,17 @@ End
 
 Public Sub tmrGetTemp_Timer()
 
+  'Delay getting temperature if busy
+  While bBusy = True
+    Wait
+  Wend
+
+  bBusy = True
+
   tmrGetTemp.Enabled = False
   SendSerialData(sGetTemperatures, True)
   tmrGetTemp.Enabled = True
+
+  bBusy = False
 
 End
