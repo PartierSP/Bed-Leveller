@@ -186,7 +186,7 @@
       { tmrGetTemp #Timer
         #MoveScaled(44,18)
         Enabled = True
-        Delay = 5000
+        Delay = 2000
       }
     }
   }
