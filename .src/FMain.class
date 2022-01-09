@@ -29,6 +29,7 @@ Public bFirstRun As Boolean
 Public sGetTemperatures As String
 Public sMessage As String
 Public sDwell As String
+Public bBusy As Boolean = False
 
 Public Sub SerialPort3D_Read()
 
@@ -46,7 +47,12 @@ Public Sub SerialPort3D_Read()
         'Got a temperature reading
         ReadTemperature(strReceived)
       Case Else
-        TextArea1.Text = TextArea1.Text & strReceived
+        If Left(strReceived, 3) = " T:" Then 
+          strReceived = "ok" & strReceived
+          ReadTemperature(strReceived)
+        Else
+          TextArea1.Text = TextArea1.Text & strReceived
+        Endif 
     End Select
   Endif
 
@@ -211,6 +217,8 @@ End
 
 Public Sub btnHome_Click()
 
+  ComBusy
+
   ResetBtnColors()
 
   'sHome Printer
@@ -222,6 +230,9 @@ Public Sub btnHome_Click()
   SendSerialData(sHome, True)
   SendSerialData(sDwell, True)
   SendSerialData(sMessage & " Ready.", True)
+
+  ComFree
+
   btnLoc1.Enabled = True
   btnLoc2.Enabled = True
   btnLoc3.Enabled = True
@@ -238,6 +249,7 @@ End
 
 Public Sub btnLoc1_Click()
 
+  ComBusy
   ResetBtnColors()
 
   'Move to -X,+Y position
@@ -251,9 +263,13 @@ Public Sub btnLoc1_Click()
   btnLoc1.Background = Color.SelectedBackground
   btnLoc1.Foreground = Color.SelectedForeground
 
+  ComFree
+
 End
 
 Public Sub btnLoc2_Click()
+
+  ComBusy
 
   ResetBtnColors()
 
@@ -268,9 +284,13 @@ Public Sub btnLoc2_Click()
   btnLoc2.Background = Color.SelectedBackground
   btnLoc2.Foreground = Color.SelectedForeground
 
+  ComFree
+  
 End
 
 Public Sub btnLoc3_Click()
+
+  ComBusy
 
   ResetBtnColors()
 
@@ -285,9 +305,13 @@ Public Sub btnLoc3_Click()
   btnLoc3.Background = Color.SelectedBackground
   btnLoc3.Foreground = Color.SelectedForeground
 
+  ComFree
+
 End
 
 Public Sub btnLoc4_Click()
+
+  ComBusy
 
   ResetBtnColors()
 
@@ -302,9 +326,13 @@ Public Sub btnLoc4_Click()
   btnLoc4.Background = Color.SelectedBackground
   btnLoc4.Foreground = Color.SelectedForeground
 
+  ComFree
+
 End
 
 Public Sub btnLoc5_Click()
+
+  ComBusy
 
   ResetBtnColors()
 
@@ -318,6 +346,8 @@ Public Sub btnLoc5_Click()
 
   btnLoc5.Background = Color.SelectedBackground
   btnLoc5.Foreground = Color.SelectedForeground
+
+  ComFree
 
 End
 
@@ -336,7 +366,9 @@ End
 
 Public Sub tgbBed_Click()
 
-  If tgbBed.Value == True Then
+  ComBusy
+
+  If tgbBed.Value = True Then
     'Turn on heated bed
     SendSerialData(sSetBedTemp & sBedTempPrefix & iBedTemp, True)
     tgbBed.Text = "&Bed On"
@@ -346,9 +378,13 @@ Public Sub tgbBed_Click()
     tgbBed.Text = "&Bed Off"
   Endif
 
+  ComFree
+
 End
 
 Public Sub tgbHotEnd_Click()
+
+  ComBusy
 
   If tgbHotEnd.Value == True Then
     'Turn on heated bed
@@ -359,6 +395,8 @@ Public Sub tgbHotEnd_Click()
     SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
     tgbHotEnd.Text = "Hot &End Off"
   Endif
+
+  ComFree
 
 End
 
@@ -392,16 +430,9 @@ End
 
 Public Sub btnClean_Click()
 
-  ResetBtnColors()
+  ComBusy
 
-  'Incase an axis gets bumped during cleaning, force rehoming printer
-  btnLoc1.Enabled = False
-  btnLoc2.Enabled = False
-  btnLoc3.Enabled = False
-  btnLoc4.Enabled = False
-  btnLoc5.Enabled = False
-  btnClean.Enabled = False
-  btnHome.Enabled = True
+  ResetBtnColors()
 
   SendSerialData(sMessage & " Moving...", True)
   Select sCleanLoc
@@ -409,12 +440,12 @@ Public Sub btnClean_Click()
       'Move to Home Clean position
       SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
       SendSerialData(sRapidMove & "X0 Y0", True)
-  
+
     Case "Left"
       'Move to Left Clean position
       SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
       SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
-  
+
     Case "Middle"
       'Move to Middle Clean position
       SendSerialData(sRapidMove & "Z" & iCleanHeight, True)
@@ -436,6 +467,17 @@ Public Sub btnClean_Click()
 
   btnClean.Background = Color.SelectedBackground
   btnClean.Foreground = Color.SelectedForeground
+
+  ComFree
+
+  'Incase an axis gets bumped during cleaning, force rehoming printer
+  btnLoc1.Enabled = False
+  btnLoc2.Enabled = False
+  btnLoc3.Enabled = False
+  btnLoc4.Enabled = False
+  btnLoc5.Enabled = False
+  btnClean.Enabled = False
+  btnHome.Enabled = True
 
 End
 
@@ -475,10 +517,10 @@ Public Sub ReadTemperature(strReceived As String)
   While (Right(strReceived, 1) > "9") Or (Right(strReceived, 1) < "0")
     strReceived = Left(strReceived, -1)
   Wend
-  
+
   'Split temperature data into an array
   sTemp = Split(strReceived, " ")
-  
+
   'Clean array
   For i = 1 To 6
     'Remove starting cruff
@@ -486,7 +528,7 @@ Public Sub ReadTemperature(strReceived As String)
       sTemp[i] = Right(sTemp[i], -1)
     Wend
   Next
-  
+
   'Update displays
   LCDHotEnd.Text = Format(Val(sTemp[1]), "0##.0")
   LCDBed.Text = Format(Val(sTemp[3]), "0##.0")
@@ -494,7 +536,7 @@ Public Sub ReadTemperature(strReceived As String)
   LBBed.Text = "Bed (" & Format(sTemp[4], "0") & ")"
   PBHotEnd.Value = Val(sTemp[5]) / 127
   PBBed.Value = Val(sTemp[6]) / 127
-  
+
   'Gradually change color of LCD's to red the hotter they get
   If Val(LCDHotEnd.Text) > 30 Then
     i = (Int(Val(LCDHotEnd.Text)) - 30) * 2
@@ -537,7 +579,57 @@ End
 Public Sub tmrGetTemp_Timer()
 
   tmrGetTemp.Enabled = False
+
+  'Delay getting temperature if busy
+  While bBusy = True
+    Wait
+  Wend
+
+  ComBusy
+
   SendSerialData(sGetTemperatures, True)
   tmrGetTemp.Enabled = True
 
+  ComFree
+
 End
+
+Public Sub ComBusy()
+  
+  bBusy = True
+  btnLoc1.Tag = btnLoc1.Enabled
+  btnLoc1.Enabled = False
+  btnLoc2.Tag = btnLoc2.Enabled
+  btnLoc2.Enabled = False
+  btnLoc3.Tag = btnLoc3.Enabled
+  btnLoc3.Enabled = False
+  btnLoc4.Tag = btnLoc4.Enabled
+  btnLoc4.Enabled = False
+  btnLoc5.Tag = btnLoc5.Enabled
+  btnLoc5.Enabled = False
+  btnClean.Tag = btnClean.Enabled
+  btnClean.Enabled = False
+  btnHome.Tag = btnHome.Enabled
+  btnHome.Enabled = False
+  tgbBed.Tag = tgbBed.Enabled
+  tgbBed.Enabled = False
+  tgbHotEnd.Tag = tgbHotEnd.Enabled
+  tgbHotEnd.Enabled = False
+  
+End
+
+Public Sub ComFree()
+  
+  btnLoc1.Enabled = btnLoc1.Tag
+  btnLoc2.Enabled = btnLoc2.Tag
+  btnLoc3.Enabled = btnLoc3.Tag
+  btnLoc4.Enabled = btnLoc4.Tag
+  btnLoc5.Enabled = btnLoc5.Tag
+  btnClean.Enabled = btnClean.Tag
+  btnHome.Enabled = btnHome.Tag
+  tgbBed.Enabled = tgbBed.Tag
+  tgbHotEnd.Enabled = tgbHotEnd.Tag
+  bBusy = False
+  
+End
+
