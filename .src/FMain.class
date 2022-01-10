@@ -206,9 +206,10 @@ Public Sub Form_Close()
   hSettings.Write(Me, "MainForm")
   hSettings.Write(vsMain, "MainFormVSMain")
 
-  'Turn off heated bed and hot end prior to exiting program
-  SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
-  SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
+  ''Turn off heated bed and hot end prior to exiting program
+  'SendSerialData(sSetBedTemp & sBedTempPrefix & "0.0", True)
+  'SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
+
   SerialPort3D.Close()
 
   FSettings.Close
