@@ -34,6 +34,8 @@ Public bBusy As Boolean = False
 Public Sub SerialPort3D_Read()
 
   Dim strReceived As String
+  Dim strRec As New String[4]
+  Dim i As Integer
 
   'Small pause to allow full line to be buffered
   Sleep 0.01
@@ -42,18 +44,30 @@ Public Sub SerialPort3D_Read()
   If Error Then
     strReceived = ""
   Else
-    Select Left(strReceived, 4) 
-      Case "ok T"
-        'Got a temperature reading
-        ReadTemperature(strReceived)
-      Case Else
-        If Left(strReceived, 3) = " T:" Then 
-          strReceived = "ok" & strReceived
+    Debug strReceived
+    strRec = Split(strReceived, "\n")
+    For i = 0 To strRec.Length
+      strReceived = strRec[i]
+      Select Left(strReceived, 4)
+        Case "ok X"
+          'Got a position reading
+          ReadPosition(strReceived) 
+        Case "ok T"
+          'Got a temperature reading
           ReadTemperature(strReceived)
-        Else
-          TextArea1.Text = TextArea1.Text & strReceived
-        Endif 
-    End Select
+        Case Else
+          Select Left(strReceived, 2)
+            Case " T"
+              strReceived = "ok" & strReceived
+              ReadTemperature(strReceived)
+            Case "X:"
+              strReceived = "ok " & strReceived
+              ReadPosition(strReceived)
+            Case Else
+'              TextArea1.Text = TextArea1.Text & strReceived
+          End Select 
+      End Select
+    Next
   Endif
 
 Catch
@@ -359,11 +373,11 @@ Public Sub btnSetting_Click()
 
 End
 
-Public Sub TextArea1_Change()
-
-  TextArea1.Pos = Len(TextArea1.Text)
-
-End
+' Public Sub TextArea1_Change()
+' 
+'   TextArea1.Pos = Len(TextArea1.Text)
+' 
+' End
 
 Public Sub tgbBed_Click()
 
@@ -517,6 +531,9 @@ Public Sub ReadTemperature(strReceived As String)
   'Remove ending cruff
   While (Right(strReceived, 1) > "9") Or (Right(strReceived, 1) < "0")
     strReceived = Left(strReceived, -1)
+    If strReceived = "" Then
+      Exit 
+    Endif
   Wend
 
   'Split temperature data into an array
@@ -558,6 +575,33 @@ Public Sub ReadTemperature(strReceived As String)
   Endif
 End
 
+Public Sub ReadPosition(strReceived As String)
+  
+  Dim sPos As New String[6]
+  Dim i As Integer
+  
+  'Remove ending cruff
+  While (Right(strReceived, 1) > "9") Or (Right(strReceived, 1) < "0")
+    strReceived = Left(strReceived, -1)
+  Wend
+  
+  sPos = Split(strReceived, " ")
+  
+  For i = 1 To 4
+    'Remove starting cruff
+    While (Left(sPos[i], 1) > "9") Or (Left(sPos[i], 1) < "0")
+      sPos[i] = Right(sPos[i], -1)
+    Wend
+  Next
+  
+  LCDX.Text = "X " & Format(Val(sPos[1]), "0##.0")
+  LCDY.Text = "Y " & Format(Val(sPos[2]), "0##.0")
+  LCDZ.Text = "Z " & Format(Val(sPos[3]), "0##.0")
+  LCDE.Text = "E " & Format(Val(sPos[4]), "0##.0")
+  
+End
+
+
 Public Sub ResetBtnColors()
 
   btnClean.Background = -1
@@ -589,6 +633,7 @@ Public Sub tmrGetTemp_Timer()
   ComBusy
 
   SendSerialData(sGetTemperatures, True)
+  SendSerialData("M114", True)
   tmrGetTemp.Enabled = True
 
   ComFree
@@ -634,3 +679,77 @@ Public Sub ComFree()
   
 End
 
+
+Public Sub Jog()
+
+  tmrJog.Enabled = True
+  SendSerialData("G1" & tgbJog.Tag & "3F1000.", True)
+  'SendSerialData("M114", True)
+
+End
+
+Public Sub btnXpos_MouseDown()
+
+  tgbJog.Tag = "X"
+  SendSerialData("G91", True)
+  Jog()
+
+End
+
+Public Sub btnXpos_MouseUp()
+
+  tmrJog.Enabled = False
+  SendSerialData("G90", True)
+  tgbJog.Tag = ""
+
+End
+
+Public Sub btnYpos_MouseDown()
+
+  tgbJog.Tag = "Y"
+  SendSerialData("G91", True)
+  Jog()
+
+End
+
+Public Sub btnYpos_MouseUp()
+
+  tmrJog.Enabled = False
+  SendSerialData("G90", True)
+  tgbJog.Tag = ""
+
+End
+
+Public Sub btnZpos_MouseDown()
+
+  tgbJog.Tag = "Z"
+  SendSerialData("G91", True)
+  Jog()
+
+End
+
+Public Sub btnZpos_MouseUp()
+
+  tmrJog.Enabled = False
+  SendSerialData("G90", True)
+  tgbJog.Tag = ""
+
+End
+
+Public Sub tgbJog_Click()
+
+  btnXneg.Enabled = tgbJog.Value
+  btnXpos.Enabled = tgbJog.Value
+  btnYneg.Enabled = tgbJog.Value
+  btnYpos.Enabled = tgbJog.Value
+  btnZneg.Enabled = tgbJog.Value
+  btnZpos.Enabled = tgbJog.Value
+
+End
+
+Public Sub tmrJog_Timer()
+
+  tmrJog.Enabled = False
+  Jog()
+
+End
