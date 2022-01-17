@@ -52,7 +52,7 @@ Public Sub SerialPort3D_Read()
   Else
     Debug strReceived
     strRec = Split(strReceived, "\n")
-    For i = 0 To strRec.Length
+    For i = 0 To strRec.Length - 1
       strReceived = strRec[i]
       Select Left(strReceived, 4)
         Case "ok X"
@@ -556,20 +556,28 @@ Public Sub ReadTemperature(strReceived As String)
   sTemp = Split(strReceived, " ")
 
   'Clean array
-  For i = 1 To 6
+  For i = 1 To sTemp.Length - 1
     'Remove starting cruff
-    While (Left(sTemp[i], 1) > "9") Or (Left(sTemp[i], 1) < "0")
+    While ((Left(sTemp[i], 1) > "9") Or (Left(sTemp[i], 1) < "0")) And (Len(sTemp[i]) > 0)
       sTemp[i] = Right(sTemp[i], -1)
     Wend
+    'Update displays
+    'Use Select in case we didn't recieve an entire temperture line to avoid Out Of Bounds error
+    Select i
+      Case 1
+        LCDHotEnd.Text = Format(Val(sTemp[1]), "0##.0")
+      Case 2
+        LBHotEnd.Text = "Hot E(" & Format(sTemp[2], "0") & ")"
+      Case 3
+        LCDBed.Text = Format(Val(sTemp[3]), "0##.0")
+      Case 4
+        LBBed.Text = "Bed (" & Format(sTemp[4], "0") & ")"
+      Case 5
+        PBHotEnd.Value = Val(sTemp[5]) / 127
+      Case 6
+        PBBed.Value = Val(sTemp[6]) / 127
+    End Select
   Next
-
-  'Update displays
-  LCDHotEnd.Text = Format(Val(sTemp[1]), "0##.0")
-  LCDBed.Text = Format(Val(sTemp[3]), "0##.0")
-  LBHotEnd.Text = "Hot E(" & Format(sTemp[2], "0") & ")"
-  LBBed.Text = "Bed (" & Format(sTemp[4], "0") & ")"
-  PBHotEnd.Value = Val(sTemp[5]) / 127
-  PBBed.Value = Val(sTemp[6]) / 127
 
   'Gradually change color of LCD's to red the hotter they get
   If Val(LCDHotEnd.Text) > 30 Then
@@ -603,18 +611,25 @@ Public Sub ReadPosition(strReceived As String)
   
   sPos = Split(strReceived, " ")
   
-  For i = 1 To 4
+  For i = 1 To sPos.Length - 1
     'Remove starting cruff
-    While (Left(sPos[i], 1) > "9") Or (Left(sPos[i], 1) < "0")
+    While ((Left(sPos[i], 1) > "9") Or (Left(sPos[i], 1) < "0")) And (Len(sPos[i]) > 0)
       sPos[i] = Right(sPos[i], -1)
     Wend
+    'Update displays
+    'Use Select in case we didn't recieve an entire temperture line to avoid Out Of Bounds error
+    Select i
+      Case 1
+        LCDX.Text = "X " & Format(Val(sPos[1]), "0##.0")
+      Case 2
+        LCDY.Text = "Y " & Format(Val(sPos[2]), "0##.0")
+      Case 3
+        LCDZ.Text = "Z " & Format(Val(sPos[3]), "0##.0")
+      Case 4
+        LCDE.Text = "E " & Format(Val(sPos[4]), "0##.0")
+    End Select
   Next
-  
-  LCDX.Text = "X " & Format(Val(sPos[1]), "0##.0")
-  LCDY.Text = "Y " & Format(Val(sPos[2]), "0##.0")
-  LCDZ.Text = "Z " & Format(Val(sPos[3]), "0##.0")
-  LCDE.Text = "E " & Format(Val(sPos[4]), "0##.0")
-  
+
 End
 
 
