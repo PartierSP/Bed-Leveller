@@ -1,7 +1,7 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,52,74)
+  MoveScaled(0,0,52,92)
   Text = ("Bed Leveller Settings")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
@@ -9,28 +9,28 @@
   Spacing = True
   Margin = True
   { VBox7 VBox
-    MoveScaled(1,1,50,72)
+    MoveScaled(1,1,50,90)
     Expand = True
     Spacing = True
     { !TabStrip1 TabStrip
-      MoveScaled(0,1,49,65)
+      MoveScaled(0,1,49,83)
       #Public = True
       Expand = True
       Arrangement = Arrange.Fill
       Count = 3
       Index = 0
-      Text = ("Positional Settings")
+      Text = ("Printer Settings")
       { ScrollView1 ScrollView
-        MoveScaled(1,1,47,49)
+        MoveScaled(1,1,47,54)
         Arrangement = Arrange.Row
         Padding = 5
         { HBox1 HBox
-          MoveScaled(1,1,45,47)
+          MoveScaled(1,1,45,52)
           Expand = True
           Spacing = True
           Padding = 5
           { VBox1 VBox
-            MoveScaled(1,1,20,44)
+            MoveScaled(1,1,20,50)
             Expand = True
             Spacing = True
             Padding = 5
@@ -84,48 +84,53 @@
               Alignment = Align.Right
               Text = ("Retraction Amount")
             }
+            { Label34 Label
+              MoveScaled(1,39,17,4)
+              Alignment = Align.Right
+              Text = ("Max Jog Speed")
+            }
           }
           { VBox2 VBox
-            MoveScaled(22,1,22,44)
+            MoveScaled(22,1,22,50)
             Expand = True
             Spacing = True
             Padding = 5
             { sbBedWidth SpinBox
               MoveScaled(2,1,19,4)
-              ToolTip = ("Maximum X travel")
+              ToolTip = ("Maximum X travel (mm)")
               MaxValue = 1000
               Step = 5
             }
             { sbBedDepth SpinBox
               MoveScaled(2,5,19,4)
-              ToolTip = ("Maximum Y travel")
+              ToolTip = ("Maximum Y travel (mm)")
               MaxValue = 1000
               Step = 5
             }
             { sbMargin SpinBox
               MoveScaled(2,9,19,4)
-              ToolTip = ("Distance from bed edge to make calibrations (must be less then bed width/depth)")
+              ToolTip = ("Distance (mm) from bed edge to make calibrations (must be less then bed width/depth)")
             }
             { sbRapidPlane SpinBox
               MoveScaled(2,13,19,4)
-              ToolTip = ("Distance to lift above bed before moving")
+              ToolTip = ("Distance to lift above bed before moving (mm)")
               Step = 5
             }
             { sbShim SpinBar
               MoveScaled(2,17,19,4)
-              ToolTip = ("Thickness of shim used for calibration")
+              ToolTip = ("Thickness of shim used for calibration (mm)")
               MaxValue = 10
             }
             { sbBedTemperature SpinBox
               MoveScaled(2,21,19,4)
-              ToolTip = ("Bed temperature set point")
+              ToolTip = ("Bed temperature set point (C)")
               MinValue = 15
               MaxValue = 80
               Value = 15
             }
             { sbHETemperature SpinBox
               MoveScaled(2,25,19,4)
-              ToolTip = ("Extruder temperature set point")
+              ToolTip = ("Extruder temperature set point (C)")
               MinValue = 50
               MaxValue = 250
               Step = 5
@@ -133,7 +138,7 @@
             }
             { sbCleanHeight SpinBox
               MoveScaled(2,29,19,4)
-              ToolTip = ("Distance to position above bed for cleaning.")
+              ToolTip = ("Distance to position above bed for cleaning. (mm)")
               MaxValue = 200
               Step = 10
             }
@@ -147,22 +152,30 @@
               ToolTip = ("Extruder retraction distance (to eliminate nozzle blob)")
               MaxValue = 10
             }
+            { sbMaxJogSpeed SpinBox
+              MoveScaled(2,41,19,4)
+              ToolTip = ("Max jog speed for X, Y, and Z axises (mm/min)")
+              MinValue = 100
+              MaxValue = 6000
+              Step = 100
+              Value = 100
+            }
           }
         }
       }
       Index = 1
       Text = ("Posting")
       { ScrollView2 ScrollView
-        MoveScaled(1,1,47,59)
+        MoveScaled(1,1,47,77)
         Arrangement = Arrange.Row
         Padding = 5
         { HBox2 HBox
-          MoveScaled(1,1,45,57)
+          MoveScaled(1,1,45,75)
           Expand = True
           Spacing = True
           Padding = 5
           { VBox5 VBox
-            MoveScaled(1,1,20,55)
+            MoveScaled(1,1,20,73)
             Expand = True
             Spacing = True
             Padding = 5
@@ -216,19 +229,39 @@
               Alignment = Align.Right
               Text = ("Report Temperature")
             }
-            { Label28 Label
+            { Label33 Label
               MoveScaled(0,41,19,4)
+              Alignment = Align.Right
+              Text = ("Report Position")
+            }
+            { Label28 Label
+              MoveScaled(0,46,19,4)
               Alignment = Align.Right
               Text = ("Dwell")
             }
             { Label29 Label
-              MoveScaled(0,45,19,4)
+              MoveScaled(0,50,19,4)
               Alignment = Align.Right
               Text = ("Send Message")
             }
+            { Label30 Label
+              MoveScaled(0,54,19,4)
+              Alignment = Align.Right
+              Text = ("Linear Movement")
+            }
+            { Label31 Label
+              MoveScaled(0,58,19,4)
+              Alignment = Align.Right
+              Text = ("Absolute Positioning")
+            }
+            { Label32 Label
+              MoveScaled(0,62,19,4)
+              Alignment = Align.Right
+              Text = ("Relative Positioning")
+            }
           }
           { VBox6 VBox
-            MoveScaled(22,1,22,55)
+            MoveScaled(22,1,22,73)
             Expand = True
             Spacing = True
             Padding = 5
@@ -272,13 +305,29 @@
               MoveScaled(2,37,19,4)
               ToolTip = ("Command to get printer to list current temperatures")
             }
-            { tbDwell TextBox
+            { tbGetPosition TextBox
               MoveScaled(2,41,19,4)
+              ToolTip = ("Command to get printer to list current position")
+            }
+            { tbDwell TextBox
+              MoveScaled(2,45,19,4)
               ToolTip = ("Command to pause printer program for a moment")
             }
             { tbMessage TextBox
-              MoveScaled(2,45,19,4)
+              MoveScaled(2,49,19,4)
               ToolTip = ("Command to send a message to the printer's screen.")
+            }
+            { tbLinear TextBox
+              MoveScaled(2,53,19,4)
+              ToolTip = ("Command to initialize straight line movements")
+            }
+            { tbAbsol TextBox
+              MoveScaled(2,57,19,4)
+              ToolTip = ("Tells printer all positions are based from the home location.")
+            }
+            { tbRelative TextBox
+              MoveScaled(2,61,19,4)
+              ToolTip = ("Tells printer that all position commands are distances from current location (incremental).")
             }
           }
         }
@@ -380,7 +429,7 @@
       Index = 0
     }
     { Panel1 Panel
-      MoveScaled(1,66,48,5)
+      MoveScaled(1,84,48,5)
       Arrangement = Arrange.Horizontal
       Spacing = True
       Padding = 10

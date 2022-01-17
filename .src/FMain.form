@@ -296,8 +296,7 @@
       }
       { tmrJog #Timer
         #MoveScaled(61,22)
-        Enabled = True
-        Delay = 200
+        Delay = 100
       }
     }
   }

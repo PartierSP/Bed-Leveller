@@ -6,6 +6,7 @@ Public iMargin As Integer
 Public sInitialization As New String[4]
 Public sHome As String
 Public sRapidMove As String
+Public sLinearMove As String
 Public iRapidPlane As Integer
 Public sSetBedTemp As String
 Public sBedTempPrefix As String
@@ -27,9 +28,14 @@ Public sConfigLoc As String = User.Home &/ ".config/leveller"
 Public sConfigName As String = "config.conf"
 Public bFirstRun As Boolean
 Public sGetTemperatures As String
+Public sGetPosition As String
 Public sMessage As String
 Public sDwell As String
+Public sAbsolute As String
+Public sRelative As String
+Public iMaxJogSpeed As Integer
 Public bBusy As Boolean = False
+Public iFeedrateDivider As Integer = 20
 
 Public Sub SerialPort3D_Read()
 
@@ -104,13 +110,17 @@ Public Sub Form_Open()
   sInitialization[3] = hSettings["Post/Init3", ""]
   sHome = hSettings["Post/Home", "G28"]
   sRapidMove = hSettings["Post/RapidMove", "G0"]
+  sLinearMove = hSettings["Post/Linear", "G1"]
   sSetBedTemp = hSettings["Post/SetBedTemp", "M140"]
   sBedTempPrefix = hSettings["Post/BedTempPrefix", "S"]
   sSetHETemp = hSettings["Post/SetHETemp", "M104"]
   sHETempPrefix = hSettings["Post/HETempPrefix", "S"]
   sGetTemperatures = hSettings["Post/GetTemperatures", "M105"]
+  sGetPosition = hSettings["Post/GetPosition", "M114"]
   sMessage = hSettings["Post/Message", "M117"]
   sDwell = hSettings["Post/Dwell", "G4"]
+  sAbsolute = hSettings["Post/Absolute", "G90"]
+  sRelative = hSettings["Post/Relative", "G91"]
 
   iMargin = hSettings["Locations/Margin", 30]
   iRapidPlane = hSettings["Locations/RapidPlane", 10]
@@ -120,6 +130,7 @@ Public Sub Form_Open()
   iCleanHeight = hSettings["Locations/CleanHeight", 200]
   sCleanLoc = hSettings["Locations/CleanLoc", "Middle"]
   fRetraction = hSettings["Locations/Retraction", 2]
+  iMaxJogSpeed = hSettings["Locations/MaxJogSpeed", 4000]
 
   sPort = hSettings["Communications/Port", "/dev/ttyUSB0"]
   iBaud = hSettings["Communications/Baud", 115200]
@@ -193,13 +204,17 @@ Public Sub Form_Close()
   hSettings["Post/Init3"] = sInitialization[3]
   hSettings["Post/Home"] = sHome
   hSettings["Post/RapidMove"] = sRapidMove
+  hSettings["Post/Linear"] = sLinearMove
   hSettings["Post/SetBedTemp"] = sSetBedTemp
   hSettings["Post/BedTempPrefix"] = sBedTempPrefix
   hSettings["Post/SetHETemp"] = sSetHETemp
   hSettings["Post/HETempPrefix"] = sHETempPrefix
   hSettings["Post/GetTemperatures"] = sGetTemperatures
+  hSettings["Post/GetPosition"] = sGetPosition
   hSettings["Post/Message"] = sMessage
   hSettings["Post/Dwell"] = sDwell
+  hSettings["Post/Absolute"] = sAbsolute
+  hSettings["Post/Relative"] = sRelative
 
   hSettings["Locations/Margin"] = iMargin
   hSettings["Locations/RapidPlane"] = iRapidPlane
@@ -209,6 +224,7 @@ Public Sub Form_Close()
   hSettings["Locations/CleanHeight"] = iCleanHeight
   hSettings["Locations/CleanLoc"] = sCleanLoc
   hSettings["Locations/Retraction"] = fRetraction
+  hSettings["Locations/MaxJogSpeed"] = iMaxJogSpeed
 
   hSettings["Communications/Port"] = sPort
   hSettings["Communications/Baud"] = iBaud
@@ -633,7 +649,7 @@ Public Sub tmrGetTemp_Timer()
   ComBusy
 
   SendSerialData(sGetTemperatures, True)
-  SendSerialData("M114", True)
+  SendSerialData(sGetPosition, True)
   tmrGetTemp.Enabled = True
 
   ComFree
@@ -682,57 +698,121 @@ End
 
 Public Sub Jog()
 
+  Dim fDistance As Float
+  Dim iFeedRate As Integer
+  Dim fAxisMultiplier As Float
+
+  If Left(tgbJog.Tag, 1) = "Z" Then 
+    fAxisMultiplier = 0.25
+  Else 
+    fAxisMultiplier = 1
+  Endif
+
+  iFeedRate = Int(iMaxJogSpeed / iFeedrateDivider * fAxisMultiplier)
+  fDistance = Round(iFeedRate * tmrJog.Delay / 60000 * 0.75, -1)  ' Distance Traveled(mm) = Feedrate (mm/min) * time (ms) / unit conversion(ms/min) Note: the 0.5 is to account for printer acceleration
+  
+  ResetBtnColors()
   tmrJog.Enabled = True
-  SendSerialData("G1" & tgbJog.Tag & "3F1000.", True)
-  'SendSerialData("M114", True)
+  SendSerialData(sLinearMove & tgbJog.Tag & fDistance & "F" & iFeedRate, True)
+  'SendSerialData(sGetPosition, True)
+  If iFeedrateDivider > 1 Then 
+    'Go faster next time
+    iFeedrateDivider = iFeedrateDivider - 1
+  Endif 
 
 End
+
+Public Sub StopJog()
+
+  tmrJog.Enabled = False
+  SendSerialData(sAbsolute, True)
+  tgbJog.Tag = ""
+  iFeedrateDivider = 20
+
+End
+
 
 Public Sub btnXpos_MouseDown()
 
   tgbJog.Tag = "X"
-  SendSerialData("G91", True)
+  SendSerialData(sRelative, True)
   Jog()
 
 End
 
 Public Sub btnXpos_MouseUp()
 
-  tmrJog.Enabled = False
-  SendSerialData("G90", True)
-  tgbJog.Tag = ""
+  StopJog()
+
+End
+
+Public Sub btnXneg_MouseDown()
+
+  tgbJog.Tag = "X-"
+  SendSerialData(sRelative, True)
+  Jog()
+
+End
+
+Public Sub btnXneg_MouseUp()
+
+  StopJog()
 
 End
 
 Public Sub btnYpos_MouseDown()
 
   tgbJog.Tag = "Y"
-  SendSerialData("G91", True)
+  SendSerialData(sRelative, True)
   Jog()
 
 End
 
 Public Sub btnYpos_MouseUp()
 
-  tmrJog.Enabled = False
-  SendSerialData("G90", True)
-  tgbJog.Tag = ""
+  StopJog()
+
+End
+
+Public Sub btnYneg_MouseDown()
+
+  tgbJog.Tag = "Y-"
+  SendSerialData(sRelative, True)
+  Jog()
+
+End
+
+Public Sub btnYneg_MouseUp()
+
+  StopJog()
 
 End
 
 Public Sub btnZpos_MouseDown()
 
   tgbJog.Tag = "Z"
-  SendSerialData("G91", True)
+  SendSerialData(sRelative, True)
   Jog()
 
 End
 
 Public Sub btnZpos_MouseUp()
 
-  tmrJog.Enabled = False
-  SendSerialData("G90", True)
-  tgbJog.Tag = ""
+  StopJog()
+
+End
+
+Public Sub btnZneg_MouseDown()
+
+  tgbJog.Tag = "Z-"
+  SendSerialData(sRelative, True)
+  Jog()
+
+End
+
+Public Sub btnZneg_MouseUp()
+
+  StopJog()
 
 End
 

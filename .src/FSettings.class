@@ -39,13 +39,18 @@ Public Sub btOK_Click()
     .sInitialization[3] = tbInitialization3.Text
     .sHome = tbHome.Text
     .sRapidMove = tbRapid.Text
+    .sLinearMove = tbLinear.Text
     .sSetBedTemp = tbSetBedTemp.Text
     .sBedTempPrefix = tbBedTempPrefix.Text
     .sSetHETemp = tbSetHETemp.Text
     .sHETempPrefix = tbHETempPrefix.Text
     .sGetTemperatures = tbGetTemperatures.Text
+    .sGetPosition = tbGetPosition.Text
     .sDwell = tbDwell.Text
     .sMessage = tbMessage.Text
+    .sAbsolute = tbAbsol.Text
+    .sRelative = tbRelative.Text
+    .iMaxJogSpeed = sbMaxJogSpeed.Value
 
     'Save settings to config
     hSettings = New Settings(.sConfigLoc &/ .sConfigName)
@@ -58,13 +63,17 @@ Public Sub btOK_Click()
     hSettings["Post/Init3"] = .sInitialization[3]
     hSettings["Post/Home"] = .sHome
     hSettings["Post/RapidMove"] = .sRapidMove
+    hSettings["Post/Linear"] = .sLinearMove
     hSettings["Post/SetBedTemp"] = .sSetBedTemp
     hSettings["Post/BedTempPrefix"] = .sBedTempPrefix
     hSettings["Post/SetHETemp"] = .sSetHETemp
     hSettings["Post/HETempPrefix"] = .sHETempPrefix
     hSettings["Post/GetTemperatures"] = .sGetTemperatures
+    hSettings["Post/GetPosition"] = .sGetPosition
     hSettings["Post/Dwell"] = .sDwell
     hSettings["Post/Message"] = .sMessage
+    hSettings["Post/Absolute"] = .sAbsolute
+    hSettings["Post/Relative"] = .sRelative
 
     hSettings["Locations/Margin"] = .iMargin
     hSettings["Locations/RapidPlane"] = .iRapidPlane
@@ -74,6 +83,7 @@ Public Sub btOK_Click()
     hSettings["Locations/CleanHeight"] = .iCleanHeight
     hSettings["Locations/CleanLoc"] = .sCleanLoc
     hSettings["Locations/Retraction"] = .fRetraction
+    hSettings["Locations/MaxJogSpeed"] = .iMaxJogSpeed
   
     hSettings["Communications/Port"] = .sPort
     hSettings["Communications/Baud"] = .iBaud
@@ -166,13 +176,18 @@ Public Sub Form_Open()
     tbInitialization3.Text = FMain.sInitialization[3]
     tbHome.Text = .sHome
     tbRapid.Text = .sRapidMove
+    tbLinear.Text = .sLinearMove
     tbSetBedTemp.Text = .sSetBedTemp
     tbBedTempPrefix.Text = .sBedTempPrefix
     tbSetHETemp.Text = .sSetHETemp
     tbHETempPrefix.Text = .sHETempPrefix
     tbGetTemperatures.Text = .sGetTemperatures
+    tbGetPosition.Text = .sGetPosition
     tbDwell.Text = .sDwell
     tbMessage.Text = .sMessage
+    tbAbsol.Text = .sAbsolute
+    tbRelative.Text = .sRelative
+    sbMaxJogSpeed.Value = .iMaxJogSpeed
   End With
 
 End
