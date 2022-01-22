@@ -284,6 +284,9 @@
           }
         }
       }
+      { jsk1 Joystick
+        MoveScaled(61,30,6,6)
+      }
       { tmrResize #Timer
         #MoveScaled(61,14)
         Enabled = True
