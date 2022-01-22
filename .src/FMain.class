@@ -37,6 +37,8 @@ Public iMaxJogSpeed As Integer
 Public bBusy As Boolean = False
 Public iFeedrateDivider As Integer = 20
 
+Public jsk1 As Joystick
+
 Public Sub SerialPort3D_Read()
 
   Dim strReceived As String
@@ -176,6 +178,9 @@ Public Sub Form_Open()
 
     'Update Location button names
     UpdateButtonNames
+    
+    'Start joystick
+    jsk1 = New Joystick(Me, "/dev/input/js0")
 
     Try serialPort3D.Open()
     If Error Then
@@ -241,6 +246,8 @@ Public Sub Form_Close()
   'SendSerialData(sSetHETemp & sHETempPrefix & "0.0", True)
 
   SerialPort3D.Close()
+  
+  jsk1.Close
 
   FSettings.Close
 
@@ -846,5 +853,41 @@ Public Sub tmrJog_Timer()
 
   tmrJog.Enabled = False
   Jog()
+
+End
+
+Public Sub jsk1_AxisChange(Id As Integer, Value As Integer)
+  
+  Select Id
+    Case 0
+      'X axis
+      If Value <> 0 Then 
+        tmrJsJog.Enabled = True
+      Endif
+    Case 1
+      'Y axis
+      If Value <> 0 Then 
+        tmrJsJog.Enabled = True
+      Endif 
+  End Select
+  
+  If Abs(jsk1.Axis[0]) + Abs(jsk1.Axis[1]) = 0 Then 
+    tmrJsJog.Enabled = False
+  Endif
+End
+
+
+Public Sub tmrJsJog_Timer()
+
+  Dim fXdist As Float
+  Dim fYdist As Float
+  
+  tmrJsJog.Enabled = False
+  
+  fXdist = jsk1.Axis[0] / 32767 * 31.25
+  fYdist = jsk1.Axis[1] / 32767 * 31.25
+
+  Debug sLinearMove & "X" & fXdist & "Y" & fYdist & "F31.15"
+  tmrJsJog.Enabled = True
 
 End

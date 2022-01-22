@@ -298,6 +298,10 @@
         #MoveScaled(61,22)
         Delay = 100
       }
+      { tmrJsJog #Timer
+        #MoveScaled(53,30)
+        Delay = 250
+      }
     }
   }
   { SerialPort3D #SerialPort

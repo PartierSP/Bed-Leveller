@@ -1,0 +1,97 @@
+' Gambas class file
+
+' Joystick.class - represents a HID game device containing
+'                  one or more joysticks and buttons
+'
+' Copyright 2008 Rob Kudla, Binara, Inc. <rpm@kudla.org>
+
+' Adapted by Terco 2021 for Gambas3 and Custom Control
+' Code generalized by PartierSP, 2022
+'
+' This program is free software; you can redistribute it and/or modify
+' it under the terms of the GNU General Public License version 2 as
+' published by the Free Software Foundation.
+
+Inherits UserControl
+Export
+
+Public Ready As Boolean = False
+Public Button As New Boolean[13]
+Public Axis As New Integer[6]
+Public DeviceFile As String
+
+Private jsDev As Process
+
+Event ButtonChange(Id As Integer, Value As Boolean)
+Event AxisChange(Id As Integer, Value As Integer)
+Event OnJoystick
+
+Public Sub _new(Optional sDev As String)
+
+  If sDev = "" Then 
+    'if no device was specified, try js0.
+    sDev = "/dev/input/js0"
+  Endif 
+  
+  DeviceFile = sDev
+
+  If Exist(sDev) Then 
+    ' the interpreter dies when we try to read from /dev/input/js0 as a file
+    ' saying "invalid argument", so we have to run cat
+    jsDev = Exec ["cat", sDev] For Read As "Device"
+
+    Ready = True
+  Endif 
+
+End
+
+Public Sub Close()
+
+  ' kill the cat process if it's still going
+  Try jsDev.Kill
+  Ready = False
+
+End
+
+Public Sub EmtyDevice()
+
+  Dim bByte As Byte
+
+  Do
+    Try bByte = Read #jsDev As Byte
+    If Eof(jsdev) = True Then Return
+  Loop
+
+End
+
+Public Sub Device_Read()
+
+  Dim iStamp As Integer
+  Dim shValue As Short
+  Dim byEventType As Byte
+  Dim byInputId As Byte
+
+  While Not Eof(jsDev)
+
+    iStamp = Read #jsDev As Integer     ' Time stamp: 4 bytes
+    shValue = Read #jsDev As Short      ' Value: 2 bytes
+    byEventType = Read #jsDev As Byte   ' Type of Event: 1 byte
+    byInputId = Read #jsDev As Byte     ' InputId: 1 byte
+
+     Debug "Device: "; DeviceFile, "Stamp: "; iStamp, "Event Type: "; byEventType, "Id: "; byInputId, "Value: "; shValue
+
+    If byEventType And 1 Then 
+      'This event is a change in a button's state
+      Button[byInputId] = shValue
+      Raise ButtonChange(byInputId, shValue)
+    Else If byEventType And 2 Then 
+      'This event is an axis movement
+      Axis[byInputId] = shValue
+      Raise AxisChange(byInputId, shValue)
+    Endif
+
+    Raise OnJoystick
+
+  Wend 
+
+End
