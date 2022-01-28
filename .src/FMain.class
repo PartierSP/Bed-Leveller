@@ -979,7 +979,9 @@ Public Sub tmrJsJog_Timer()
       If jsk1.Button[4] Then                    'Button 4 activates fine feed
         fZdist = fZdist / 10
       Endif
+      SendSerialData(sRelative, True)
       SendSerialData(sLinearMove & "Z" & fZdist & "F500", True)
+      SendSerialData(sAbsolute, True)
       Debug sLinearMove & " Z" & fZdist & " F500"
   
     Else
@@ -989,7 +991,9 @@ Public Sub tmrJsJog_Timer()
         fXdist = fXdist / 10
         fYdist = fYdist / 10
       Endif
+      SendSerialData(sRelative, True)
       SendSerialData(sLinearMove & "X" & fXdist & "Y" & fYdist & "F800", True)
+      SendSerialData(sAbsolute, True)
       Debug sLinearMove & " X" & fXdist & " Y" & fYdist & " F800"
     Endif
   Endif 

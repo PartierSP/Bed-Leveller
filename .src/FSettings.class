@@ -128,6 +128,7 @@ Public Sub Form_Open()
   Dim sStopBits As New String[3]
   Dim sParity As New String[3]
   Dim sFlowControls As New String[4]
+  Dim sAxis As New String[7]
   Dim hSettings As Settings
 
   'Retrieve Setting form settings.
@@ -152,6 +153,9 @@ Public Sub Form_Open()
 
   sFlowControls = ["None", "Hardware", "Software", "Both"]
   cbFlowControl.List = sFlowControls
+  
+  sAxis = ["Axis 0", "Axis 1", "Axis 2", "Axis 3", "Axis 4", "Axis 5", "None"]
+  cbAxisX.List = sAxis
 
   'Set the forms control values.
   With FMain
@@ -199,5 +203,20 @@ Public Sub Form_Close()
   'Save Setting form settings.
   hSettings = New Settings(FMain.sConfigLoc &/ FMain.sConfigName)
   hSettings.Write(Me, "SettingForm")
+
+End
+
+Public Sub TabStrip1_Click()
+
+  If TabStrip1.Index = 3 Then
+    'disable Jog mode when adjusting joystick
+    FMain.tgbjog.Value = False
+  Endif
+
+End
+
+Public Sub tgbDetectX_Click()
+
+  
 
 End

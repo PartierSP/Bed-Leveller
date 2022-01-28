@@ -17,7 +17,7 @@
       #Public = True
       Expand = True
       Arrangement = Arrange.Fill
-      Count = 3
+      Count = 4
       Index = 0
       Text = ("Printer Settings")
       { ScrollView1 ScrollView
@@ -421,6 +421,101 @@
                 MoveScaled(2,21,18,4)
                 ToolTip = ("What type of flow control the printer uses")
                 ReadOnly = True
+              }
+            }
+          }
+        }
+      }
+      Index = 3
+      Text = ("Joystick")
+      { ScrollView4 ScrollView
+        MoveScaled(1,1,47,69)
+        Arrangement = Arrange.Row
+        Padding = 5
+        { Frame1 Frame
+          MoveScaled(1,1,45,24)
+          Expand = True
+          Arrangement = Arrange.Vertical
+          Spacing = True
+          Padding = 5
+          Text = ("X Axis")
+          { VBox9 VBox
+            MoveScaled(1,2,43,21)
+            Expand = True
+            Padding = 5
+            { Panel2 Panel
+              MoveScaled(1,0,41,5)
+              Expand = True
+              Arrangement = Arrange.Horizontal
+              AutoResize = True
+              Spacing = True
+              Padding = 5
+              { tgbDetectX ToggleButton
+                MoveScaled(0,0,9,4)
+                ToolTip = ("Automatic detect axis")
+                Text = ("Detect")
+              }
+              { cbAxisX ComboBox
+                MoveScaled(10,0,19,4)
+                Expand = True
+              }
+              { chbInvertX CheckBox
+                MoveScaled(32,0,9,4)
+                ToolTip = ("Reverse axis direction")
+                Text = ("Invert")
+              }
+            }
+            { Panel3 Panel
+              MoveScaled(1,5,41,5)
+              Expand = True
+              Arrangement = Arrange.Horizontal
+              AutoResize = True
+              Padding = 5
+              { Mi Label
+                MoveScaled(1,1,11,3)
+                Alignment = Align.Right
+                Text = ("Min")
+              }
+              { sbMinX SliderBox
+                MoveScaled(16,1,22,4)
+                Expand = True
+                MinValue = -32767
+                MaxValue = 0
+                Value = -32767
+              }
+            }
+            { Panel4 Panel
+              MoveScaled(1,10,41,5)
+              Expand = True
+              Arrangement = Arrange.Horizontal
+              AutoResize = True
+              Padding = 5
+              { Mi2 Label
+                MoveScaled(1,1,11,3)
+                Alignment = Align.Right
+                Text = ("Max")
+              }
+              { sbMaxX SliderBox
+                MoveScaled(16,1,22,4)
+                Expand = True
+                MaxValue = 32767
+                Value = 32767
+              }
+            }
+            { Panel5 Panel
+              MoveScaled(1,15,41,5)
+              Arrangement = Arrange.Horizontal
+              AutoResize = True
+              Padding = 5
+              { Mi3 Label
+                MoveScaled(1,1,11,3)
+                Alignment = Align.Right
+                Text = ("Dead Zone")
+              }
+              { sbDeadZoneX SliderBox
+                MoveScaled(16,1,22,4)
+                Expand = True
+                MaxValue = 32767
               }
             }
           }

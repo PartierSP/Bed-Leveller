@@ -201,8 +201,9 @@
         { Spring6 Spring
           MoveScaled(50,2,1,2)
         }
-        { tgbJog ToggleButton
+        { !tgbJog ToggleButton
           MoveScaled(51,1,11,4)
+          #Public = True
           Text = Shortcut(("Jog"), "J")
         }
       }
