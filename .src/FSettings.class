@@ -128,7 +128,8 @@ Public Sub Form_Open()
   Dim sStopBits As New String[3]
   Dim sParity As New String[3]
   Dim sFlowControls As New String[4]
-  Dim sAxis As New String[7]
+  Dim sAxis As New String[13]
+  Dim sButton As New String[13]
   Dim hSettings As Settings
 
   'Retrieve Setting form settings.
@@ -154,8 +155,28 @@ Public Sub Form_Open()
   sFlowControls = ["None", "Hardware", "Software", "Both"]
   cbFlowControl.List = sFlowControls
   
-  sAxis = ["Axis 0", "Axis 1", "Axis 2", "Axis 3", "Axis 4", "Axis 5", "None"]
-  cbAxisX.List = sAxis
+  sAxis = ["- None -", 
+           "Axis 0 + Prime", "Axis 1 + Prime", "Axis 2 + Prime", "Axis 3 + Prime", "Axis 4 + Prime", "Axis 5 + Prime", 
+           "Axis 0 + Sec", "Axis 1 + Sec", "Axis 2 + Sec", "Axis 3 + Sec", "Axis 4 + Sec", "Axis 5 + Sec"]
+  cbXAxis.List = sAxis
+  cbYAxis.List = sAxis
+  cbZAxis.List = sAxis
+  cbEAxis.List = sAxis
+  
+  sButton = ["- None -", 
+             "Button 0", "Button 1", "Button 2", "Button 3", "Button 4", "Button 5", "Button 6", 
+             "Button 7", "Button 8", "Button 9", "Button 10", "Button 11", "Button 12"]
+  cbPrimeE.List = sButton
+  cbSecE.List = sButton
+  cbExtruder.List = sButton
+  cbHeatedBed.List = sButton
+  cbHome.List = sButton
+  cbXnYn.List = sButton
+  cbXpYn.List = sButton
+  cbXnYn.List = sButton
+  cbXpYp.List = sButton
+  cbCentre.List = sButton
+  
 
   'Set the forms control values.
   With FMain
@@ -212,11 +233,5 @@ Public Sub TabStrip1_Click()
     'disable Jog mode when adjusting joystick
     FMain.tgbjog.Value = False
   Endif
-
-End
-
-Public Sub tgbDetectX_Click()
-
-  
 
 End

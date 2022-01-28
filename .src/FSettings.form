@@ -1,7 +1,7 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,52,92)
+  MoveScaled(0,0,52,107)
   Text = ("Bed Leveller Settings")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
@@ -9,11 +9,11 @@
   Spacing = True
   Margin = True
   { VBox7 VBox
-    MoveScaled(1,1,50,90)
+    MoveScaled(1,1,50,103)
     Expand = True
     Spacing = True
     { !TabStrip1 TabStrip
-      MoveScaled(0,1,49,83)
+      MoveScaled(0,1,49,94)
       #Public = True
       Expand = True
       Arrangement = Arrange.Fill
@@ -429,93 +429,214 @@
       Index = 3
       Text = ("Joystick")
       { ScrollView4 ScrollView
-        MoveScaled(1,1,47,69)
+        MoveScaled(1,1,47,88)
         Arrangement = Arrange.Row
         Padding = 5
-        { Frame1 Frame
-          MoveScaled(1,1,45,24)
+        { VBox11 VBox
+          MoveScaled(1,1,45,85)
           Expand = True
-          Arrangement = Arrange.Vertical
           Spacing = True
           Padding = 5
-          Text = ("X Axis")
-          { VBox9 VBox
-            MoveScaled(1,2,43,21)
-            Expand = True
+          { Frame1 Frame
+            MoveScaled(1,1,43,33)
+            Arrangement = Arrange.Horizontal
+            Margin = True
             Padding = 5
-            { Panel2 Panel
-              MoveScaled(1,0,41,5)
+            Text = ("Jog Control")
+            { VBox9 VBox
+              MoveScaled(1,2,19,26)
               Expand = True
-              Arrangement = Arrange.Horizontal
-              AutoResize = True
               Spacing = True
+              Margin = True
               Padding = 5
-              { tgbDetectX ToggleButton
-                MoveScaled(0,0,9,4)
-                ToolTip = ("Automatic detect axis")
-                Text = ("Detect")
+              { Label35 Label
+                MoveScaled(1,1,18,4)
+                Alignment = Align.Right
+                Text = ("X Axis")
               }
-              { cbAxisX ComboBox
-                MoveScaled(10,0,19,4)
-                Expand = True
+              { Label36 Label
+                MoveScaled(1,5,18,4)
+                Alignment = Align.Right
+                Text = ("Y Axis")
               }
-              { chbInvertX CheckBox
-                MoveScaled(32,0,9,4)
-                ToolTip = ("Reverse axis direction")
-                Text = ("Invert")
+              { Label37 Label
+                MoveScaled(1,9,18,4)
+                Alignment = Align.Right
+                Text = ("Z Axis")
+              }
+              { Label38 Label
+                MoveScaled(1,13,18,4)
+                Alignment = Align.Right
+                Text = ("Extruder")
+              }
+              { Label39 Label
+                MoveScaled(0,17,18,4)
+                Alignment = Align.Right
+                Text = ("Primary Enable")
+              }
+              { Label40 Label
+                MoveScaled(0,21,18,4)
+                Alignment = Align.Right
+                Text = ("Secondary Enable")
               }
             }
-            { Panel3 Panel
-              MoveScaled(1,5,41,5)
+            { VBox10 VBox
+              MoveScaled(21,2,22,26)
               Expand = True
-              Arrangement = Arrange.Horizontal
-              AutoResize = True
+              Spacing = True
+              Margin = True
               Padding = 5
-              { Mi Label
-                MoveScaled(1,1,11,3)
-                Alignment = Align.Right
-                Text = ("Min")
+              { cbXAxis ComboBox
+                MoveScaled(2,1,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
               }
-              { sbMinX SliderBox
-                MoveScaled(16,1,22,4)
-                Expand = True
-                MinValue = -32767
-                MaxValue = 0
-                Value = -32767
+              { cbYAxis ComboBox
+                MoveScaled(2,5,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbZAxis ComboBox
+                MoveScaled(2,9,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbEAxis ComboBox
+                MoveScaled(2,13,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbPrimeE ComboBox
+                MoveScaled(2,17,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbSecE ComboBox
+                MoveScaled(2,21,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
               }
             }
-            { Panel4 Panel
-              MoveScaled(1,10,41,5)
+          }
+          { Frame2 Frame
+            MoveScaled(1,34,43,14)
+            Arrangement = Arrange.Horizontal
+            Margin = True
+            Padding = 5
+            Text = ("Function Control")
+            { VBox12 VBox
+              MoveScaled(1,3,19,10)
               Expand = True
-              Arrangement = Arrange.Horizontal
-              AutoResize = True
+              Spacing = True
+              Margin = True
               Padding = 5
-              { Mi2 Label
-                MoveScaled(1,1,11,3)
+              { Label41 Label
+                MoveScaled(1,1,18,4)
                 Alignment = Align.Right
-                Text = ("Max")
+                Text = ("Extruder Heater")
               }
-              { sbMaxX SliderBox
-                MoveScaled(16,1,22,4)
-                Expand = True
-                MaxValue = 32767
-                Value = 32767
+              { Label42 Label
+                MoveScaled(1,5,18,4)
+                Alignment = Align.Right
+                Text = ("Bed Heater")
               }
             }
-            { Panel5 Panel
-              MoveScaled(1,15,41,5)
-              Arrangement = Arrange.Horizontal
-              AutoResize = True
+            { VBox13 VBox
+              MoveScaled(21,3,22,10)
+              Expand = True
+              Spacing = True
+              Margin = True
               Padding = 5
-              { Mi3 Label
-                MoveScaled(1,1,11,3)
-                Alignment = Align.Right
-                Text = ("Dead Zone")
+              { cbExtruder ComboBox
+                MoveScaled(2,1,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
               }
-              { sbDeadZoneX SliderBox
-                MoveScaled(16,1,22,4)
-                Expand = True
-                MaxValue = 32767
+              { cbHeatedBed ComboBox
+                MoveScaled(2,5,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+            }
+          }
+          { Frame3 Frame
+            MoveScaled(1,48,43,33)
+            Arrangement = Arrange.Horizontal
+            Margin = True
+            Padding = 5
+            Text = ("Preprogrammed Positions")
+            { VBox14 VBox
+              MoveScaled(1,3,19,26)
+              Expand = True
+              Spacing = True
+              Margin = True
+              Padding = 5
+              { Label43 Label
+                MoveScaled(0,0,18,4)
+                Alignment = Align.Right
+                Text = ("Home")
+              }
+              { Label44 Label
+                MoveScaled(0,4,18,4)
+                Alignment = Align.Right
+                Text = ("Leveling -X,-Y")
+              }
+              { Label45 Label
+                MoveScaled(0,8,18,4)
+                Alignment = Align.Right
+                Text = ("Leveling +X,-Y")
+              }
+              { Label46 Label
+                MoveScaled(0,12,18,4)
+                Alignment = Align.Right
+                Text = ("Leveling -X,+Y")
+              }
+              { Label47 Label
+                MoveScaled(0,16,18,4)
+                Alignment = Align.Right
+                Text = ("Leveling +X,+Y")
+              }
+              { Label48 Label
+                MoveScaled(0,20,18,4)
+                Alignment = Align.Right
+                Text = ("Leveling Centre")
+              }
+            }
+            { VBox15 VBox
+              MoveScaled(21,3,22,26)
+              Expand = True
+              Spacing = True
+              Margin = True
+              Padding = 5
+              { cbHome ComboBox
+                MoveScaled(2,1,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbXnYn ComboBox
+                MoveScaled(2,5,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbXpYn ComboBox
+                MoveScaled(0,9,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbXnYp ComboBox
+                MoveScaled(0,13,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbXpYp ComboBox
+                MoveScaled(0,17,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbCentre ComboBox
+                MoveScaled(1,21,18,4)
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
               }
             }
           }
@@ -524,7 +645,7 @@
       Index = 0
     }
     { Panel1 Panel
-      MoveScaled(1,84,48,5)
+      MoveScaled(1,96,48,5)
       Arrangement = Arrange.Horizontal
       Spacing = True
       Padding = 10
