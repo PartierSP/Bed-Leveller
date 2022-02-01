@@ -168,15 +168,15 @@ Public Sub Form_Open()
              "Button 7", "Button 8", "Button 9", "Button 10", "Button 11", "Button 12"]
   cbPrimeE.List = sButton
   cbSecE.List = sButton
+  cbMicroM.List = sButton
   cbExtruder.List = sButton
   cbHeatedBed.List = sButton
   cbHome.List = sButton
   cbXnYn.List = sButton
   cbXpYn.List = sButton
-  cbXnYn.List = sButton
+  cbXnYp.List = sButton
   cbXpYp.List = sButton
   cbCentre.List = sButton
-  
 
   'Set the forms control values.
   With FMain
@@ -234,4 +234,83 @@ Public Sub TabStrip1_Click()
     FMain.tgbjog.Value = False
   Endif
 
+End
+
+Public Sub cbAxis_Leave()
+
+  Dim iIdx As Integer
+
+  iIdx = Last.Index
+  CheckDuplicateAxis(iIdx)
+
+  Last.Index = iIdx
+
+End
+
+Public Sub cbBut_Leave()
+
+  Dim iIdx As Integer
+
+  iIdx = Last.Index
+  CheckDuplicateButton(iIdx)
+  Last.Index = iIdx
+
+End
+
+Public Sub CheckDuplicateAxis(Selection As Integer)
+  
+  If Selection > 0 Then
+    If cbXAxis.Index = Selection Then
+      cbXAxis.Index = 0
+    Endif
+    If cbYAxis.Index = Selection Then
+      cbYAxis.Index = 0
+    Endif
+    If cbZAxis.Index = Selection Then
+      cbZAxis.Index = 0
+    Endif
+    If cbEAxis.Index = Selection Then
+      cbEAxis.Index = 0
+    Endif
+  Endif
+  
+End
+
+Public Sub CheckDuplicateButton(Selection As Integer)
+
+  If Selection > 0 Then
+    If cbPrimeE.Index = Selection Then
+      cbPrimeE.Index = 0
+    Endif
+    If cbSecE.Index = Selection Then
+      cbSecE.Index = 0
+    Endif
+    If cbMicroM.Index = Selection Then
+      cbMicroM.Index = 0
+    Endif
+    If cbExtruder.Index = Selection Then
+      cbExtruder.Index = 0
+    Endif
+    If cbHeatedBed.Index = Selection Then
+      cbHeatedBed.Index = 0
+    Endif
+    If cbHome.Index = Selection Then
+      cbHome.Index = 0
+    Endif
+    If cbXnYn.Index = Selection Then
+      cbXnYn.Index = 0
+    Endif
+    If cbXpYn.Index = Selection Then
+      cbXpYn.Index = 0
+    Endif
+    If cbXnYp.Index = Selection Then
+      cbXnYp.Index = 0
+    Endif
+    If cbXpYp.Index = Selection Then
+      cbXpYp.Index = 0
+    Endif
+    If cbCentre.Index = Selection Then
+      cbCentre.Index = 0
+    Endif
+  Endif
 End

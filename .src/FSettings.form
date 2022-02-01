@@ -9,11 +9,11 @@
   Spacing = True
   Margin = True
   { VBox7 VBox
-    MoveScaled(1,1,50,103)
+    MoveScaled(1,1,50,105)
     Expand = True
     Spacing = True
     { !TabStrip1 TabStrip
-      MoveScaled(0,1,49,94)
+      MoveScaled(0,1,49,96)
       #Public = True
       Expand = True
       Arrangement = Arrange.Fill
@@ -429,22 +429,22 @@
       Index = 3
       Text = ("Joystick")
       { ScrollView4 ScrollView
-        MoveScaled(1,1,47,88)
+        MoveScaled(1,1,47,89)
         Arrangement = Arrange.Row
         Padding = 5
         { VBox11 VBox
-          MoveScaled(1,1,45,85)
+          MoveScaled(1,1,45,87)
           Expand = True
           Spacing = True
           Padding = 5
           { Frame1 Frame
-            MoveScaled(1,1,43,33)
+            MoveScaled(1,1,43,38)
             Arrangement = Arrange.Horizontal
             Margin = True
             Padding = 5
             Text = ("Jog Control")
             { VBox9 VBox
-              MoveScaled(1,2,19,26)
+              MoveScaled(1,2,19,35)
               Expand = True
               Spacing = True
               Margin = True
@@ -479,47 +479,67 @@
                 Alignment = Align.Right
                 Text = ("Secondary Enable")
               }
+              { Label49 Label
+                MoveScaled(0,25,18,4)
+                Alignment = Align.Right
+                Text = ("Micro Move")
+              }
             }
             { VBox10 VBox
-              MoveScaled(21,2,22,26)
+              MoveScaled(21,2,22,35)
               Expand = True
               Spacing = True
               Margin = True
               Padding = 5
-              { cbXAxis ComboBox
+              { cbXAxis ComboBox cbAxis
+                Name = "cbXAxis"
                 MoveScaled(2,1,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbYAxis ComboBox
+              { cbYAxis ComboBox cbAxis
+                Name = "cbYAxis"
                 MoveScaled(2,5,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbZAxis ComboBox
+              { cbZAxis ComboBox cbAxis
+                Name = "cbZAxis"
                 MoveScaled(2,9,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbEAxis ComboBox
+              { cbEAxis ComboBox cbAxis
+                Name = "cbEAxis"
                 MoveScaled(2,13,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbPrimeE ComboBox
+              { cbPrimeE ComboBox cbBut
+                Name = "cbPrimeE"
                 MoveScaled(2,17,18,4)
+                Tag = "pe"
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbSecE ComboBox
+              { cbSecE ComboBox cbBut
+                Name = "cbSecE"
                 MoveScaled(2,21,18,4)
+                Tag = "se"
+                ToolTip = ("Printer communication speed")
+                ReadOnly = True
+              }
+              { cbMicroM ComboBox cbBut
+                Name = "cbMicroM"
+                MoveScaled(2,25,18,4)
+                Tag = "mm"
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
             }
           }
           { Frame2 Frame
-            MoveScaled(1,34,43,14)
+            MoveScaled(1,39,43,14)
             Arrangement = Arrange.Horizontal
             Margin = True
             Padding = 5
@@ -547,12 +567,14 @@
               Spacing = True
               Margin = True
               Padding = 5
-              { cbExtruder ComboBox
+              { cbExtruder ComboBox cbBut
+                Name = "cbExtruder"
                 MoveScaled(2,1,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbHeatedBed ComboBox
+              { cbHeatedBed ComboBox cbBut
+                Name = "cbHeatedBed"
                 MoveScaled(2,5,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
@@ -560,7 +582,7 @@
             }
           }
           { Frame3 Frame
-            MoveScaled(1,48,43,33)
+            MoveScaled(1,54,43,33)
             Arrangement = Arrange.Horizontal
             Margin = True
             Padding = 5
@@ -608,33 +630,39 @@
               Spacing = True
               Margin = True
               Padding = 5
-              { cbHome ComboBox
+              { cbHome ComboBox cbBut
+                Name = "cbHome"
                 MoveScaled(2,1,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbXnYn ComboBox
+              { cbXnYn ComboBox cbBut
+                Name = "cbXnYn"
                 MoveScaled(2,5,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbXpYn ComboBox
-                MoveScaled(0,9,18,4)
+              { cbXpYn ComboBox cbBut
+                Name = "cbXpYn"
+                MoveScaled(2,9,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbXnYp ComboBox
-                MoveScaled(0,13,18,4)
+              { cbXnYp ComboBox cbBut
+                Name = "cbXnYp"
+                MoveScaled(2,13,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbXpYp ComboBox
-                MoveScaled(0,17,18,4)
+              { cbXpYp ComboBox cbBut
+                Name = "cbXpYp"
+                MoveScaled(2,17,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
-              { cbCentre ComboBox
-                MoveScaled(1,21,18,4)
+              { cbCentre ComboBox cbBut
+                Name = "cbCentre"
+                MoveScaled(2,21,18,4)
                 ToolTip = ("Printer communication speed")
                 ReadOnly = True
               }
@@ -645,7 +673,7 @@
       Index = 0
     }
     { Panel1 Panel
-      MoveScaled(1,96,48,5)
+      MoveScaled(0,98,48,5)
       Arrangement = Arrange.Horizontal
       Spacing = True
       Padding = 10
