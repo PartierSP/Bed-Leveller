@@ -36,6 +36,8 @@ Public sRelative As String
 Public iMaxJogSpeed As Integer
 Public bBusy As Boolean = False
 Public iFeedrateDivider As Integer = 20
+Public iButtonMap As New Integer[14]
+Public iAxisMap As New Integer[14]
 
 'Public jsk1 As Joystick
 Public bButtonDown As New Boolean[13]
@@ -94,6 +96,7 @@ Public Sub SendSerialData(strMessage As String, blnLF As Boolean)
   SerialPort3D.Send()
 
 Catch
+  'FIXME: if stream is closed then stop requesting temperature/location
   Me.Text = Error.Text
 
 End
@@ -144,6 +147,9 @@ Public Sub Form_Open()
 
   hSettings.Read(Me, "MainForm")
   hSettings.Read(vsMain, "MainFormVSMain")
+
+  iButtonMap = hSettings["Joystick/ButtonMap"]
+  iAxisMap = hSettings["Joystick/AxisMap"]
 
   bFirstRun = hSettings["System/FirstRun", True]  'If this setting isn't found, set First Run to True until OK is clicked on fSettings.
 
