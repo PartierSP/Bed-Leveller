@@ -890,84 +890,46 @@ End
 
 Public Sub jsk1_ButtonChange(Id As Integer, Value As Boolean)
   
-  Select Id
-    Case 0
-      If Value = True Then
-        If bButtonDown[Id] = False Then 
-          bButtonDown[Id] = True
-          If btnLoc3.Enabled = True Then 
-            btnLoc3_Click
-          Endif 
-        Endif
-      Else 
-        bButtonDown[Id] = False
-      Endif 
-    Case 1
-      If Value = True Then
-        If bButtonDown[Id] = False Then 
-          bButtonDown[Id] = True
-          If tgbBed.Enabled = True Then 
-            tgbBed.Value = Not tgbBed.Value
-          Endif 
-        Endif
-      Else 
-        bButtonDown[Id] = False
-      Endif 
-    Case 2
-      If Value = True Then
-        If bButtonDown[Id] = False Then 
-          bButtonDown[Id] = True
+  If Value = True Then
+    If bButtonDown[Id] = False Then 
+      bButtonDown[Id] = True
+      Select iButtonMap[id]
+        Case 4
           If tgbHotEnd.Enabled = True Then 
             tgbHotEnd.Value = Not tgbHotEnd.Value
-          Endif 
-        Endif
-      Else 
-        bButtonDown[Id] = False
-      Endif 
-    Case 3
-      If Value = True Then
-        If bButtonDown[Id] = False Then 
-          bButtonDown[Id] = True
-          If btnLoc1.Enabled = True Then 
-            btnLoc1_Click
-          Endif 
-        Endif
-      Else 
-        bButtonDown[Id] = False
-      Endif 
-    Case 8
-      If Value = True Then
-        If bButtonDown[Id] = False Then 
-          bButtonDown[Id] = True
-          If btnLoc4.Enabled = True Then 
-            btnLoc4_Click
-          Endif 
-        Endif
-      Else 
-        bButtonDown[Id] = False
-      Endif 
-    Case 9
-      If Value = True Then
-        If bButtonDown[Id] = False Then 
-          bButtonDown[Id] = True
-          If btnLoc2.Enabled = True Then 
-            btnLoc2_Click
-          Endif 
-        Endif
-      Else 
-        bButtonDown[Id] = False
-      Endif 
-    Case 12
-      If Value = True Then
-        If bButtonDown[Id] = False Then 
-          bButtonDown[Id] = True
+          Endif
+        Case 5
+          If tgbBed.Enabled = True Then
+            tgbBed.Value = Not tgbBed.Value
+          Endif
+        Case 6
           btnHome_Click()
-        Endif
-      Else 
-        bButtonDown[Id] = False
-      Endif 
-  End Select
-  
+        Case 7
+          If btnLoc3.Enabled = True Then
+            btnLoc3_Click()
+          Endif
+        Case 8
+          If btnLoc4.Enabled = True Then
+            btnLoc4_Click()
+          Endif
+        Case 9
+          If btnLoc1.Enabled = True Then
+            btnLoc1_Click()
+          Endif
+        Case 10
+          If btnLoc2.Enabled = True Then
+            btnLoc2_Click()
+          Endif
+        Case 11
+          If btnLoc5.Enabled = True Then
+            btnLoc5_Click()
+          Endif
+      End Select
+    Endif
+  Else 
+    bButtonDown[Id] = False
+  Endif 
+
 End
 
 
