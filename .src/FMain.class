@@ -41,6 +41,7 @@ Public iAxisMap As New Integer[14]
 
 'Public jsk1 As Joystick
 Public bButtonDown As New Boolean[13]
+Public bEnableJoystk As Boolean = True
 
 Public Sub SerialPort3D_Read()
 
@@ -869,7 +870,19 @@ Public Sub tmrJog_Timer()
 End
 
 Public Sub jsk1_AxisChange(Id As Integer, Value As Integer)
-  
+
+  If bEnableJoystk = False Then
+    'Joystick tab on FSettings is active.
+    'Show Axis Id info and then exit sub without initiating axis actions.
+    If (Value > 200) Or (Value < -200) Then
+      FSettings.lblJoyInfo.Text = "Axis " & Id
+      FSettings.lblJoyInfo.Visible = True
+    Else
+      FSettings.lblJoyInfo.Visible = False
+    Endif
+    Return
+  Endif
+
   Select Id
     Case 0
       'X axis
@@ -889,11 +902,23 @@ Public Sub jsk1_AxisChange(Id As Integer, Value As Integer)
 End
 
 Public Sub jsk1_ButtonChange(Id As Integer, Value As Boolean)
-  
+
+  If bEnableJoystk = False Then
+    'Joystick tab on FSettings is active.
+    'Show Button Id info and then exit sub without initiating button actions.
+    If Value = True Then
+      FSettings.lblJoyInfo.Text = "Button " & Id
+      FSettings.lblJoyInfo.Visible = True
+    Else
+      FSettings.lblJoyInfo.Visible = False
+    Endif
+    Return
+  Endif
+
   If Value = True Then
     If bButtonDown[Id] = False Then 
       bButtonDown[Id] = True
-      Select iButtonMap[id]
+      Select iButtonMap[id + 1]
         Case 4
           If tgbHotEnd.Enabled = True Then 
             tgbHotEnd.Value = Not tgbHotEnd.Value

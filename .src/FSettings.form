@@ -677,8 +677,14 @@
       Arrangement = Arrange.Horizontal
       Spacing = True
       Padding = 10
+      { !lblJoyInfo Label
+        MoveScaled(1,1,12,4)
+        #Public = True
+        Visible = False
+        Text = ("Button XX")
+      }
       { Spring1 Spring
-        MoveScaled(1,1,19,4)
+        MoveScaled(15,1,5,4)
       }
       { btCancel Button
         MoveScaled(22,1,12,4)

@@ -138,6 +138,9 @@ Public Sub btOK_Click()
     'Update location button text
     .UpdateButtonNames
 
+    'Enable Joystick if it was disabled
+    FMain.bEnableJoystk = True
+
     'Check if this is a First Run.  If so, re-initialize start up to get communitations working.
     If .bFirstRun = True Then 
       .bFirstRun = False
@@ -154,6 +157,7 @@ End
 
 Public Sub btCancel_Click()
 
+  FMain.bEnableJoystk = True
   Me.Close
 
 End
@@ -307,8 +311,11 @@ End
 Public Sub TabStrip1_Click()
 
   If TabStrip1.Index = 3 Then
-    'disable Jog mode when adjusting joystick
-    FMain.tgbjog.Value = False
+    'disable joystick to prevent movements while on Joystick tab
+    FMain.bEnableJoystk = False
+  Else 
+    FMain.bEnableJoystk = True
+    lblJoyInfo.Visible = False
   Endif
 
 End
