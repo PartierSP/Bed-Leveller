@@ -36,10 +36,13 @@ Public sRelative As String
 Public iMaxJogSpeed As Integer
 Public bBusy As Boolean = False
 Public iFeedrateDivider As Integer = 20
+
+'Joystick Settings
 Public iButtonMap As New Integer[14]
 Public iAxisMap As New Integer[14]
+Public iAxisDeadZone As Integer
 
-'Public jsk1 As Joystick
+'Joystick globals
 Public bButtonDown As New Boolean[13]
 Public bEnableJoystk As Boolean = True
 
@@ -151,6 +154,7 @@ Public Sub Form_Open()
 
   iButtonMap = hSettings["Joystick/ButtonMap"]
   iAxisMap = hSettings["Joystick/AxisMap"]
+  iAxisDeadZone = hSettings["Joystick/DeadZone", 100]
 
   bFirstRun = hSettings["System/FirstRun", True]  'If this setting isn't found, set First Run to True until OK is clicked on fSettings.
 
@@ -245,6 +249,10 @@ Public Sub Form_Close()
   hSettings["Communications/StopBits"] = iStopBits
   hSettings["Communications/Parity"] = sParity
   hSettings["Communications/FlowControl"] = sFlowControl
+
+  hSettings["Joystick/ButtonMap"] = iButtonMap 
+  hSettings["Joystick/AxisMap"] = iAxisMap
+  hSettings["Joystick/DeadZone"] = iAxisDeadZone
 
   hSettings.Write(Me, "MainForm")
   hSettings.Write(vsMain, "MainFormVSMain")
@@ -874,11 +882,13 @@ Public Sub jsk1_AxisChange(Id As Integer, Value As Integer)
   If bEnableJoystk = False Then
     'Joystick tab on FSettings is active.
     'Show Axis Id info and then exit sub without initiating axis actions.
-    If (Value > 200) Or (Value < -200) Then
+    If Abs(Value) > 1000 Then
       FSettings.lblJoyInfo.Text = "Axis " & Id
       FSettings.lblJoyInfo.Visible = True
     Else
-      FSettings.lblJoyInfo.Visible = False
+      If (Abs(jsk1.Axis[0]) < 1000) And (Abs(jsk1.Axis[1]) < 1000) Then
+        FSettings.lblJoyInfo.Visible = False
+      Endif 
     Endif
     Return
   Endif
@@ -886,17 +896,17 @@ Public Sub jsk1_AxisChange(Id As Integer, Value As Integer)
   Select Id
     Case 0
       'X axis
-      If Value <> 0 Then 
+      If Abs(Value) > iAxisDeadZone Then 
         tmrJsJog.Enabled = True
       Endif
     Case 1
       'Y axis
-      If Value <> 0 Then 
+      If Abs(Value) > iAxisDeadZone Then 
         tmrJsJog.Enabled = True
       Endif 
   End Select
   
-  If Abs(jsk1.Axis[0]) + Abs(jsk1.Axis[1]) = 0 Then 
+  If (Abs(jsk1.Axis[0]) < iAxisDeadZone) And (Abs(jsk1.Axis[1]) < iAxisDeadZone) Then 
     tmrJsJog.Enabled = False
   Endif
 End
