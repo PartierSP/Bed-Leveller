@@ -59,7 +59,7 @@ Public Sub SerialPort3D_Read()
   If Error Then
     strReceived = ""
   Else
-    Debug strReceived
+    'Debug strReceived
     strRec = Split(strReceived, "\n")
     For i = 0 To strRec.Length - 1
       strReceived = strRec[i]
@@ -929,6 +929,10 @@ Public Sub jsk1_ButtonChange(Id As Integer, Value As Boolean)
     If bButtonDown[Id] = False Then 
       bButtonDown[Id] = True
       Select iButtonMap[id + 1]
+        Case 1
+          tmrJsJog.Enabled = True
+        Case 2
+          tmrJsJog.Enabled = True
         Case 4
           If tgbHotEnd.Enabled = True Then 
             tgbHotEnd.Value = Not tgbHotEnd.Value
@@ -970,36 +974,121 @@ End
 
 Public Sub tmrJsJog_Timer()
 
+  Dim I As Integer
   Dim fXdist As Float
   Dim fYdist As Float
   Dim fZdist As Float
+  Dim fEdist As Float
+  Dim PriBut As Integer
+  Dim SecBut As Integer
+  Dim MicBut As Integer
+  Dim XAxis As Integer
+  Dim YAxis As Integer
+  Dim ZAxis As Integer
+  Dim EAxis As Integer
+  Dim XEnable As Integer
+  Dim YEnable As Integer
+  Dim ZEnable As Integer
+  Dim EEnable As Integer
+  Dim SendLine As String
   
-  tmrJsJog.Enabled = False
+  PriBut = iButtonMap.Find(1) - 1
+  SecBut = iButtonMap.Find(2) - 1
+  MicBut = iButtonMap.Find(3) - 1
   
-  If jsk1.Button[6] Or jsk1.Button[4] Then      'Button 4 and 6 can be used to enable movement by the joystick
-    If jsk1.Button[5] Then                      'Button 5 switches from X-Y to Z axis.
-      fZdist = Round(-jsk1.Axis[1] / 32767 * 3.125 / 5, -2)
-      If jsk1.Button[4] Then                    'Button 4 activates fine feed
-        fZdist = fZdist / 10
-      Endif
-      SendSerialData(sRelative, True)
-      SendSerialData(sLinearMove & "Z" & fZdist & "F500", True)
-      SendSerialData(sAbsolute, True)
-      Debug sLinearMove & " Z" & fZdist & " F500"
-  
-    Else
-      fXdist = Round(jsk1.Axis[0] / 32767 * 3.125, -2)
-      fYdist = Round(-jsk1.Axis[1] / 32767 * 3.125, -2)
-      If jsk1.Button[4] Then                    'Button 4 activates fine feed
-        fXdist = fXdist / 10
-        fYdist = fYdist / 10
-      Endif
-      SendSerialData(sRelative, True)
-      SendSerialData(sLinearMove & "X" & fXdist & "Y" & fYdist & "F800", True)
-      SendSerialData(sAbsolute, True)
-      Debug sLinearMove & " X" & fXdist & " Y" & fYdist & " F800"
+  '----Z and E Movement----
+  'Find which button and axis enables Z
+  ZAxis = iAxisMap.Find(3) - 1
+  If ZAxis > 5 Then
+    ZEnable = SecBut
+    ZAxis = ZAxis - 6
+  Else 
+    ZEnable = PriBut
+  Endif
+  EAxis = iAxisMap.Find(4) - 1
+  If EAxis > 5 Then
+    EEnable = SecBut
+    EAxis = EAxis - 6
+  Else 
+    EEnable = PriBut
+  Endif
+  'Check if Z Enable button is pressed
+  If bButtonDown[ZEnable] = True Then
+    fZdist = Round(-jsk1.Axis[ZAxis] / 32767 * 3.125 / 5, -2)
+    fEdist = Round(jsk1.Axis[EAxis] / 32767 * 1 / 5, -2)
+    'Check if micro move button is pressed
+    If bButtonDown[MicBut] = True Then
+      fZdist = fZdist / 10
     Endif
-  Endif 
-  tmrJsJog.Enabled = True
+    SendLine = sLinearMove
+    If fZdist <> 0 Then
+      SendLine = SendLine & "Z" & fZdist
+    Endif
+    If fEdist <> 0 Then
+      SendLine = SendLine & "E" & fEdist
+    Endif
+    SendLine = SendLine & "F500"
+    'Send Z movement command
+    SendSerialData(sRelative, True)
+    SendSerialData(SendLine, True)
+    SendSerialData(sAbsolute, True)
+    Debug SendLine
+  Endif
 
+  '----X and Y Movement----
+  'Find out which button and axis enables X motions
+  XAxis = iAxisMap.Find(1) - 1
+  If XAxis > 5 Then
+    XEnable = SecBut
+    XAxis = XAxis - 6
+  Else 
+    XEnable = PriBut
+  Endif
+  'Find out which button and axis enables Y motions
+  YAxis = iAxisMap.Find(2) - 1
+  If YAxis > 5 Then
+    YEnable = SecBut
+    YAxis = YAxis - 6
+  Else 
+    XEnable = PriBut
+  Endif
+
+  'Check if X Enable button is pressed
+  If bButtonDown[XEnable] = True Then
+    fXdist = Round(jsk1.Axis[XAxis] / 32767 * 9 / 5, -2)
+    fYdist = Round(-jsk1.Axis[YAxis] / 32767 * 9 / 5, -2)
+    'Check if micro move button is pressed
+    If bButtonDown[MicBut] = True Then
+      fXdist = fXdist / 10
+      fYdist = fYdist / 10
+    Endif
+    SendLine = sLinearMove
+    If fXdist <> 0 Then
+      SendLine = SendLine & "X" & fXdist
+    Endif
+    If fYdist <> 0 Then
+      SendLine = SendLine & "Y" & fYdist
+    Endif
+    SendLine = SendLine & "F500"
+    'Send X and Y movement command
+    SendSerialData(sRelative, True)
+    SendSerialData(SendLine, True)
+    SendSerialData(sAbsolute, True)
+    Debug SendLine
+  Endif
+End
+
+Public Sub debug_array(values As String[], name As String)
+  
+  Dim sRow As String
+  Dim sTemp As String
+  Dim i As Integer
+  
+  i = 0
+  sTemp = name & " => "
+  For Each sRow In values
+    sTemp = sTemp & i & "=>" & sRow & ", "
+    i = i + 1
+  Next
+  Debug sTemp
 End

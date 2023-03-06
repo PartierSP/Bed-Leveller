@@ -78,7 +78,7 @@ Public Sub Device_Read()
     byEventType = Read #jsDev As Byte   ' Type of Event: 1 byte
     byInputId = Read #jsDev As Byte     ' InputId: 1 byte
 
-     Debug "Device: "; DeviceFile, "Stamp: "; iStamp, "Event Type: "; byEventType, "Id: "; byInputId, "Value: "; shValue
+    ' Debug "Device: "; DeviceFile, "Stamp: "; iStamp, "Event Type: "; byEventType, "Id: "; byInputId, "Value: "; shValue
 
     If byEventType And 1 Then 
       'This event is a change in a button's state

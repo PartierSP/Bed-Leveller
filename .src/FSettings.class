@@ -64,7 +64,7 @@ Public Sub btOK_Click()
 
     'Zero out Joystic axis mapping and repopulate
     For I = 0 To 13
-      .iAxisMap[I] = 0
+      .iAxisMap[I] = -1
     Next
     .iAxisMap[cbXAxis.Index] = 1
     .iAxisMap[cbYAxis.Index] = 2
@@ -73,7 +73,7 @@ Public Sub btOK_Click()
 
     'Zero out Joystick button mapping and repopulate
     For I = 0 To 13
-      .iButtonMap[I] = 0
+      .iButtonMap[I] = -1
     Next 
     .iButtonMap[cbPrimeE.Index] = 1
     .iButtonMap[cbSecE.Index] = 2
