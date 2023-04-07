@@ -466,7 +466,7 @@ End
 
 Public Sub Form_Resize()
 
-  If Me.Width < 400 Then
+  If Me.Width < 450 Then
     Me.Width = Me.Width + 15
   Endif
 

@@ -1,14 +1,14 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,75,77)
+  MoveScaled(0,0,81,74)
   Text = ("Bed Leveller")
   Icon = Picture["icon.png"]
   Arrangement = Arrange.Fill
   AutoResize = True
   Padding = 5
   { vsMain VSplit
-    MoveScaled(1,1,73,74)
+    MoveScaled(1,1,79,73)
     Expand = True
     Spacing = True
     { Panel8 Panel
@@ -125,12 +125,12 @@
       }
     }
     { VBox4 VBox
-      MoveScaled(2,35,69,37)
+      MoveScaled(2,35,75,37)
       Expand = True
       Spacing = True
       Padding = 5
       { Panel9 HBox
-        MoveScaled(0,0,64,6)
+        MoveScaled(0,0,74,6)
         AutoResize = True
         Padding = 5
         { btnHome Button
@@ -149,7 +149,7 @@
           MoveScaled(24,2,2,2)
         }
         { tgbBed ToggleButton
-          MoveScaled(26,1,11,4)
+          MoveScaled(26,1,10,4)
           Enabled = False
           Text = Shortcut(("Bed Off"), "B")
         }
@@ -165,8 +165,15 @@
           MoveScaled(50,2,1,2)
         }
         { btnSetting Button
-          MoveScaled(51,1,11,4)
+          MoveScaled(51,1,10,4)
           Text = Shortcut(("Settings"), "S")
+        }
+        { Spring19 Spring
+          MoveScaled(62,2,1,2)
+        }
+        { BtnTestSTL Button
+          MoveScaled(63,1,10,4)
+          Text = ("Test STL")
         }
       }
       { Panel7 HBox
