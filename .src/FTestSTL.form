@@ -1,0 +1,91 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,74,58)
+  Expand = True
+  Spacing = True
+  Padding = 5
+  { Panel2 Panel
+    MoveScaled(0,0,72,57)
+    Expand = True
+    Arrangement = Arrange.Vertical
+    AutoResize = True
+    Spacing = True
+    Padding = 5
+    { Panel1 Panel
+      MoveScaled(0,0,70,14)
+      Arrangement = Arrange.Horizontal
+      AutoResize = True
+      Spacing = True
+      Padding = 5
+      { VBox1 VBox
+        MoveScaled(1,0,30,14)
+        Expand = True
+        Spacing = True
+        Padding = 5
+        { Label1 Label
+          MoveScaled(8,2,19,4)
+          Alignment = Align.Right
+          Text = ("Test Print Width (X)")
+        }
+        { Label2 Label
+          MoveScaled(8,6,19,4)
+          Alignment = Align.Right
+          Text = ("Test Print Depth (Y)")
+        }
+        { Label3 Label
+          MoveScaled(8,10,19,4)
+          Alignment = Align.Right
+          Text = ("Test Print Layer Height (Z)")
+        }
+      }
+      { VBox2 VBox
+        MoveScaled(32,0,37,14)
+        Spacing = True
+        Padding = 5
+        { SBX SpinBar
+          MoveScaled(1,1,34,4)
+          MaxValue = 400
+          Step = 1
+        }
+        { SBY SpinBar
+          MoveScaled(1,5,34,4)
+          MaxValue = 400
+          Step = 1
+        }
+        { SBZ SpinBar
+          MoveScaled(1,9,34,4)
+          Step = 0.01
+        }
+      }
+    }
+    { VBox3 VBox
+      MoveScaled(0,16,72,31)
+      Expand = True
+      AutoResize = True
+      Spacing = True
+      Margin = True
+      Padding = 5
+      { FileChooser1 FileChooser
+        MoveScaled(0,0,71,26)
+        Expand = True
+      }
+    }
+    { HBox1 HBox
+      MoveScaled(1,52,69,4)
+      Spacing = True
+      Padding = 10
+      { Spring1 Spring
+        MoveScaled(2,1,35,1)
+      }
+      { BtnCancel Button
+        MoveScaled(38,0,13,4)
+        Text = Shortcut(("Cancel"), "C")
+      }
+      { BtnSave Button
+        MoveScaled(53,0,12,4)
+        Text = Shortcut(("Save"), "S")
+      }
+    }
+  }
+}

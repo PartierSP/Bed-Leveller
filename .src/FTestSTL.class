@@ -1,0 +1,9 @@
+' Gambas class file
+
+Public Sub Form_Open()
+
+  SBX.Value = FMain.iBedSizeX - FMain.iMargin
+  SBY.Value = FMain.iBedSizeY - FMain.iMargin
+  SBZ.Value = FMain.fShim
+
+End

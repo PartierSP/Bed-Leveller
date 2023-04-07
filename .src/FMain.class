@@ -1091,3 +1091,9 @@ Public Sub debug_array(values As String[], name As String)
   Next
   Debug sTemp
 End
+
+Public Sub BtnTestSTL_Click()
+
+  FTestSTL.Show
+
+End
