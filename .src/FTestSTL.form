@@ -1,9 +1,10 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,74,58)
+  MoveScaled(0,0,74,57)
   Expand = True
   Spacing = True
+  Margin = True
   Padding = 5
   { Panel2 Panel
     MoveScaled(0,0,72,57)
@@ -11,64 +12,119 @@
     Arrangement = Arrange.Vertical
     AutoResize = True
     Spacing = True
+    Margin = True
     Padding = 5
     { Panel1 Panel
-      MoveScaled(0,0,70,14)
+      MoveScaled(0,0,71,24)
       Arrangement = Arrange.Horizontal
       AutoResize = True
       Spacing = True
       Padding = 5
-      { VBox1 VBox
-        MoveScaled(1,0,30,14)
+      { Frame1 Frame
+        MoveScaled(-1,0,72,23)
+        AutoResize = True
+        Text = ("STL Settings")
+        Alignment = Align.Left
+        { VBox2 VBox
+          MoveScaled(33,2,37,14)
+          Spacing = True
+          Padding = 5
+          { SBX SpinBar
+            MoveScaled(1,1,34,4)
+            MaxValue = 400
+            Step = 1
+          }
+          { SBY SpinBar
+            MoveScaled(1,5,34,4)
+            MaxValue = 400
+            Step = 1
+          }
+          { SBZ SpinBar
+            MoveScaled(1,9,34,4)
+            Value = 0.2
+            Step = 0.01
+          }
+        }
+        { VBox1 VBox
+          MoveScaled(2,2,30,14)
+          Expand = True
+          Spacing = True
+          Padding = 5
+          { Label1 Label
+            MoveScaled(8,2,19,4)
+            Alignment = Align.Right
+            Text = ("Test Print Width (X)")
+          }
+          { Label2 Label
+            MoveScaled(8,6,19,4)
+            Alignment = Align.Right
+            Text = ("Test Print Depth (Y)")
+          }
+          { Label3 Label
+            MoveScaled(4,10,23,4)
+            Alignment = Align.Right
+            Text = ("Test Print Layer Height (Z)")
+          }
+        }
+        { Button1 Button
+          MoveScaled(48,17,20,5)
+          Text = Shortcut(("Generate STL File"), "G")
+        }
+        { Spring2 Spring
+          MoveScaled(2,18,45,3)
+        }
+      }
+    }
+    { Frame2 Frame
+      MoveScaled(1,25,70,26)
+      Text = ("Correction")
+      Alignment = Align.Left
+      { VBox3 VBox
+        MoveScaled(1,2,30,14)
         Expand = True
         Spacing = True
         Padding = 5
-        { Label1 Label
+        { Label4 Label
           MoveScaled(8,2,19,4)
           Alignment = Align.Right
-          Text = ("Test Print Width (X)")
+          Text = ("Leveling Screw")
         }
-        { Label2 Label
+        { Label5 Label
           MoveScaled(8,6,19,4)
           Alignment = Align.Right
-          Text = ("Test Print Depth (Y)")
+          Text = ("Divisions per Rotation")
         }
-        { Label3 Label
+        { Label6 Label
           MoveScaled(8,10,19,4)
           Alignment = Align.Right
-          Text = ("Test Print Layer Height (Z)")
+          Text = ("Measured Thickness")
         }
       }
-      { VBox2 VBox
-        MoveScaled(32,0,37,14)
+      { VBox4 VBox
+        MoveScaled(32,2,37,14)
         Spacing = True
         Padding = 5
-        { SBX SpinBar
-          MoveScaled(1,1,34,4)
-          MaxValue = 400
-          Step = 1
+        { CBScrew ComboBox
+          MoveScaled(0,0,35,5)
         }
-        { SBY SpinBar
+        { SBDivPR SpinBar
           MoveScaled(1,5,34,4)
-          MaxValue = 400
+          Value = 14
+          MaxValue = 50
           Step = 1
         }
-        { SBZ SpinBar
+        { SBMeasured SpinBar
           MoveScaled(1,9,34,4)
           Step = 0.01
         }
       }
-    }
-    { VBox3 VBox
-      MoveScaled(0,16,72,31)
-      Expand = True
-      AutoResize = True
-      Spacing = True
-      Margin = True
-      Padding = 5
-      { FileChooser1 FileChooser
-        MoveScaled(0,0,71,26)
-        Expand = True
+      { Button2 Button
+        MoveScaled(8,18,16,5)
+        Text = ("Calculate")
+      }
+      { TBAns TextBox
+        MoveScaled(30,18,39,5)
+        Enabled = False
       }
     }
     { HBox1 HBox
@@ -80,11 +136,7 @@
       }
       { BtnCancel Button
         MoveScaled(38,0,13,4)
-        Text = Shortcut(("Cancel"), "C")
-      }
-      { BtnSave Button
-        MoveScaled(53,0,12,4)
-        Text = Shortcut(("Save"), "S")
+        Text = Shortcut(("Close"), "C")
       }
     }
   }

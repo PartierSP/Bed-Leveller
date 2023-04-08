@@ -2,8 +2,37 @@
 
 Public Sub Form_Open()
 
+  Dim sScrew As New String[10]
+
   SBX.Value = FMain.iBedSizeX - FMain.iMargin
   SBY.Value = FMain.iBedSizeY - FMain.iMargin
   SBZ.Value = FMain.fShim
+  
+  sScrew = ["M3", "M4 x 0.7", "M5", "M6", "#4-40", "#6-32 UNC", "#8-32 UNC", "#10-24 UNC", "#10-32 UNF"]
+  CBScrew.List = sScrew
+
+End
+
+Public Sub BtnCancel_Click()
+
+  Me.Close()
+
+End
+
+Public Sub Button2_Click()
+
+  Dim fAns As Float
+  
+  fAns = (SBMeasured.Value - SBZ.Value) / 0.7 * SBDivPR.Value
+  If fans > 0 Then 
+    TBAns.Text = "Rotate Clockwise " & Round(Abs(FAns), -1) & " Divisions."
+  Else 
+    TBAns.Text = "Rotate Counter Clockwise " & Round(Abs(FAns), -1) & " Divisions."
+  Endif
+End
+
+Public Sub TBAns_KeyPress()
+
+  
 
 End
