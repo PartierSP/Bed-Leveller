@@ -8,7 +8,7 @@ Public Sub Form_Open()
   SBY.Value = FMain.iBedSizeY - FMain.iMargin
   SBZ.Value = FMain.fShim
   
-  sScrew = ["M3", "M4 x 0.7", "M5", "M6", "#4-40", "#6-32 UNC", "#8-32 UNC", "#10-24 UNC", "#10-32 UNF"]
+  sScrew = ["M2.5 x 0.45", "M3 x 0.5", "M4 x 0.7", "M5 x 0.8", "M6 x 1", "#4-40 UNC", "#4-48 UNC", "#6-32 UNC", "#6-40 UNF", "#8-32 UNC", "#8-36 UNF", "#10-24 UNC", "#10-32 UNF", "1/4-20 UNC", "1/4-28 UNF"]
   CBScrew.List = sScrew
 
 End
@@ -19,7 +19,7 @@ Public Sub BtnCancel_Click()
 
 End
 
-Public Sub Button2_Click()
+Public Sub BtnCalculate_Click()
 
   Dim fAns As Float
   
@@ -31,8 +31,49 @@ Public Sub Button2_Click()
   Endif
 End
 
-Public Sub TBAns_KeyPress()
 
+Public Sub BtnGenSTL_Click()
+
+  Dim sSTL As String
+
+  Dialog.Filter = ["*.stl", "STL 3D Models"]
+  If Dialog.SaveFile() Then Return 
+  sSTL = GenerateSTL()
+  File.Save(Dialog.Path, sSTL)
+
+'Catch 
+'    Message.Error(Error.text)
+End
+
+Public Sub GenerateSTL() As String
   
+  Dim sSTL As String
+  Dim fsize As Float
+  Dim fDirection As Float[]
+  Dim X As Float
+  Dim Y As Float
+  Dim Z As Float
+  Dim iSide As Integer
+  Dim fHeight As Float
+
+  fDirection = [0, 0.5, 0.5, 0.5, 0, 0.5, 0, -0.5, 0.5, -0.5, 0, 0.5, 0, 0, 0, 0, 0, 1]
+  fSize = 10
+
+  sSTL = "solid ascii\n"
+  For iSide = 0 To 17 Step 3
+    X = fDirection[iSide + 0] * fSize * 0.2
+    Y = fDirection[iSide + 1] * fSize * 0.2
+    Z = fDirection[iSide + 2] * fHeight * 0.2
+    sSTL &= "  facet normal " & X & " " & Y & " " & Z & "\n"
+    sSTL &= "    outer loop\n"
+    sSTL &= "      vertex \n"
+    sSTL &= "      vertex \n"
+    sSTL &= "      vertex \n"
+    sSTL &= "    endloop\n"
+    sSTL &= "  endfacet\n"
+  Next
+  sstl &= "endsolid"
+
+  Return sSTL
 
 End

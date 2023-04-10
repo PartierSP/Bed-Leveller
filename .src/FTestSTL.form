@@ -41,8 +41,7 @@
           }
           { SBZ SpinBar
             MoveScaled(1,9,34,4)
-            Value = 0.2
-            Step = 0.01
+            Step = 0
           }
         }
         { VBox1 VBox
@@ -66,7 +65,7 @@
             Text = ("Test Print Layer Height (Z)")
           }
         }
-        { Button1 Button
+        { BtnGenSTL Button
           MoveScaled(48,17,20,5)
           Text = Shortcut(("Generate STL File"), "G")
         }
@@ -115,10 +114,10 @@
         }
         { SBMeasured SpinBar
           MoveScaled(1,9,34,4)
-          Step = 0.01
+          Step = 0
         }
       }
-      { Button2 Button
+      { BtnCalculate Button
         MoveScaled(8,18,16,5)
         Text = ("Calculate")
       }
