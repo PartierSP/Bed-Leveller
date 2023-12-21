@@ -46,6 +46,12 @@ Public iAxisDeadZone As Integer
 Public bButtonDown As New Boolean[13]
 Public bEnableJoystk As Boolean = True
 
+'Test Print Settings
+Public fLayerHeight As Float
+Public iThreadType As Integer
+Public iThreadDivisions As Integer
+Public iIsMetric As Integer
+
 Public Sub SerialPort3D_Read()
 
   Dim strReceived As String
@@ -156,6 +162,11 @@ Public Sub Form_Open()
   iAxisMap = hSettings["Joystick/AxisMap"]
   iAxisDeadZone = hSettings["Joystick/DeadZone", 100]
 
+  fLayerHeight = hSettings["TestPrint/LayerHeight", 0.2]
+  iThreadType = hSettings["TestPrint/ThreadType", 2]
+  iThreadDivisions = hSettings["TestPrint/ThreadDivisions", 14]
+  iIsMetric = hSettings["TestPrint/IsMetric", 1]
+
   bFirstRun = hSettings["System/FirstRun", True]  'If this setting isn't found, set First Run to True until OK is clicked on fSettings.
 
   If bFirstRun = True Then 
@@ -253,6 +264,11 @@ Public Sub Form_Close()
   hSettings["Joystick/ButtonMap"] = iButtonMap 
   hSettings["Joystick/AxisMap"] = iAxisMap
   hSettings["Joystick/DeadZone"] = iAxisDeadZone
+  
+  hSettings["TestPrint/LayerHeight"] = fLayerHeight
+  hSettings["TestPrint/ThreadType"] = iThreadType
+  hSettings["TestPrint/ThreadDivisions"] = iThreadDivisions
+  hSettings["TestPrint/IsMetric"] = iIsMetric
 
   hSettings.Write(Me, "MainForm")
   hSettings.Write(vsMain, "MainFormVSMain")

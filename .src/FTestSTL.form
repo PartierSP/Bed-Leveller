@@ -1,13 +1,13 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,74,57)
+  MoveScaled(0,0,74,60)
   Expand = True
   Spacing = True
   Margin = True
   Padding = 5
   { Panel2 Panel
-    MoveScaled(0,0,72,57)
+    MoveScaled(0,0,72,60)
     Expand = True
     Arrangement = Arrange.Vertical
     AutoResize = True
@@ -41,7 +41,7 @@
           }
           { SBZ SpinBar
             MoveScaled(1,9,34,4)
-            Step = 0
+            Step = 0.01
           }
         }
         { VBox1 VBox
@@ -75,11 +75,11 @@
       }
     }
     { Frame2 Frame
-      MoveScaled(1,25,70,26)
+      MoveScaled(1,25,70,29)
       Text = ("Correction")
       Alignment = Align.Left
       { VBox3 VBox
-        MoveScaled(1,2,30,14)
+        MoveScaled(1,2,30,19)
         Expand = True
         Spacing = True
         Padding = 5
@@ -94,17 +94,22 @@
           Text = ("Divisions per Rotation")
         }
         { Label6 Label
-          MoveScaled(8,10,19,4)
+          MoveScaled(4,10,23,4)
+          Alignment = Align.Right
+          Text = ("Units used to Measure")
+        }
+        { Label7 Label
+          MoveScaled(8,14,19,4)
           Alignment = Align.Right
           Text = ("Measured Thickness")
         }
       }
       { VBox4 VBox
-        MoveScaled(32,2,37,14)
+        MoveScaled(32,2,37,19)
         Spacing = True
         Padding = 5
         { CBScrew ComboBox
-          MoveScaled(0,0,35,5)
+          MoveScaled(1,1,35,4)
         }
         { SBDivPR SpinBar
           MoveScaled(1,5,34,4)
@@ -112,22 +117,25 @@
           MaxValue = 50
           Step = 1
         }
-        { SBMeasured SpinBar
+        { CBUnits ComboBox
           MoveScaled(1,9,34,4)
-          Step = 0
+        }
+        { SBMeasured SpinBar
+          MoveScaled(1,13,34,4)
+          Step = 0.001
         }
       }
       { BtnCalculate Button
-        MoveScaled(8,18,16,5)
+        MoveScaled(6,22,16,5)
         Text = ("Calculate")
       }
       { TBAns TextBox
-        MoveScaled(30,18,39,5)
+        MoveScaled(30,22,39,5)
         Enabled = False
       }
     }
     { HBox1 HBox
-      MoveScaled(1,52,69,4)
+      MoveScaled(1,55,69,4)
       Spacing = True
       Padding = 10
       { Spring1 Spring

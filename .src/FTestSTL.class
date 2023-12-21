@@ -3,15 +3,34 @@
 Public Sub Form_Open()
 
   Dim sScrew As New String[10]
+  Dim sUnits As New String[2]
 
   SBX.Value = FMain.iBedSizeX - FMain.iMargin
   SBY.Value = FMain.iBedSizeY - FMain.iMargin
-  SBZ.Value = FMain.fShim
+  SBZ.Value = FMain.fLayerHeight
+  SBDivPR.Value = FMain.iThreadDivisions
   
   sScrew = ["M2.5 x 0.45", "M3 x 0.5", "M4 x 0.7", "M5 x 0.8", "M6 x 1", "#4-40 UNC", "#4-48 UNC", "#6-32 UNC", "#6-40 UNF", "#8-32 UNC", "#8-36 UNF", "#10-24 UNC", "#10-32 UNF", "1/4-20 UNC", "1/4-28 UNF"]
   CBScrew.List = sScrew
+  CBScrew.Index = FMain.iThreadType
+  
+  sUnits = ["inch", "mm"]
+  CBUnits.List = sUnits
+  CBUnits.Index = FMain.iIsMetric
 
 End
+
+Public Sub Form_Close()
+  
+  With FMain
+    .fLayerHeight = SBZ.Value
+    .iThreadDivisions = SBDivPR.Value
+    .iThreadType = CBScrew.Index
+    .iIsMetric = CBUnits.Index
+  End With
+  
+End
+
 
 Public Sub BtnCancel_Click()
 
@@ -22,8 +41,15 @@ End
 Public Sub BtnCalculate_Click()
 
   Dim fAns As Float
-  
-  fAns = (SBMeasured.Value - SBZ.Value) / 0.7 * SBDivPR.Value
+  Dim fMeasuredmm As Float
+  Dim fmmPerRev As New Float[10]
+
+  fmmPerRev = [0.45, 0.5, 0.7, 0.8, 1, 0.635, 0.52917, 0.79375, 0.635, 0.79375, 0.70556, 1.05833, 0.79375, 1.27, 0.90714]
+  fMeasuredmm = SBMeasured.Value
+  If CBUnits.Index = 0 Then 
+    fMeasuredmm = fMeasuredmm * 25.4
+  Endif
+  fAns = (fMeasuredmm - SBZ.Value) / fmmPerRev[CBScrew.Index] * SBDivPR.Value
   If fans > 0 Then 
     TBAns.Text = "Rotate Clockwise " & Round(Abs(FAns), -1) & " Divisions."
   Else 
