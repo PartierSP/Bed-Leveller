@@ -324,7 +324,7 @@ Public Sub btnLoc1_Click()
 
   'Move to -X,+Y position
   SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane & "F" & iMaxJogSpeed, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & (iBedSizeY - iMargin), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
   SendSerialData(sDwell, True)
@@ -345,7 +345,7 @@ Public Sub btnLoc2_Click()
 
   'Move to +X,+Y position
   SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane & "F" & iMaxJogSpeed, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & (iBedSizeY - iMargin), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
   SendSerialData(sDwell, True)
@@ -366,7 +366,7 @@ Public Sub btnLoc3_Click()
 
   'Move to -X,-Y position
   SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane & "F" & iMaxJogSpeed, True)
   SendSerialData(sRapidMove & "X" & iMargin & "Y" & iMargin, True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
   SendSerialData(sDwell, True)
@@ -387,7 +387,7 @@ Public Sub btnLoc4_Click()
 
   'Move to +X,-Y position
   SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane & "F" & iMaxJogSpeed, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX - iMargin) & "Y" & iMargin, True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
   SendSerialData(sDwell, True)
@@ -408,7 +408,7 @@ Public Sub btnLoc5_Click()
 
   'Move to centre of the bed
   SendSerialData(sMessage & " Moving...", True)
-  SendSerialData(sRapidMove & "Z" & iRapidPlane, True)
+  SendSerialData(sRapidMove & "Z" & iRapidPlane & "F" & iMaxJogSpeed, True)
   SendSerialData(sRapidMove & "X" & (iBedSizeX / 2) & "Y" & (iBedSizeY / 2), True)
   SendSerialData(sRapidMove & "Z" & fShim, True)
   SendSerialData(sDwell, True)
